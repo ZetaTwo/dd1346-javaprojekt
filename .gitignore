@@ -4,3 +4,6 @@
 *.jar
 *.war
 *.ear
+
+#ignore thumbnails created by windows
+Thumbs.db
