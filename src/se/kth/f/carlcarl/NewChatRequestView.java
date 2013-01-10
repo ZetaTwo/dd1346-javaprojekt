@@ -1,8 +1,6 @@
 package se.kth.f.carlcarl;
 
 import java.awt.Container;
-import java.awt.Dimension;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -11,7 +9,14 @@ import javax.swing.SpringLayout;
 public class NewChatRequestView extends JFrame{
 	
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7222428308087082953L;
+
 	public NewChatRequestView(String name){
+		this.setTitle("Chatförfrågan");
+		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		
@@ -47,9 +52,6 @@ public class NewChatRequestView extends JFrame{
 		layout.putConstraint(SpringLayout.WEST, yesButton, -widthDiff, SpringLayout.WEST, nameLabel);
 	//	layout.putConstraint(SpringLayout.WEST, noButton, 2, SpringLayout.EAST, yesButton);
 		layout.putConstraint(SpringLayout.EAST, noButton, widthDiff, SpringLayout.EAST, nameLabel);
-		
-		System.out.println(buttonWidth);
-		System.out.println(labelWidth);
 		
 		setResizable(false);
 		

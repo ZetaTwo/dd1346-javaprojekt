@@ -19,6 +19,8 @@ public class NewChatView extends JFrame{
 	private static final long serialVersionUID = -2563969029790271758L;
 
 	public NewChatView() {
+		
+		this.setTitle("Ny chat");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		
@@ -106,10 +108,5 @@ public class NewChatView extends JFrame{
 		
 	}
 	
-/*	
-	public static void main(String args[]){
-		NewChatView frame = new NewChatView();		
-	}
-*/
 	
 }
