@@ -5,10 +5,14 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.SpringLayout;
 import javax.swing.JTabbedPane;
+
+import se.kth.f.carlcarl.scrapbook.TestDialog;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -169,5 +173,23 @@ public class ProgramView extends JFrame {
 	
 	private void SendFile() {
 		//TODO: Create send file window
+		TestDialog t = new TestDialog(this);
+		t.setVisible(true);
+		int res = t.getResult();
+		if(res > 0) {
+			System.out.println(t.getTestValue());
+		}
 	}
+	
+	public int IncomingChatRequest(String name) {
+		return JOptionPane.showConfirmDialog(null, name + " vill chatta med dig. Vill du?", "Inkommande chatförfrågan", JOptionPane.YES_NO_OPTION);
+	}
+	
+	/* SettingsView v = new SetingsView();
+	 * int result = v.show();
+	 * if(result > 0) {
+	 *      SPARA INSTÄLLNINGAR;
+	 * }
+	 * 
+	 */
 }
