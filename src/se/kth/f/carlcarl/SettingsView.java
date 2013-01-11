@@ -1,8 +1,10 @@
 package se.kth.f.carlcarl;
 
 import java.awt.Container;
+import java.text.NumberFormat;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -15,7 +17,10 @@ public class SettingsView extends JFrame{
 	 */
 	private static final long serialVersionUID = 919092415372014804L;
 
-	public SettingsView() {
+	JTextField nameField;
+	JFormattedTextField portField;
+	
+	public SettingsView(String name, int port) {
 		
 		// Titel och exitonclose
 		setTitle("Inställningar");
@@ -24,10 +29,18 @@ public class SettingsView extends JFrame{
 		
 		// Skapar komponenter
 		JLabel nameLabel = new JLabel("Name :");
-		JTextField nameField = new JTextField(15);
+		nameField = new JTextField(name, 15);
 		
 		JLabel portLabel = new JLabel("Lysningsport :");
-		JTextField portField = new JTextField(15);
+		
+		NumberFormat format = NumberFormat.getNumberInstance();
+		format.setGroupingUsed(false);
+		format.setParseIntegerOnly(true);
+		format.setMaximumFractionDigits(0);
+		format.setMaximumIntegerDigits(5);
+		
+		portField = new JFormattedTextField(format);
+		portField.setValue(port);
 		
 		JButton yesButton = new JButton("Ok");
 		JButton noButton = new JButton("Avbryt");
@@ -70,9 +83,18 @@ public class SettingsView extends JFrame{
 		setResizable(false);
 		
 		// Packar och visar
-		setLayout(layout);
+		getContentPane().setLayout(layout);
 		pack();
 		setVisible(true);
 	}
-
+	
+	public int getListeningPort() {
+		return (int)portField.getValue();
+	}
+	
+	public String getName() {
+		return nameField.getText();
+	}
+	
 }
+
