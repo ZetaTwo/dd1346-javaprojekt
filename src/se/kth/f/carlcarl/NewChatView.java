@@ -1,54 +1,95 @@
 package se.kth.f.carlcarl;
 
 import java.awt.Container;
+import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.Window;
+import java.text.NumberFormat;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
-public class NewChatView extends JFrame{
+public class NewChatView extends JDialog{
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2563969029790271758L;
 
-	public NewChatView() {
-		
-		this.setTitle("Ny chat");
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
-		
-		
-		//Skapar container och komponenter
-		
-		Container contentPane = new Container();
+	
+	JFormattedTextField portTextField;
+	JTextField adressTextField;
+	JRadioButton radioGroup, radioSingle;
+	int result;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	
+	
+	public NewChatView(Window parent, int port) {
+		super(parent, "Ny chat", Dialog.ModalityType.APPLICATION_MODAL);
 				
+
+		//Skapar container och komponenter		
+		Container contentPane = new Container();
+		
+		
+		NumberFormat format = NumberFormat.getNumberInstance();
+		format.setGroupingUsed(false);
+		format.setParseIntegerOnly(true);
+		format.setMaximumFractionDigits(0);
+		format.setMaximumIntegerDigits(5);
+		
+		portTextField = new JFormattedTextField(format);
+		portTextField.setValue(port);
+		
 		JLabel portLabel = new JLabel("Port :");
-		JTextField portTextField = new JTextField(4);
+		
 		
 		JLabel adressLabel = new JLabel("Adress :");
-		JTextField adressTextField = new JTextField(10);
+		adressTextField = new JTextField(10);
+		adressTextField.setEditable(false);
 		
-		JRadioButton radioGroup = new JRadioButton("Skapa gruppchat");
-		JRadioButton radioSingle = new JRadioButton("Anslut till en chat");
+		
+		radioSingle = new JRadioButton("Anslut till en chat");
+		radioGroup = new JRadioButton("Skapa gruppchat");
+		radioSingle.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				if(radioSingle.isSelected()) {
+					adressTextField.setEditable(true);
+				}
+				else {
+					adressTextField.setEditable(false);
+				}
+			}
+		});
+				
+		radioGroup.setSelected(true);
+		buttonGroup.add(radioGroup);		
+		buttonGroup.add(radioSingle);
 		
 		JButton yesButton = new JButton("Ok");
+		yesButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Ok();
+			}
+		});
 		JButton noButton = new JButton("Avbryt");		
+		noButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Cancel();
+			}
+		});
 		
-		
-		// Gruppar radio-knapparna
-		
-		ButtonGroup radioButtons = new ButtonGroup();
-		radioButtons.add(radioGroup);
-		radioButtons.add(radioSingle);
-		
-		
+
 		
 		// Lägger till componenterna
 		
@@ -72,24 +113,19 @@ public class NewChatView extends JFrame{
 		// Layoutar
 		
 		SpringLayout layout = new SpringLayout();
-		
-		layout.putConstraint(SpringLayout.WEST, portLabel, 5, SpringLayout.WEST, contentPane);
-		layout.putConstraint(SpringLayout.NORTH, portLabel, 5, SpringLayout.NORTH, contentPane);
-		
-		layout.putConstraint(SpringLayout.EAST, portTextField, -5, SpringLayout.EAST, contentPane);
-		layout.putConstraint(SpringLayout.NORTH, portTextField, 5, SpringLayout.NORTH, contentPane);
-		
-		layout.putConstraint(SpringLayout.WEST, radioGroup, 5, SpringLayout.WEST, contentPane);
-		layout.putConstraint(SpringLayout.NORTH, radioGroup, 20, SpringLayout.SOUTH, portLabel);
-		
-		layout.putConstraint(SpringLayout.WEST, radioSingle, 5, SpringLayout.WEST, contentPane);
-		layout.putConstraint(SpringLayout.NORTH, radioSingle, 1, SpringLayout.SOUTH, radioGroup);
-		
-		layout.putConstraint(SpringLayout.WEST, adressLabel, 5, SpringLayout.WEST, contentPane);
-		layout.putConstraint(SpringLayout.NORTH, adressLabel, 5, SpringLayout.SOUTH, radioSingle);
-		
-		layout.putConstraint(SpringLayout.EAST, adressTextField, -5, SpringLayout.EAST, contentPane);
-		layout.putConstraint(SpringLayout.NORTH, adressTextField, 5, SpringLayout.SOUTH, radioSingle);
+		layout.putConstraint(SpringLayout.NORTH, adressLabel, 9, SpringLayout.SOUTH, radioSingle);
+		layout.putConstraint(SpringLayout.NORTH, adressTextField, -3, SpringLayout.NORTH, adressLabel);
+		layout.putConstraint(SpringLayout.WEST, adressTextField, 8, SpringLayout.EAST, adressLabel);
+		layout.putConstraint(SpringLayout.SOUTH, portLabel, -145, SpringLayout.SOUTH, contentPane);
+		layout.putConstraint(SpringLayout.NORTH, radioGroup, 29, SpringLayout.NORTH, contentPane);
+		layout.putConstraint(SpringLayout.NORTH, portTextField, -3, SpringLayout.NORTH, portLabel);
+		layout.putConstraint(SpringLayout.WEST, portTextField, 6, SpringLayout.EAST, portLabel);
+		layout.putConstraint(SpringLayout.EAST, portTextField, -109, SpringLayout.EAST, contentPane);
+		layout.putConstraint(SpringLayout.WEST, portLabel, 18, SpringLayout.WEST, contentPane);
+		layout.putConstraint(SpringLayout.WEST, adressLabel, 0, SpringLayout.WEST, portLabel);
+		layout.putConstraint(SpringLayout.NORTH, radioSingle, 6, SpringLayout.SOUTH, radioGroup);
+		layout.putConstraint(SpringLayout.WEST, radioSingle, 0, SpringLayout.WEST, portLabel);
+		layout.putConstraint(SpringLayout.WEST, radioGroup, 18, SpringLayout.WEST, contentPane);
 		
 		layout.putConstraint(SpringLayout.EAST, noButton, -35, SpringLayout.EAST, contentPane);
 		layout.putConstraint(SpringLayout.SOUTH, noButton, -10, SpringLayout.SOUTH, contentPane);
@@ -101,12 +137,43 @@ public class NewChatView extends JFrame{
 		// Packar ihop och visar
 		
 		setContentPane(contentPane);
-		setLayout(layout);
+		getContentPane().setLayout(layout);
 		pack();
-		setVisible(true);
-				
-		
 	}
 	
+
+	private void Ok() {
+		result = 1;
+		Close();
+	}
 	
+	public int getListeningPort() {
+		return (int)portTextField.getValue();
+	}
+	
+	public String getAdress() {
+		return adressTextField.getText();
+	}
+	
+	private void Cancel() {
+		result = 0;
+		Close();
+	}
+	
+	private void Close() {
+		dispose();
+	}
+	
+	/*
+	
+	public static void main(String[] args) {
+		try {
+			NewChatView dialog = new NewChatView(null, 20122);
+			dialog.setVisible(true);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	 */	
 }
