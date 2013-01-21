@@ -127,7 +127,7 @@ public class FileTransferStartView extends JDialog {
 		return textArea.getText();
 	}
 	
-/*	public static void main(String[] args) {
+	public static void main(String[] args) {
 		try {
 			FileTransferStartView dialog = new FileTransferStartView(null);
 			dialog.setVisible(true);
@@ -136,5 +136,5 @@ public class FileTransferStartView extends JDialog {
 			e.printStackTrace();
 		}
 	}
-*/
+
 }
