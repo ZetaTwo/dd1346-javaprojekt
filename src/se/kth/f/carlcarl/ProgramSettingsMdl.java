@@ -8,17 +8,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class SettingsMdl {
+public class ProgramSettingsMdl {
 	
 	int listeningPort;
 	String username;
 	Map<String, Object> privateKey;
 	
-	SettingsMdl() {
+	ProgramSettingsMdl() {
 		privateKey = new HashMap<String, Object>();	
 	}
 	
-	/*SettingsMdl(int port, String name, int ceasarKey,String RSAKey) {
+	/*
+	 ProgramSettingsMdl(int port, String name, int ceasarKey,String RSAKey) {
 		listeningPort = port;
 		username = name;
 		privateKey = new HashMap<String, Object>();
