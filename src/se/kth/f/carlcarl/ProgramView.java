@@ -134,11 +134,8 @@ public class ProgramView extends JFrame {
 	
 	private void HelpAbout() {
 		//TODO: Insert AboutBoxView
-		/*
 		AboutBoxView aboutBox = new AboutBoxView();
-		aboutBox.Display();
-		 */
-		
+		aboutBox.setVisible(true);
 	}
 
 	private void EditSettings() {

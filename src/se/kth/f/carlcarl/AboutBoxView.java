@@ -19,6 +19,7 @@ public class AboutBoxView extends JDialog{
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		SpringLayout springLayout = new SpringLayout();
 		getContentPane().setLayout(springLayout);
+		setBounds(100, 100, 300, 150);
 		
 		JButton btnOk = new JButton("Ok");
 		btnOk.addActionListener(new ActionListener() {
@@ -39,10 +40,11 @@ public class AboutBoxView extends JDialog{
 		springLayout.putConstraint(SpringLayout.NORTH, lblKontaktCarlsvenmensase, 6, SpringLayout.SOUTH, lblProgrammetSkrivetAv);
 		springLayout.putConstraint(SpringLayout.WEST, lblKontaktCarlsvenmensase, 0, SpringLayout.WEST, lblProgrammetSkrivetAv);
 		getContentPane().add(lblKontaktCarlsvenmensase);
+
 	}
 
 
-private void Close() {
-	dispose();
-}
+	private void Close() {
+		dispose();
+	}
 }
