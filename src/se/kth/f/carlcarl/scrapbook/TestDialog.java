@@ -1,7 +1,6 @@
 package se.kth.f.carlcarl.scrapbook;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.Window;
@@ -17,6 +16,10 @@ import java.awt.event.ActionListener;
 
 public class TestDialog extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3634791122563985158L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField textField;
 	private int result;
