@@ -1,4 +1,4 @@
-package se.kth.f.carlcarl;
+package se.kth.f.carlcarl.view;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
