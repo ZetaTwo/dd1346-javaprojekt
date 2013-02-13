@@ -1,36 +1,68 @@
 package se.kth.f.carlcarl.model;
 
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 
 public class ChatMdl {
 	String[] messages;
 	String[] users;
-	ArrayList<Socket> connections;
+	protected ArrayList<Connection> connections;
 	MessageSettings messageSettings;
+	protected boolean running = true;
 	
-	private ChatMdl() {
+	public ChatMdl() {
 	}
 	
-	public ChatMdl Connect() {
+	public void sendMessage(String htmlMessage, String sender) {
+		String messageData = "<message sender=\"" + sender + "\">" + 
+							  "<text>" + htmlMessage + "</text>" +
+							 "</message>";
+							  
+		postMessage(messageData);
+	}
+	
+	public void sendFile(String filename, String message, String sender) {
+		int size = 0;
 		
+		String messageData = "<message sender=\"" + sender + "\">" + 
+				  "<filerequest name=\"" + filename + "\" size=\"" + size + "\">" + message + "</filerequest>" +
+				 "</message>";
+				  
+		postMessage(messageData);
 	}
 	
-	public ChatMdl Host(int port) {
-		ChatMdl host = new ChatMdl();
-		host.connections.add(new ServerSocket(port));
+	public void sendFileResponse(boolean response, String message, int port, String sender) {
+		String messageData = "<message sender=\"" + sender + "\">" + 
+				  "<fileresponse reply=\"" + ((response)?"yes":"no") + "\" port=\"" + port + "\">" + message + "</fileresponse>" +
+				 "</message>";
+				  
+		postMessage(messageData);
 	}
 	
-	public void sendMessage() {
+	public void sendKeyrequest(String sender, String message, String type) {
+		String messageData = "<message sender=\"" + sender + "\">" + 
+				  "<keyrequest type=\"" + type + "\">" + message + "</fileresponse>" +
+				 "</message>";
+				  
+		postMessage(messageData);
 	}
 	
-	public void sendFile() {
+	public void sendKeyresponse(String sender, String key) {
+		String messageData = "<message sender=\"" + sender + "\">" + 
+				  "<text key=\"" + key + "\"></text>" +
+				 "</message>";
+				  
+		postMessage(messageData);
 	}
 	
-	public void close() {	
+	public void close(String sender) {
+		String messageData = "<message sender=\"" + sender + "\"><disconnect /></message>";
+		postMessage(messageData);
+		connections.clear();
 	}
 	
-	
-	
+	private void postMessage(String xmlData) {
+		for(Connection connection : connections) {
+			connection.getOut().write(xmlData);
+		}
+	}
 }
