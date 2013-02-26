@@ -1,5 +1,8 @@
 package se.kth.f.carlcarl.model;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class ChatMdl {
@@ -10,6 +13,13 @@ public class ChatMdl {
 	protected boolean running = true;
 	
 	public ChatMdl() {
+	}
+	
+	public void Connect(String host, int port) throws UnknownHostException, IOException {
+		Socket target = new Socket(host, port);
+		Connection conection = new Connection(target);
+		
+		connections.add(conection);
 	}
 	
 	public void sendMessage(String htmlMessage, String sender) {
