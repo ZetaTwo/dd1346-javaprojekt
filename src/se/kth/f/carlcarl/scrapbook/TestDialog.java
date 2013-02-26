@@ -32,7 +32,7 @@ public class TestDialog extends JDialog {
 			TestDialog dialog = new TestDialog(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
-			if(dialog.result == 1) {
+			if(dialog.result == 0) {
 				System.out.println(dialog.getTestValue());
 			}
 			System.out.println(dialog.getTestValue());
