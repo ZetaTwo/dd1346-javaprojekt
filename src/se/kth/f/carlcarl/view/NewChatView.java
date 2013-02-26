@@ -164,6 +164,10 @@ public class NewChatView extends JDialog{
 		dispose();
 	}
 	
+	public int getResult(){
+		return result;
+	}
+	
 	/*
 	
 	public static void main(String[] args) {
