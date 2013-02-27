@@ -168,7 +168,7 @@ public class NewChatView extends JDialog{
 		return result;
 	}
 	
-	/*
+	
 	
 	public static void main(String[] args) {
 		try {
@@ -179,5 +179,5 @@ public class NewChatView extends JDialog{
 			e.printStackTrace();
 		}
 	}
-	 */	
+		
 }

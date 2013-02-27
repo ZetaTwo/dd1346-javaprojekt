@@ -28,6 +28,7 @@ import javax.swing.DefaultComboBoxModel;
 public class MessageComposerView extends JPanel {
 	private static final long serialVersionUID = 3010982094099123535L;
 
+	JButton boldButton, italicsButton, colorButton;
 	JTextPane editorPane;
 	JComboBox<String> encryptionComboBox;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
@@ -39,14 +40,14 @@ public class MessageComposerView extends JPanel {
 		SpringLayout springLayout = new SpringLayout();
 		setLayout(springLayout);
 		
-		JButton boldButton = new JButton("B");
+		boldButton = new JButton("B");
 		boldButton.setAction(new BoldAction());
 		buttonGroup.add(boldButton);
 		springLayout.putConstraint(SpringLayout.NORTH, boldButton, 0, SpringLayout.NORTH, this);
 		springLayout.putConstraint(SpringLayout.WEST, boldButton, 0, SpringLayout.WEST, this);
 		add(boldButton);
 		
-		JButton italicsButton = new JButton("I");
+		italicsButton = new JButton("I");
 		italicsButton.setAction(new ItalicAction());
 		buttonGroup.add(italicsButton);
 		springLayout.putConstraint(SpringLayout.NORTH, italicsButton, 0, SpringLayout.NORTH, boldButton);
@@ -54,7 +55,7 @@ public class MessageComposerView extends JPanel {
 		springLayout.putConstraint(SpringLayout.SOUTH, italicsButton, 0, SpringLayout.SOUTH, boldButton);
 		add(italicsButton);
 		
-		JButton colorButton = new JButton();
+		colorButton = new JButton();
 		colorButton.setAction(new ForegroundAction());
 		springLayout.putConstraint(SpringLayout.NORTH, colorButton, 0, SpringLayout.NORTH, boldButton);
 		springLayout.putConstraint(SpringLayout.WEST, colorButton, 6, SpringLayout.EAST, italicsButton);
@@ -87,13 +88,53 @@ public class MessageComposerView extends JPanel {
 		return text;
 	}
 	
+	public void setText(String htmlString) {
+		editorPane.setText(htmlString);
+	}
+	
 	public String getEncryption() {
 		return (String)encryptionComboBox.getSelectedItem();
 	}
 	
+	public void setEncryption(String encryption) {
+		int s = encryptionComboBox.getComponentCount();
+		int i = 0;
+		while(i < s) {
+			if(encryption.equals(encryptionComboBox.getComponent(i))) {
+				encryptionComboBox.setSelectedIndex(i);
+			}
+			i++;
+		}
+	}
+	
+	public boolean isBold() {
+		return ((BoldAction) boldButton.getAction()).isActive();
+	}
+	
+	public void setBold() {
+		((BoldAction) boldButton.getAction()).activate();
+	}
+	
+	public boolean isItalics() {
+		return ((ItalicAction) italicsButton.getAction()).isActive();
+	}
+	
+	public void setItalics() {
+		((ItalicAction) italicsButton.getAction()).activate();
+	}
+	
+	public Color getActiveColor() {
+		return ((ForegroundAction) colorButton.getAction()).getColor();
+	}
+	
+	public void setActiveColor(Color color) {
+		((ForegroundAction) colorButton.getAction()).setColor(color);
+	}
+	
 	class BoldAction extends StyledEditorKit.StyledTextAction {
 	  private static final long serialVersionUID = 9174670038684056758L;
-
+	  boolean isActive;
+	  
 	  public BoldAction() {
 	    super("font-bold");
 	    
@@ -114,15 +155,32 @@ public class MessageComposerView extends JPanel {
 	      SimpleAttributeSet sas = new SimpleAttributeSet();
 	      StyleConstants.setBold(sas, bold);
 	      setCharacterAttributes(editor, sas, false);
-
+	      isActive = !isActive;
 	    }
+	  }
+	  
+	  public boolean isActive() {
+		  return isActive;
+	  }
+	  
+	  public void activate() {
+		  if(!isActive) {
+			  StyledEditorKit kit = getStyledEditorKit(editorPane);
+		      MutableAttributeSet attr = kit.getInputAttributes();
+		      boolean bold = (StyleConstants.isBold(attr)) ? false : true;
+		      SimpleAttributeSet sas = new SimpleAttributeSet();
+		      StyleConstants.setBold(sas, bold);
+		      setCharacterAttributes(editorPane, sas, false);
+		      isActive = !isActive;
+		  }
 	  }
 	}
 	
 	class ItalicAction extends StyledEditorKit.StyledTextAction {
 
 		  private static final long serialVersionUID = -1428340091100055456L;
-
+		  boolean isActive;
+		  
 		  public ItalicAction() {
 		    super("font-italic");
 		    
@@ -143,14 +201,29 @@ public class MessageComposerView extends JPanel {
 		      SimpleAttributeSet sas = new SimpleAttributeSet();
 		      StyleConstants.setItalic(sas, italic);
 		      setCharacterAttributes(editor, sas, false);
+		      isActive = !isActive;
 		    }
+		  }
+		  
+		  public boolean isActive() {
+			  return isActive;
+		  }
+		  
+		  public void activate() {
+		      StyledEditorKit kit = getStyledEditorKit(editorPane);
+		      MutableAttributeSet attr = kit.getInputAttributes();
+		      boolean italic = (StyleConstants.isItalic(attr)) ? false : true;
+		      SimpleAttributeSet sas = new SimpleAttributeSet();
+		      StyleConstants.setItalic(sas, italic);
+		      setCharacterAttributes(editorPane, sas, false);
+		      isActive = !isActive;
 		  }
 		}
 	
 	class ForegroundAction extends StyledEditorKit.StyledTextAction {
 
 		  private static final long serialVersionUID = 6384632651737400352L;
-
+		 
 		  JColorChooser colorChooser = new JColorChooser();
 
 		  JDialog dialog = new JDialog();
@@ -237,5 +310,19 @@ public class MessageComposerView extends JPanel {
 		  }
 
 		  private Color fg;
+		  
+		  public Color getColor() {
+			  if(fg != null){
+				  return fg;
+			  }
+			  return Color.black;
+		  }
+		  
+		  public void setColor(Color color) {
+			  SimpleAttributeSet attr = new SimpleAttributeSet();
+	          StyleConstants.setForeground(attr, color);
+	          setCharacterAttributes(editorPane, attr, false);
+		  }
+		  
 		}
 }

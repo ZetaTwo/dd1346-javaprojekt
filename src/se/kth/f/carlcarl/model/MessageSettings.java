@@ -32,11 +32,11 @@ public class MessageSettings {
 		color = col;
 	}
 	
-	public void setCryptoType(String string){
+	public void setEncryption(String string){
 		cryptoType = string;
 	}
 	
-	public void setCurrentMessage(String string) {
+	public void setText(String string) {
 		currentMessage = string;
 	}
 	
@@ -52,11 +52,11 @@ public class MessageSettings {
 		return color;
 	}
 	
-	public String getCryptoType() {
+	public String getEncryption() {
 		return cryptoType;
 	}
 	
-	public String getCurrentMessage() {
+	public String getText() {
 		return currentMessage;
 	}
 }

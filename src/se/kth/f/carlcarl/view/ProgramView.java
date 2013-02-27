@@ -21,8 +21,8 @@ public class ProgramView extends JFrame {
 
 	private static final long serialVersionUID = -7022872006598970444L;
 	private JPanel contentPane;
-	JTabbedPane tabbedPane;
-	MessageComposerView messageComposerView;
+	public JTabbedPane tabbedPane;
+	public MessageComposerView messageComposerView;
 
 	/**
 	 * Launch the application.
