@@ -10,6 +10,7 @@ import java.awt.Dialog;
 import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 public class FileTransferRequestView extends JDialog{
 	
@@ -23,7 +24,7 @@ public class FileTransferRequestView extends JDialog{
 	
 	int result;
 
-	public FileTransferRequestView(Window parent, String user, String filename, String message) {
+	public FileTransferRequestView(Window parent, String user, File file, String message) {
 		super(parent, "Filöverföringsförfrågan", Dialog.ModalityType.APPLICATION_MODAL);
 		
 		setResizable(false);
@@ -41,7 +42,7 @@ public class FileTransferRequestView extends JDialog{
 		springLayout.putConstraint(SpringLayout.WEST, lblFil, 0, SpringLayout.WEST, lblUservillChatta);
 		getContentPane().add(lblFil);
 		
-		JLabel lblfilnamn = new JLabel(filename);
+		JLabel lblfilnamn = new JLabel(file.getName());
 		springLayout.putConstraint(SpringLayout.NORTH, lblfilnamn, 6, SpringLayout.SOUTH, lblUservillChatta);
 		springLayout.putConstraint(SpringLayout.WEST, lblfilnamn, 6, SpringLayout.EAST, lblFil);
 		getContentPane().add(lblfilnamn);
@@ -85,6 +86,17 @@ public class FileTransferRequestView extends JDialog{
 		springLayout.putConstraint(SpringLayout.EAST, btnJa, -6, SpringLayout.WEST, btnNej);
 		getContentPane().add(btnJa);
 		
+		JLabel lblFileSize = new JLabel();
+		springLayout.putConstraint(SpringLayout.WEST, lblFileSize, 0, SpringLayout.WEST, btnNej);
+		springLayout.putConstraint(SpringLayout.SOUTH, lblFileSize, 0, SpringLayout.SOUTH, lblFil);
+		getContentPane().add(lblFileSize);
+		
+		JLabel lblFilstorlek = new JLabel("Filstorlek :");
+		lblFilstorlek.setText(getFileSize(file));
+		springLayout.putConstraint(SpringLayout.NORTH, lblFilstorlek, 0, SpringLayout.NORTH, lblFil);
+		springLayout.putConstraint(SpringLayout.EAST, lblFilstorlek, 0, SpringLayout.EAST, btnJa);
+		getContentPane().add(lblFilstorlek);
+		
 		
 		setSize( 400, 280);
 	}
@@ -103,16 +115,25 @@ public class FileTransferRequestView extends JDialog{
 		dispose();
 	}
 	
+	public String getFileSize(File file) {
+		String[] suffixList = new String[]{"B", "kB", "MB", "GB", "TB"};
+		long bytes = file.length();
+		int numberOfItterations = 0;
+		while(bytes > 1000) {
+			bytes = bytes / 1000;
+			numberOfItterations += 1;
+		}
+		return Long.toString(bytes) + " "  + suffixList[numberOfItterations];
+	}
+	
 
 	public static void main(String[] args) {
 		try {
-			FileTransferRequestView dialog = new FileTransferRequestView(null, "Peter", "file.jpg", "Hej jag tänkte skicka med den här lilla filen jag hoppas att den är trevlig jag vet inte riktigt vad den innehåller med det är säkert bra i alla fall.");
+			FileTransferRequestView dialog = new FileTransferRequestView(null, "Peter", new File("file.jpg"), "Hej jag tänkte skicka med den här lilla filen jag hoppas att den är trevlig jag vet inte riktigt vad den innehåller med det är säkert bra i alla fall.");
 			dialog.setVisible(true);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	
 }
