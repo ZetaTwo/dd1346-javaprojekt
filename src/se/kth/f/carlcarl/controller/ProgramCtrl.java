@@ -52,17 +52,8 @@ public class ProgramCtrl {
 		// \end{BLOB}
 	}
 	
-	protected void SaveMessageSettings() {
-		/*Bortkommenterad för att saker ska kompilera
-		 * Man borde kanske ha setters som kastar det neråt?
-		 
-		activeChat.chatMdl.messageSettings.setBold(programView.messageComposerView.isBold());
-		activeChat.chatMdl.messageSettings.setItalics(programView.messageComposerView.isItalics());
-		activeChat.chatMdl.messageSettings.setColor(programView.messageComposerView.getActiveColor());
-		activeChat.chatMdl.messageSettings.setText(programView.messageComposerView.getText());
-		activeChat.chatMdl.messageSettings.setEncryption(programView.messageComposerView.getEncryption());
-		
-		*/
+	protected void SaveMessageSettings() {		
+		activeChat.UpdateSettings(programView.messageComposerView.getSettings());
 	}
 	
 	@SuppressWarnings("unused")

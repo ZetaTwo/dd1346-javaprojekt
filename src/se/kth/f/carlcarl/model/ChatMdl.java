@@ -15,6 +15,10 @@ public class ChatMdl {
 	public ChatMdl() {
 	}
 	
+	public void UpdateSettings(MessageSettings settings) {
+		messageSettings = settings;
+	}
+	
 	public void Connect(String host, int port) throws UnknownHostException, IOException {
 		Socket target = new Socket(host, port);
 		Connection conection = new Connection(target);

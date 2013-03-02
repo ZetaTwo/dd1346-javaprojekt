@@ -25,6 +25,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 
+import se.kth.f.carlcarl.model.MessageSettings;
+
 public class MessageComposerView extends JPanel {
 	private static final long serialVersionUID = 3010982094099123535L;
 
@@ -77,6 +79,18 @@ public class MessageComposerView extends JPanel {
 		springLayout.putConstraint(SpringLayout.SOUTH, editorPane, 0, SpringLayout.SOUTH, this);
 		springLayout.putConstraint(SpringLayout.EAST, editorPane, 0, SpringLayout.EAST, this);
 		add(editorPane);
+	}
+	
+	public MessageSettings getSettings() {
+		MessageSettings result = new MessageSettings();
+		
+		result.setBold(isBold());
+		result.setItalics(isItalics());
+		result.setColor(getActiveColor());
+		result.setText(getText());
+		result.setEncryption(getEncryption());
+		
+		return result;
 	}
 	
 	public String getText() {
