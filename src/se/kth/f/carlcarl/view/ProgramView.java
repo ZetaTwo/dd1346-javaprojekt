@@ -26,6 +26,7 @@ public class ProgramView extends JFrame {
 	public JTabbedPane tabbedPane;
 	public MessageComposerView messageComposerView;
 	ProgramCtrl ctrl;
+	int chatIndex = 1;
 
 	/**
 	 * Launch the application.
@@ -55,7 +56,9 @@ public class ProgramView extends JFrame {
 			public void stateChanged(ChangeEvent e) {
 				if (e.getSource() instanceof JTabbedPane) {
 					ChatView view = (ChatView) tabbedPane.getSelectedComponent();
-					ctrl.setActiveChat(view);
+					if(view != null) {
+						ctrl.setActiveChat(view);
+					}
 				}
 			}
 		});
@@ -155,13 +158,20 @@ public class ProgramView extends JFrame {
 	}
 
 	private void NewChat() {
-		//TODO: Insert NewChatView
-		/*
-		NewChatView newChatView = new NewChatView();
-		newChatView.Display();
+		NewChatView newChatView = new NewChatView(this, ctrl.getSettings().getListeningPort() + 1);
+		newChatView.setVisible(true);
 		//Process results
-		controller.newChat(...);
-		 */
+		if(newChatView.result == 1) {
+			ChatView newView;
+			if(newChatView.getChatType() == 1) {
+				newView = ctrl.newChat(newChatView.getListeningPort());
+			} else {
+				newView = ctrl.connectChat(newChatView.getAdress(), newChatView.getListeningPort());
+			}
+			
+			tabbedPane.add("Chat " + (chatIndex++), newView);
+			
+		}
 	}
 	
 	private void Send() {

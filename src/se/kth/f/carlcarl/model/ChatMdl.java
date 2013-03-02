@@ -6,13 +6,18 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class ChatMdl {
-	String[] messages;
-	String[] users;
-	protected ArrayList<Connection> connections;
-	MessageSettings messageSettings;
+	ArrayList<String> messages = new ArrayList<String>();
+	ArrayList<String> users = new ArrayList<String>();
+	protected ArrayList<Connection> connections = new ArrayList<Connection>();
+	MessageSettings messageSettings = new MessageSettings();
 	protected boolean running = true;
 	
-	public ChatMdl() {
+	protected ChatMdl() {
+		
+	}
+	
+	public ChatMdl(String adress, int port) throws UnknownHostException, IOException {
+		Connect(adress, port);
 	}
 	
 	public void UpdateSettings(MessageSettings settings) {

@@ -37,10 +37,8 @@ public class NewChatView extends JDialog{
 	public NewChatView(Window parent, int port) {
 		super(parent, "Ny chat", Dialog.ModalityType.APPLICATION_MODAL);
 				
-
 		//Skapar container och komponenter		
 		Container contentPane = new Container();
-		
 		
 		NumberFormat format = NumberFormat.getNumberInstance();
 		format.setGroupingUsed(false);
@@ -53,11 +51,9 @@ public class NewChatView extends JDialog{
 		
 		JLabel portLabel = new JLabel("Port :");
 		
-		
 		JLabel adressLabel = new JLabel("Adress :");
 		adressTextField = new JTextField(10);
 		adressTextField.setEditable(false);
-		
 		
 		radioSingle = new JRadioButton("Anslut till en chat");
 		radioGroup = new JRadioButton("Skapa gruppchat");
@@ -89,10 +85,7 @@ public class NewChatView extends JDialog{
 			}
 		});
 		
-
-		
 		// Lägger till componenterna
-		
 		contentPane.add(portLabel);
 		contentPane.add(portTextField);
 		contentPane.add(radioGroup);
@@ -101,17 +94,13 @@ public class NewChatView extends JDialog{
 		contentPane.add(adressTextField);
 		contentPane.add(yesButton);
 		contentPane.add(noButton);
-		
 
 		// Låser dimensionerna
-		
 		Dimension dimension = new Dimension(200,170);
 		contentPane.setPreferredSize(dimension);
 		setResizable(false);
 		
-		
 		// Layoutar
-		
 		SpringLayout layout = new SpringLayout();
 		layout.putConstraint(SpringLayout.NORTH, adressLabel, 9, SpringLayout.SOUTH, radioSingle);
 		layout.putConstraint(SpringLayout.NORTH, adressTextField, -3, SpringLayout.NORTH, adressLabel);
@@ -133,14 +122,11 @@ public class NewChatView extends JDialog{
 		layout.putConstraint(SpringLayout.EAST, yesButton, -5, SpringLayout.WEST, noButton);
 		layout.putConstraint(SpringLayout.SOUTH, yesButton, -10, SpringLayout.SOUTH, contentPane);
 		
-		
 		// Packar ihop och visar
-		
 		setContentPane(contentPane);
 		getContentPane().setLayout(layout);
 		pack();
 	}
-	
 
 	private void Ok() {
 		result = 1;
@@ -148,7 +134,7 @@ public class NewChatView extends JDialog{
 	}
 	
 	public int getListeningPort() {
-		return (int)portTextField.getValue();
+		return (int)(long)portTextField.getValue();
 	}
 	
 	public String getAdress() {
@@ -164,11 +150,17 @@ public class NewChatView extends JDialog{
 		dispose();
 	}
 	
+	public int getChatType() {
+		if(buttonGroup.getSelection() == radioGroup.getModel()) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+	
 	public int getResult(){
 		return result;
 	}
-	
-	
 	
 	public static void main(String[] args) {
 		try {
@@ -178,6 +170,5 @@ public class NewChatView extends JDialog{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-		
+	}		
 }
