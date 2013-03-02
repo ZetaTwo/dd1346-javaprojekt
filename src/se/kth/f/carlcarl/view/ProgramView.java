@@ -8,9 +8,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.SpringLayout;
 import javax.swing.JTabbedPane;
 
+import se.kth.f.carlcarl.controller.ProgramCtrl;
 import se.kth.f.carlcarl.scrapbook.TestDialog;
 
 import java.awt.event.ActionListener;
@@ -23,12 +26,13 @@ public class ProgramView extends JFrame {
 	private JPanel contentPane;
 	public JTabbedPane tabbedPane;
 	public MessageComposerView messageComposerView;
+	ProgramCtrl ctrl;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		ProgramView frame = new ProgramView();
+		ProgramView frame = new ProgramView(null);
 		frame.tabbedPane.addTab("Group chat 1", null, new ChatViewGroup());
 		frame.tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 		frame.tabbedPane.addTab("Single chat 1", null, new ChatViewSingle());
@@ -42,7 +46,8 @@ public class ProgramView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ProgramView() {
+	public ProgramView(ProgramCtrl owner) {
+		this.ctrl = owner;
 		setTitle("CoC Chat");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 640);
@@ -57,6 +62,15 @@ public class ProgramView extends JFrame {
 		sl_contentPane.putConstraint(SpringLayout.WEST, tabbedPane, 0, SpringLayout.WEST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, tabbedPane, 0, SpringLayout.EAST, contentPane);
 		contentPane.add(tabbedPane);
+		
+		tabbedPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				if (e.getSource() instanceof JTabbedPane) {
+					ChatView view = (ChatView) tabbedPane.getSelectedComponent();
+					ctrl.setActiveChat(view);
+				}
+			}
+		});
 		
 		JButton sendButton = new JButton("Send");
 		sendButton.addActionListener(new ActionListener() {

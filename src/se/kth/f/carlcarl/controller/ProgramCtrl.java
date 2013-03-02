@@ -4,11 +4,8 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import se.kth.f.carlcarl.model.ProgramSettingsMdl;
+import se.kth.f.carlcarl.view.ChatView;
 import se.kth.f.carlcarl.view.ChatViewGroup;
 import se.kth.f.carlcarl.view.ChatViewSingle;
 import se.kth.f.carlcarl.view.NewChatView;
@@ -18,50 +15,33 @@ public class ProgramCtrl {
 	
 	ProgramSettingsMdl programMdl;
 	ProgramView programView;
-	ArrayList<ChatCtrl> chatCtrls;
+	ArrayList<ChatCtrl> chatCtrls = new ArrayList<>();
 	ChatCtrl activeChat;
 	
 	
 	public ProgramCtrl() throws IOException {
 		programMdl = ProgramSettingsMdl.open("programSettings.ini");
-		programView = new ProgramView();
-		
-		
-		// lol, blob
-		// \begin{BLOB}
-		programView.tabbedPane.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				if (e.getSource() instanceof JTabbedPane) {
-					/*
-					
-					SaveMessageSettings();
-					JTabbedPane pane = (JTabbedPane) e.getSource();
-					Bortkommenterad för att saker ska kompilera
-					 
-					for(ChatCtrl s: chatCtrls){
-						if(s.getView() == pane) {
-							setActiveChat(s);
-							updateMessageComposer();	
-						}
-					}
-					*/
-				}
-			}
-		});
-		
-		// \end{BLOB}
+		programView = new ProgramView(this);
 	}
 	
-	protected void SaveMessageSettings() {		
-		activeChat.UpdateSettings(programView.messageComposerView.getSettings());
+	protected void SaveMessageSettings() {	
+		if(activeChat != null) {
+			activeChat.UpdateSettings(programView.messageComposerView.getSettings());
+		}
 	}
 	
 	private void updateMessageComposer() {
-		programView.messageComposerView.UpdateSEttings(activeChat.getSettings());
+		programView.messageComposerView.UpdateSettings(activeChat.getSettings());
 	}
 
-	public void setActiveChat(ChatCtrl chat) {
-		activeChat = chat;
+	public void setActiveChat(ChatView view) {
+		SaveMessageSettings();
+		for(ChatCtrl s: chatCtrls){
+			if(s.getView() == view) {
+				activeChat = s;
+				updateMessageComposer();	
+			}
+		}
 	}
 	
 	public void newChat() {
@@ -70,18 +50,18 @@ public class ProgramCtrl {
 			ChatCtrl newCtrl = new ChatCtrl();
 			chatCtrls.add(newCtrl);	
 		}
-		
-		
 	}
 	
-	public static void main(String[] args) {
-		ProgramCtrl.programView.setVisible(true);
-		ProgramCtrl.programView.tabbedPane.addTab("Group chat 1", null, new ChatViewGroup());
-		ProgramCtrl.programView.tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
-		ProgramCtrl.programView.tabbedPane.addTab("Single chat 1", null, new ChatViewSingle());
-		ProgramCtrl.programView.tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
-		ProgramCtrl.programView.tabbedPane.addTab("Group chat 2", null, new ChatViewGroup());
-		ProgramCtrl.programView.tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
+	public static void main(String[] args) throws IOException {
+		ProgramCtrl ctrl = new ProgramCtrl();
+		
+		ctrl.programView.setVisible(true);
+		ctrl.programView.tabbedPane.addTab("Group chat 1", null, new ChatViewGroup());
+		ctrl.programView.tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
+		ctrl.programView.tabbedPane.addTab("Single chat 1", null, new ChatViewSingle());
+		ctrl.programView.tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
+		ctrl.programView.tabbedPane.addTab("Group chat 2", null, new ChatViewGroup());
+		ctrl.programView.tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 	}
 	
 	

@@ -93,7 +93,7 @@ public class MessageComposerView extends JPanel {
 		return result;
 	}
 	
-	public void UpdateSEttings(MessageSettings settings) {
+	public void UpdateSettings(MessageSettings settings) {
 		setActiveColor(settings.getColor());
 		setText(settings.getText());
 		setEncryption(settings.getEncryption());
@@ -348,7 +348,6 @@ public class MessageComposerView extends JPanel {
 			  SimpleAttributeSet attr = new SimpleAttributeSet();
 	          StyleConstants.setForeground(attr, color);
 	          setCharacterAttributes(editorPane, attr, false);
-		  }
-		  
-		}
+		  }	  
+	}
 }
