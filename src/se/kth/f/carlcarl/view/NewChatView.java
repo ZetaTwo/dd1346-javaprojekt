@@ -134,7 +134,7 @@ public class NewChatView extends JDialog{
 	}
 	
 	public int getListeningPort() {
-		return (int)(long)portTextField.getValue();
+		return Integer.parseInt(portTextField.getText());
 	}
 	
 	public String getAdress() {

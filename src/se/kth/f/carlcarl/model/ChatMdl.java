@@ -28,7 +28,11 @@ public class ChatMdl {
 		Socket target = new Socket(host, port);
 		Connection conection = new Connection(target);
 		
-		connections.add(conection);
+		addConnection(conection);
+	}
+	
+	public void addConnection(Connection connection) {
+		connections.add(connection);
 	}
 	
 	public void sendMessage(String htmlMessage, String sender) {

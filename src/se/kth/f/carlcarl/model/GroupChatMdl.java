@@ -4,15 +4,10 @@ import java.io.IOException;
 import java.net.ServerSocket;
 
 public class GroupChatMdl extends ChatMdl {
-	ServerSocket server;
+	GroupChatListener listener;
 	
 	public GroupChatMdl(int port) throws IOException {
-		server = new ServerSocket(port);
-	}
-	
-	public void Start() throws IOException {
-		while(running) {
-			connections.add(new Connection(server.accept()));
-		}
+		listener = new GroupChatListener(this, port);
+		listener.start();
 	}
 }
