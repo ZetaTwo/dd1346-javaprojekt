@@ -16,10 +16,10 @@ import se.kth.f.carlcarl.view.ProgramView;
 
 public class ProgramCtrl {
 	
-	static ProgramSettingsMdl programMdl;
-	static ProgramView programView;
-	static ArrayList<ChatCtrl> chatCtrls;
-	static ChatCtrl activeChat;
+	ProgramSettingsMdl programMdl;
+	ProgramView programView;
+	ArrayList<ChatCtrl> chatCtrls;
+	ChatCtrl activeChat;
 	
 	
 	public ProgramCtrl() throws IOException {
@@ -40,7 +40,7 @@ public class ProgramCtrl {
 					 
 					for(ChatCtrl s: chatCtrls){
 						if(s.getView() == pane) {
-							activeChat = s;
+							setActiveChat(s);
 							updateMessageComposer();	
 						}
 					}
@@ -85,10 +85,8 @@ public class ProgramCtrl {
 		
 	}
 	
-	public static void main(String[] args){
-		
+	public static void main(String[] args) {
 		ProgramCtrl.programView.setVisible(true);
-		
 		ProgramCtrl.programView.tabbedPane.addTab("Group chat 1", null, new ChatViewGroup());
 		ProgramCtrl.programView.tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 		ProgramCtrl.programView.tabbedPane.addTab("Single chat 1", null, new ChatViewSingle());
