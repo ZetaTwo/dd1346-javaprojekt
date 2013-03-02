@@ -79,4 +79,8 @@ public class ChatMdl {
 			connection.getOut().write(xmlData);
 		}
 	}
+
+	public MessageSettings getSettings() {
+		return messageSettings;
+	}
 }

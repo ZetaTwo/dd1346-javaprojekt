@@ -56,19 +56,8 @@ public class ProgramCtrl {
 		activeChat.UpdateSettings(programView.messageComposerView.getSettings());
 	}
 	
-	@SuppressWarnings("unused")
 	private void updateMessageComposer() {
-		
-		/*
-		programView.messageComposerView.setActiveColor(activeChat.chatMdl.messageSettings.getColor());
-		programView.messageComposerView.setText(activeChat.chatMdl.messageSettings.getText());
-		programView.messageComposerView.setEncryption(activeChat.chatMdl.messageSettings.getEncryption());
-		if(!activeChat.chatMdl.messageSettings.getBold().equals(programView.messageComposerView.isBold())){
-			programView.messageComposerView.setBold();
-		}
-		if(!activeChat.chatMdl.messageSettings.getItalics().equals(programView.messageComposerView.isItalics())){
-			programView.messageComposerView.setItalics();
-		}*/
+		programView.messageComposerView.UpdateSEttings(activeChat.getSettings());
 	}
 
 	public void setActiveChat(ChatCtrl chat) {

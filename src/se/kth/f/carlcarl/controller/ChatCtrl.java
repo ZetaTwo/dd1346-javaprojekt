@@ -13,4 +13,8 @@ public class ChatCtrl {
 	public void UpdateSettings(MessageSettings settings) {
 		model.UpdateSettings(settings);
 	}
+
+	public MessageSettings getSettings() {
+		return model.getSettings();
+	}
 }

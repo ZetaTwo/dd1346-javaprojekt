@@ -93,6 +93,18 @@ public class MessageComposerView extends JPanel {
 		return result;
 	}
 	
+	public void UpdateSEttings(MessageSettings settings) {
+		setActiveColor(settings.getColor());
+		setText(settings.getText());
+		setEncryption(settings.getEncryption());
+		if(!isBold() == settings.getBold()){
+			setBold();
+		}
+		if(!isItalics() == settings.getItalics()){
+			setItalics();
+		}
+	}
+	
 	public String getText() {
 		String text = editorPane.getText();
 		text = text.replaceAll("</?(?:(?!(?:[bi]|font)\\b)[^>])*>", ""); //Remove everything except <b>, <i>, <font>
