@@ -18,7 +18,6 @@ import se.kth.f.carlcarl.scrapbook.TestDialog;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 
 public class ProgramView extends JFrame {
 
@@ -31,18 +30,7 @@ public class ProgramView extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		ProgramView frame = new ProgramView(null);
-		frame.tabbedPane.addTab("Group chat 1", null, new ChatViewGroup());
-		frame.tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
-		frame.tabbedPane.addTab("Single chat 1", null, new ChatViewSingle());
-		frame.tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
-		frame.tabbedPane.addTab("Group chat 2", null, new ChatViewGroup());
-		frame.tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
-		
-		frame.setVisible(true);
-	}
-
+	
 	/**
 	 * Create the frame.
 	 */
