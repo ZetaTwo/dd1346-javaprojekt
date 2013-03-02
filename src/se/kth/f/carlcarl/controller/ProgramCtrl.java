@@ -20,7 +20,7 @@ public class ProgramCtrl {
 		programView = new ProgramView(this);
 	}
 	
-	protected void SaveMessageSettings() {	
+	protected void SaveMessageSettings() {
 		if(activeChat != null) {
 			activeChat.UpdateSettings(programView.messageComposerView.getSettings());
 		}
