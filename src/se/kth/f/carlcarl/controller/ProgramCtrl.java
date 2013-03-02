@@ -84,4 +84,8 @@ public class ProgramCtrl {
 		ctrl.programView.tabbedPane.addTab("Group chat 2", null, new ChatViewGroup());
 		ctrl.programView.tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);*/
 	}
+
+	public void Send(String text, String encryption) {
+		activeChat.Send(text, encryption);
+	}
 }

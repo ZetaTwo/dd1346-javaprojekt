@@ -5,23 +5,46 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-public class ChatMdl {
+import se.kth.f.carlcarl.controller.ChatCtrl;
+
+public class ChatMdl extends Thread {
 	ArrayList<String> messages = new ArrayList<String>();
 	ArrayList<String> users = new ArrayList<String>();
 	protected ArrayList<Connection> connections = new ArrayList<Connection>();
 	MessageSettings messageSettings = new MessageSettings();
 	protected boolean running = true;
+	ChatCtrl owner;
 	
-	protected ChatMdl() {
-		
+	protected ChatMdl(ChatCtrl ctrl) {
+		owner = ctrl;
 	}
 	
-	public ChatMdl(String adress, int port) throws UnknownHostException, IOException {
+	public ChatMdl(ChatCtrl ctrl, String adress, int port) throws UnknownHostException, IOException {
+		owner = ctrl;
 		Connect(adress, port);
 	}
 	
 	public void UpdateSettings(MessageSettings settings) {
 		messageSettings = settings;
+	}
+	
+	public void run() {
+		while(running) {
+			for(Connection conn : connections) {
+				String incoming = "";
+				try {
+					while(conn.in.ready()) {
+						incoming += conn.in.readLine();
+					}
+					if(!incoming.isEmpty()) {
+						owner.RecieveMessage(incoming, "Other");
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
 	}
 	
 	public void Connect(String host, int port) throws UnknownHostException, IOException {
@@ -85,7 +108,7 @@ public class ChatMdl {
 	
 	private void postMessage(String xmlData) {
 		for(Connection connection : connections) {
-			connection.getOut().write(xmlData);
+			connection.getOut().println(xmlData);
 		}
 	}
 

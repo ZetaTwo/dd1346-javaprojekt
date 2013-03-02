@@ -17,7 +17,8 @@ public class ChatCtrl {
 	}
 	
 	public ChatCtrl(String adress, int port) throws UnknownHostException, IOException {
-		model = new ChatMdl(adress, port);
+		model = new ChatMdl(this, adress, port);
+		model.start();
 		view = new ChatViewSingle();
 	}
 	
@@ -31,5 +32,14 @@ public class ChatCtrl {
 	
 	public ChatView getView() {
 		return view;
+	}
+	
+	public void RecieveMessage(String message, String user) {
+		view.addMessage(message, user);
+	}
+
+	public void Send(String text, String encryption) {
+		model.sendMessage(text, "Chat User");
+		view.addMessage(text, "Chat User");
 	}
 }

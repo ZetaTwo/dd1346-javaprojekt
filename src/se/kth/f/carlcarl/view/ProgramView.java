@@ -175,9 +175,10 @@ public class ProgramView extends JFrame {
 	}
 	
 	private void Send() {
-		//TODO: Invoke controller
-		//String text = messageComposerView.getText();
-		//String encryption = messageComposerView.getEncryption();
+		String text = messageComposerView.getText();
+		String encryption = messageComposerView.getEncryption();
+		
+		ctrl.Send(text, encryption);
 	}
 	
 	private void SendFile() {

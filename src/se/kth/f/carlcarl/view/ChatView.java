@@ -12,4 +12,8 @@ public class ChatView extends JPanel {
 
 	}
 
+	public void addMessage(String text, String string) {
+		
+	}
+
 }
