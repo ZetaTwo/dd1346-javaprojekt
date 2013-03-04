@@ -41,16 +41,18 @@ public class ChatCtrl {
 	}
 
 	public void Send(String text, String encryption) {
-		model.sendMessage(text, "Chat User");
-		view.addMessage(text, "Chat User");
+		String username = owner.getSettings().getUserName();
+		model.sendMessage(text, username);
+		view.addMessage(text, username);
 	}
 	
 	public void ProcessChatMessage(String message, String username) {
 		view.addMessage(message, username);
 	}
 	
-	public void ProcessFileTransferRequest(String fileName, int fileSize, String message) {
-		owner.FileTransferRequest(fileName, fileSize, message);
+	public void ProcessFileTransferRequest(String username, String fileName, int fileSize, String message) {
+		boolean accept = owner.FileTransferRequest(username, fileName, fileSize, message);
+		model.sendFileResponse(accept, "", 50000, owner.getSettings().getUserName());
 	}
 	
 	public void ProcessFileTransferResponse(boolean reply, int port) {
@@ -58,16 +60,32 @@ public class ChatCtrl {
 	}
 	
 	public void ProcessChatRequest(String username) {
-		owner.ChatRequest(username);
+		boolean accept = owner.ChatRequest(true, username);
 	}
 	
 	public void ProcessDisconnect(String username) {
 		view.addMessage(" has disconnected.", username);
-		owner.Disconnect(this);
 	}
 	
 	public void ProcessKeyRequest(String type) {
-		//get relevant key
-		//model.sendkeyreponse
+		String key = "";
+		switch(type) {
+		case "RSA":
+			key = owner.getSettings().getRSAKey();
+			break;
+		case "Caesar":
+			key = String.valueOf(owner.getSettings().getCeasarKey());
+		default:
+			break;
+		}
+		
+		if(!key.isEmpty()) {
+			model.sendKeyresponse(owner.getSettings().getUserName(), key);
+		}
+	}
+
+	public void SendFileRequest(String user, String fileName, long fileSize,
+			String message) {
+		model.sendFile(fileName, message, fileSize, user);
 	}
 }

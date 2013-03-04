@@ -85,7 +85,7 @@ public class ProgramSettingsMdl {
 		return returnMdl;
 	}
 	
-	/*
+	
 	 public static void main(String[] args) {
 	 
 		ProgramSettingsMdl model = null;
@@ -93,7 +93,6 @@ public class ProgramSettingsMdl {
 		try {
 			model = open("filepath.ini");
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		model.setCeasarKey(2002);
@@ -103,10 +102,8 @@ public class ProgramSettingsMdl {
 		try {
 			model.save();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 	}
-	*/
 }

@@ -1,12 +1,16 @@
 package se.kth.f.carlcarl.view;
 
 import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.text.NumberFormat;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
@@ -19,6 +23,8 @@ public class SettingsView extends JFrame{
 
 	JTextField nameField;
 	JFormattedTextField portField;
+	
+	int result;
 	
 	public SettingsView(String name, int port) {
 		
@@ -43,8 +49,18 @@ public class SettingsView extends JFrame{
 		portField.setValue(port);
 		
 		JButton yesButton = new JButton("Ok");
-		JButton noButton = new JButton("Avbryt");
+		yesButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Ok();
+			}
+		});
 		
+		JButton noButton = new JButton("Avbryt");
+		noButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Cancel();
+			}
+		});
 		
 		// Lägger till komponenterna
 		Container contentPane = this.getContentPane();
@@ -86,6 +102,24 @@ public class SettingsView extends JFrame{
 		getContentPane().setLayout(layout);
 		pack();
 		setVisible(true);
+	}
+	
+	private void Ok() {
+		result = 1;
+		Close();
+	}
+	
+	private void Cancel() {
+		result = 0;
+		Close();
+	}
+	
+	private void Close() {
+		dispose();
+	}
+	
+	public int getResult() {
+		return result;
 	}
 	
 	public int getListeningPort() {

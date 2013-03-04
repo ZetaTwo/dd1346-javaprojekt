@@ -14,10 +14,13 @@ import javax.swing.SpringLayout;
 import javax.swing.JTabbedPane;
 
 import se.kth.f.carlcarl.controller.ProgramCtrl;
+import se.kth.f.carlcarl.model.ProgramSettingsMdl;
 import se.kth.f.carlcarl.scrapbook.TestDialog;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
 
 public class ProgramView extends JFrame {
 
@@ -138,19 +141,25 @@ public class ProgramView extends JFrame {
 	}
 	
 	private void HelpAbout() {
-		//TODO: Insert AboutBoxView
 		AboutBoxView aboutBox = new AboutBoxView();
 		aboutBox.setVisible(true);
 	}
 
 	private void EditSettings() {
-		//TODO: Insert SettingsView
-		/*
-		SettingsView settingsDialog = new SettingsView();
-		settingsDialog.Display();
-		//Process results
-		controller.editSettings(...);
-		*/
+		ProgramSettingsMdl settings = ctrl.getSettings();
+		SettingsView dialog = new SettingsView(settings.getUserName(), settings.getListeningPort());
+		dialog.setVisible(true);
+		
+		if(dialog.getResult() == 1) {
+			ctrl.getSettings().setListeningPort(dialog.getListeningPort());
+			ctrl.getSettings().setUserName(dialog.getName());
+			try {
+				ctrl.getSettings().save();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void Exit() {
@@ -182,12 +191,16 @@ public class ProgramView extends JFrame {
 	}
 	
 	private void SendFile() {
-		//TODO: Create send file window
-		TestDialog t = new TestDialog(this);
-		t.setVisible(true);
-		int res = t.getResult();
-		if(res > 0) {
-			System.out.println(t.getTestValue());
+		FileTransferStartView dialog = new FileTransferStartView(this);
+		dialog.setVisible(true);
+		
+		if(dialog.getResult() == 1) {
+			File file = new File(dialog.getFilePath());
+			long fileSize = file.length();
+			String fileName = file.getName();
+			String message = dialog.getMessage();
+			
+			ctrl.SendFileTransferRequest(fileName, fileSize, message);
 		}
 	}
 	

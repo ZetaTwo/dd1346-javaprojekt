@@ -76,11 +76,9 @@ public class ChatMdl extends Thread {
 		postMessage(messageData);
 	}
 	
-	public void sendFile(String filename, String message, String sender) {
-		int size = 0;
-		
+	public void sendFile(String filename, String message, long fileSize, String sender) {
 		String messageData = "<message sender=\"" + sender + "\">" + 
-				  "<filerequest name=\"" + filename + "\" size=\"" + size + "\">" + message + "</filerequest>" +
+				  "<filerequest name=\"" + filename + "\" size=\"" + fileSize + "\">" + message + "</filerequest>" +
 				 "</message>";
 				  
 		postMessage(messageData);

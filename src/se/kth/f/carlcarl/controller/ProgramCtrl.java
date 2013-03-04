@@ -3,8 +3,11 @@ package se.kth.f.carlcarl.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import se.kth.f.carlcarl.model.ProgramSettingsMdl;
 import se.kth.f.carlcarl.view.ChatView;
+import se.kth.f.carlcarl.view.FileTransferRequestView;
 import se.kth.f.carlcarl.view.ProgramView;
 
 public class ProgramCtrl {
@@ -76,22 +79,22 @@ public class ProgramCtrl {
 	public static void main(String[] args) throws IOException {
 		ProgramCtrl ctrl = new ProgramCtrl();
 		ctrl.Start();
-		
-		/*ctrl.programView.tabbedPane.addTab("Group chat 1", null, new ChatViewGroup());
-		ctrl.programView.tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
-		ctrl.programView.tabbedPane.addTab("Single chat 1", null, new ChatViewSingle());
-		ctrl.programView.tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
-		ctrl.programView.tabbedPane.addTab("Group chat 2", null, new ChatViewGroup());
-		ctrl.programView.tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);*/
 	}
 
 	public void Send(String text, String encryption) {
 		activeChat.Send(text, encryption);
 	}
 
-	public void FileTransferRequest(String fileName, int fileSize,
-			String message) {
-		// TODO Auto-generated method stub
+	public boolean FileTransferRequest(String user, String fileName, int fileSize, String message) {
+		FileTransferRequestView dialog = new FileTransferRequestView(programView, user, fileName, fileSize, message);
+		dialog.setVisible(true);
+		if(dialog.getResult() == 1) {
+			//Accept request
+			return true;
+		} else {
+			//Deny request
+			return false;
+		}
 		
 	}
 
@@ -100,13 +103,19 @@ public class ProgramCtrl {
 		
 	}
 
-	public void ChatRequest(String username) {
-		// TODO Auto-generated method stub
-		
+	public boolean ChatRequest(boolean groupChat, String username) {
+		if(username.isEmpty()) {
+			username = "Någon";
+		}
+		int answer = JOptionPane.showConfirmDialog(programView, username + " vill chatta med dig.", "Chattförfrågan", JOptionPane.YES_NO_OPTION);
+		return (answer == JOptionPane.YES_OPTION);		
+		 
 	}
 
-	public void Disconnect(ChatCtrl chatCtrl) {
-		// TODO Auto-generated method stub
+	public void SendFileTransferRequest(String fileName, long fileSize,
+			String message) {
+		String user = programMdl.getUserName();
+		activeChat.SendFileRequest(user, fileName, fileSize, message);
 		
 	}
 }
