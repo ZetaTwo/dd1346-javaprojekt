@@ -1,9 +1,7 @@
 package se.kth.f.carlcarl.model;
 
-import java.io.CharArrayReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -12,9 +10,6 @@ import java.util.Queue;
 
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
 
 import se.kth.f.carlcarl.controller.ChatCtrl;
 

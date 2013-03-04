@@ -1,5 +1,4 @@
 package se.kth.f.carlcarl.view;
-import javax.swing.JScrollPane;
 import javax.swing.SpringLayout;
 import javax.swing.JEditorPane;
 
