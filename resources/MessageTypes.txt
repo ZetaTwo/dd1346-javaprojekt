@@ -1,33 +1,97 @@
 == Meddelandetyper ==
-* ChatMessage
-  - Message
-  - User
 
-  -- implemented as: ProcessChatMessage(String message, String username)
+= ChatMessage =
+Attribut:
+  Message: String
+  User: String
+    
+Exempel 1:
+<message sender="USER">
+  <text>MESSAGE</text>
+</message>
+
+Exempel 2:
+<message sender="USER">
+  <encrypted type="CRYPTO">MESSAGE</encrypted>
+</message>
+
+Notera:
+  Message kan antingen vara okrypterat som i exempel 1 eller krypterat som i exempel 2 och då måste rätt dekryptering göras innan meddelandet kan skickas vidare.
+
+Anropa:
+  owner.ProcessChatMessage(Message, User)
   
-* FileTransferRequest
-  - FileName
-  - FileSize
-  - Message
+= FileTransferRequest =
+Attribut:
+  FileName: String
+  FileSize: int
+  Message: String
 
-  -- implemented as: ProcessFileTransferRequest(String fileName, int fileSize, String message)
+Exempel 1:
+<message sender="USER">
+  <filerequest name="FILENAME" size="FILESIZE">
+   MESSAGE
+  </filerequest>
+</message>
+
+Anropa:
+  owner.ProcessFileTransferRequest(String fileName, int fileSize, String message)  
+
+= FileTransferResponse =
+Attribut:
+  User: String
+  Reply: boolean
+  Port: int
+
+Exempel 1:
+<message sender="USER">
+  <fileresponse reply="REPLY (yes/no)" port="PORT">
+  </fileresponse>
+</message>
   
-* FileTransferResponse
-  - Reply
-  - Port
-
-  -- implemented as: ProcessFileTransferResponse(boolean reply, int port)
-
-* ChatRequest
-  - User
+Bearbetning:
+  Plocka ut FileName ur pendingfilerequests.
+  Om Reply == "no": 
+    anropa: owner.ProcessDenyFileTranser(String User, String FileName)
+  Om Reply == "yes":
+    skapa ett filetransferobjekt
+    anropa: owner.ProcessDoFileTransfer(FileTransfer transfer)
+    
+= ChatRequest =
+Attribut:
+  User: String
+  Message: String
   
-  -- implemented as: ProcessChatRequest(String username)
-
-* Disconnect
-
-  -- implemented as: ProcessDisconnect(String username)
-
-* KeyRequest
-  - Type
+Exempel 1:
+<message sender="USER">
+  <request>USER vill chatta.</request>
+</message>
   
-  -- implemented as: ProcessKeyRequest(String type)
+Anropa:
+  owner.ProcessChatRequest(String User, String Message)
+
+= Disconnect =
+Attribut:
+  User: String
+
+Exempel 1:
+<message sender="USER">
+  <disconnect />
+</message>
+
+Anropa:
+  owner.ProcessDisconnect(String User)
+
+= KeyRequest =
+Attribut:
+  User: String
+  Type: String
+  Message: String
+  
+Exempel 1:
+<message sender="USER">
+ <keyrequest type="TYPE">USER efterfrågade din nyckel för TYPE</keyrequest>
+</message>
+  
+Anropa:
+  owner.ProcessKeyRequest(String Type, String Message)
