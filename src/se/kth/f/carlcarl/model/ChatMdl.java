@@ -31,13 +31,9 @@ public class ChatMdl extends Thread {
 	public void run() {
 		while(running) {
 			for(Connection conn : connections) {
-				String incoming = "";
 				try {
-					while(conn.in.ready()) {
-						incoming += conn.in.readLine();
-					}
-					if(!incoming.isEmpty()) {
-						owner.RecieveMessage(incoming, "Other");
+					if(conn.in.ready()) {
+						ParseMessage(conn.in.readLine());
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -115,4 +111,11 @@ public class ChatMdl extends Thread {
 	public MessageSettings getSettings() {
 		return messageSettings;
 	}
+	
+	private void ParseMessage(String string) {
+		
+		
+		
+	}
+	
 }
