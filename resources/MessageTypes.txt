@@ -1,0 +1,33 @@
+== Meddelandetyper ==
+* ChatMessage
+  - Message
+  - User
+
+  -- implemented as: ProcessChatMessage(String message, String user)
+  
+* FileTransferRequest
+  - FileName
+  - FileSize
+  - Message
+
+  -- implemented as: ProcessFileTransferRequest(String fileName, int fileSize, String message)
+  
+* FileTransferResponse
+  - Reply
+  - Port
+
+  -- implemented as: ProcessFileTransferResponse(boolean reply, int port)
+
+* ChatRequest
+  - User
+  
+  -- implemented as: ProcessChatRequest(String username)
+
+* Disconnect
+
+  -- implemented as: ProcessDisconnect()
+
+* KeyRequest
+  - Type
+  
+  -- implemented as: ProcessKeyRequest(String type)
