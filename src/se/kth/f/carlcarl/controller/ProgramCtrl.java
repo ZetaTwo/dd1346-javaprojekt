@@ -43,7 +43,7 @@ public class ProgramCtrl {
 	public ChatView newChat(int port) {
 		ChatCtrl ctrl;
 		try {
-			ctrl = new GroupChatCtrl(port);
+			ctrl = new GroupChatCtrl(this, port);
 		} catch (IOException e) {
 			return null;
 		}
@@ -53,7 +53,7 @@ public class ProgramCtrl {
 	public ChatView connectChat(String adress, int port) {
 		ChatCtrl ctrl;
 		try {
-			ctrl = new ChatCtrl(adress, port);
+			ctrl = new ChatCtrl(this, adress, port);
 		} catch (IOException e) {
 			return null;
 		}
@@ -87,5 +87,26 @@ public class ProgramCtrl {
 
 	public void Send(String text, String encryption) {
 		activeChat.Send(text, encryption);
+	}
+
+	public void FileTransferRequest(String fileName, int fileSize,
+			String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void FileTransferResponse(boolean reply, int port) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void ChatRequest(String username) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void Disconnect(ChatCtrl chatCtrl) {
+		// TODO Auto-generated method stub
+		
 	}
 }

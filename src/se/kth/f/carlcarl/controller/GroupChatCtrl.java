@@ -7,7 +7,8 @@ import se.kth.f.carlcarl.view.ChatViewGroup;
 
 public class GroupChatCtrl extends ChatCtrl {
 
-	public GroupChatCtrl(int port) throws IOException {
+	public GroupChatCtrl(ProgramCtrl owner, int port) throws IOException {
+		super(owner);
 		model = new GroupChatMdl(this, port);
 		model.start();
 		view = new ChatViewGroup();

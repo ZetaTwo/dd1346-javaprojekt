@@ -3,7 +3,7 @@
   - Message
   - User
 
-  -- implemented as: ProcessChatMessage(String message, String user)
+  -- implemented as: ProcessChatMessage(String message, String username)
   
 * FileTransferRequest
   - FileName
@@ -25,7 +25,7 @@
 
 * Disconnect
 
-  -- implemented as: ProcessDisconnect()
+  -- implemented as: ProcessDisconnect(String username)
 
 * KeyRequest
   - Type
