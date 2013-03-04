@@ -1,9 +1,20 @@
 package se.kth.f.carlcarl.model;
 
+import java.io.CharArrayReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.*;
+import javax.xml.transform.stream.*;
 
 import se.kth.f.carlcarl.controller.ChatCtrl;
 
@@ -14,6 +25,9 @@ public class ChatMdl extends Thread {
 	MessageSettings messageSettings = new MessageSettings();
 	protected boolean running = true;
 	ChatCtrl owner;
+	
+	Queue<String> pendingFileRequests = new LinkedList<String>();
+	
 	
 	protected ChatMdl(ChatCtrl ctrl) {
 		owner = ctrl;
@@ -33,7 +47,7 @@ public class ChatMdl extends Thread {
 			for(Connection conn : connections) {
 				try {
 					if(conn.in.ready()) {
-						ParseMessage(conn.in.readLine());
+						ParseMessage(conn.socket.getInputStream());
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -112,10 +126,24 @@ public class ChatMdl extends Thread {
 		return messageSettings;
 	}
 	
-	private void ParseMessage(String string) {
+	private void ParseMessage(InputStream inputStream) throws IOException {
+		try {
+			// Create a factory
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			// Use document builder factory
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			//Parse the document
+			Document XMLDocument = builder.parse(inputStream);
+			
+			XMLDocument.getElementsByTagName("");
+
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		
 		
-	}
+	}    
 	
 }
