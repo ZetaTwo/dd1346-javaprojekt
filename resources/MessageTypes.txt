@@ -35,7 +35,7 @@ Exempel 1:
 </message>
 
 Anropa:
-  owner.ProcessFileTransferRequest(String fileName, int fileSize, String message)  
+  owner.ProcessFileTransferRequest(String sender, String fileName, int fileSize, String message)  
 
 = FileTransferResponse =
 Attribut:

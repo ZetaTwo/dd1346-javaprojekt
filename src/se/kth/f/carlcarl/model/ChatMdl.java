@@ -1,15 +1,20 @@
 package se.kth.f.carlcarl.model;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.io.StringReader;
 
 import org.w3c.dom.*;
+import org.xml.sax.InputSource;
+
 import javax.xml.parsers.*;
+
+
+>>>>>>> Added xml-parsing to chatMdl
 
 import se.kth.f.carlcarl.controller.ChatCtrl;
 
@@ -22,7 +27,6 @@ public class ChatMdl extends Thread {
 	ChatCtrl owner;
 	
 	Queue<String> pendingFileRequests = new LinkedList<String>();
-	
 	
 	protected ChatMdl(ChatCtrl ctrl) {
 		owner = ctrl;
@@ -39,10 +43,11 @@ public class ChatMdl extends Thread {
 	
 	public void run() {
 		while(running) {
-			for(Connection conn : connections) {
+			ArrayList<Connection> connectionsCopy = new ArrayList<>(connections);
+			for(Connection conn : connectionsCopy) {
 				try {
 					if(conn.in.ready()) {
-						ParseMessage(conn.socket.getInputStream());
+						ParseMessage(conn.in.readLine());
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -119,24 +124,59 @@ public class ChatMdl extends Thread {
 		return messageSettings;
 	}
 	
-	private void ParseMessage(InputStream inputStream) throws IOException {
+	private void ParseMessage(String string) throws IOException {
 		try {
-			// Create a factory
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			// Use document builder factory
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			//Parse the document
-			Document XMLDocument = builder.parse(inputStream);
+			InputSource is = new InputSource(new StringReader(string));
+			Document XMLDocument = builder.parse(is);
 			
-			XMLDocument.getElementsByTagName("");
-
+			Node root = XMLDocument.getFirstChild();
+			
+			String sender = root.getAttributes().getNamedItem("sender").getNodeValue();
+			Node child = root.getFirstChild();
+			
+			switch(child.getNodeName()) {
+			
+			case "text": 
+				owner.ProcessChatMessage(child.getNodeValue(), sender);
+				break;
+			case "encrypted":
+				String decryptedMessage = null;
+				String encryption = child.getAttributes().getNamedItem("type").getNodeValue();
+				switch(encryption) {
+				case "RSA":
+					break;
+				case "ceasar":
+					break;
+				default:
+					decryptedMessage = "unknown encryption";
+					break;
+				}
+				owner.ProcessChatMessage(decryptedMessage, sender);
+				break;
+			case "filerequest":
+				owner.ProcessFileTransferRequest(sender, child.getAttributes().getNamedItem("name").getNodeValue(), Integer.parseInt(child.getAttributes().getNamedItem("size").getNodeValue()), child.getNodeValue());
+				break;
+			case "fileresponse":
+				owner.ProcessFileTransferResponse(Boolean.parseBoolean(child.getAttributes().getNamedItem("reply").getNodeValue()), Integer.parseInt(child.getAttributes().getNamedItem("port").getNodeValue()));
+				break;
+			case "request":
+				owner.ProcessChatRequest(sender);
+				break;
+			case "disconnect":
+				owner.ProcessDisconnect(sender);
+				break;
+			case "keyrequest":
+				owner.ProcessKeyRequest(child.getAttributes().getNamedItem("type").getNodeValue());
+				break;
+			
+			}
+			
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
-		
 	}    
 	
 }
