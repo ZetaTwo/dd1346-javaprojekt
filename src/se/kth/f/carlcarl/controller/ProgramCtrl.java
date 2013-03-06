@@ -1,5 +1,6 @@
 package se.kth.f.carlcarl.controller;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -81,8 +82,13 @@ public class ProgramCtrl {
 		ctrl.Start();
 	}
 
-	public void Send(String text, String encryption) {
-		activeChat.Send(text, encryption);
+	public boolean Send(String text, String encryption, Color color) {
+		boolean result = activeChat != null;
+		if(result) {
+			activeChat.Send(text, encryption, color);
+		}
+		
+		return result;
 	}
 
 	public boolean FileTransferRequest(String user, String fileName, int fileSize, String message) {

@@ -30,6 +30,7 @@ import se.kth.f.carlcarl.model.MessageSettings;
 public class MessageComposerView extends JPanel {
 	private static final long serialVersionUID = 3010982094099123535L;
 
+	Color currentColor;
 	JButton boldButton, italicsButton, colorButton;
 	JTextPane editorPane;
 	JComboBox<String> encryptionComboBox;
@@ -57,8 +58,18 @@ public class MessageComposerView extends JPanel {
 		springLayout.putConstraint(SpringLayout.SOUTH, italicsButton, 0, SpringLayout.SOUTH, boldButton);
 		add(italicsButton);
 		
-		colorButton = new JButton();
-		colorButton.setAction(new ForegroundAction());
+		colorButton = new JButton("Color");
+		colorButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ColorChooserView dialog = new ColorChooserView();
+				dialog.setVisible(true);
+				
+				if(dialog.getResult() == 1) {
+					currentColor = dialog.getColor();
+				}
+			}
+		});
+		
 		springLayout.putConstraint(SpringLayout.NORTH, colorButton, 0, SpringLayout.NORTH, boldButton);
 		springLayout.putConstraint(SpringLayout.WEST, colorButton, 6, SpringLayout.EAST, italicsButton);
 		springLayout.putConstraint(SpringLayout.SOUTH, colorButton, 0, SpringLayout.SOUTH, boldButton);
@@ -150,11 +161,11 @@ public class MessageComposerView extends JPanel {
 	}
 	
 	public Color getActiveColor() {
-		return ((ForegroundAction) colorButton.getAction()).getColor();
+		return currentColor;
 	}
 	
 	public void setActiveColor(Color color) {
-		((ForegroundAction) colorButton.getAction()).setColor(color);
+		currentColor = color;
 	}
 	
 	class BoldAction extends StyledEditorKit.StyledTextAction {
@@ -246,7 +257,7 @@ public class MessageComposerView extends JPanel {
 		  }
 		}
 	
-	class ForegroundAction extends StyledEditorKit.StyledTextAction {
+	/*class ForegroundAction extends StyledEditorKit.StyledTextAction {
 
 		  private static final long serialVersionUID = 6384632651737400352L;
 		 
@@ -349,5 +360,9 @@ public class MessageComposerView extends JPanel {
 	          StyleConstants.setForeground(attr, color);
 	          setCharacterAttributes(editorPane, attr, false);
 		  }	  
+	}*/
+	
+	public void Clear() {
+		this.editorPane.setText("");
 	}
 }

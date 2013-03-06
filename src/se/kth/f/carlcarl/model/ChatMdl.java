@@ -1,15 +1,21 @@
 package se.kth.f.carlcarl.model;
 
+import java.awt.Color;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.io.StringReader;
 
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
+
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 import javax.xml.parsers.*;
 
@@ -22,15 +28,29 @@ public class ChatMdl extends Thread {
 	MessageSettings messageSettings = new MessageSettings();
 	protected boolean running = true;
 	ChatCtrl owner;
+	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	DocumentBuilder builder;
 	
 	Queue<String> pendingFileRequests = new LinkedList<String>();
 	
 	protected ChatMdl(ChatCtrl ctrl) {
 		owner = ctrl;
+		try {
+			builder = factory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public ChatMdl(ChatCtrl ctrl, String adress, int port) throws UnknownHostException, IOException {
 		owner = ctrl;
+		try {
+			builder = factory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Connect(adress, port);
 	}
 	
@@ -43,13 +63,18 @@ public class ChatMdl extends Thread {
 			ArrayList<Connection> connectionsCopy = new ArrayList<>(connections);
 			for(Connection conn : connectionsCopy) {
 				try {
-					if(conn.in.ready()) {
-						ParseMessage(conn.in.readLine());
+					if(conn != null) {
+						String data = "";
+						while(conn.in.ready()) {
+							data += conn.in.readLine();
+						}
+						if(!data.isEmpty()) {
+							ParseMessage(data);
+						}
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
 			}
 		}
 	}
@@ -65,9 +90,16 @@ public class ChatMdl extends Thread {
 		connections.add(connection);
 	}
 	
-	public void sendMessage(String htmlMessage, String sender) {
+	public void sendMessage(String htmlMessage, String sender, Color color) {
+		String colorString = String.format("#%06X", (0xFFFFFF & color.getRGB()));
+		
+		htmlMessage = htmlMessage.replace("<b>", "<fetstil>");
+		htmlMessage = htmlMessage.replace("</b>", "</fetstil>");
+		htmlMessage = htmlMessage.replace("<i>", "<kursiv>");
+		htmlMessage = htmlMessage.replace("</i>", "</kursiv>");
+		
 		String messageData = "<message sender=\"" + sender + "\">" + 
-							  "<text>" + htmlMessage + "</text>" +
+							  "<text color=\"" + colorString + "\">" + htmlMessage + "</text>" +
 							 "</message>";
 							  
 		postMessage(messageData);
@@ -123,24 +155,46 @@ public class ChatMdl extends Thread {
 	
 	private void ParseMessage(String string) throws IOException {
 		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			InputSource is = new InputSource(new StringReader(string));
-			Document XMLDocument = builder.parse(is);
+			//Create xml doc from string
+			String encoding = "latin1"; //UTF-8 or latin1
+			InputSource inputSource = new InputSource(new ByteArrayInputStream(string.getBytes(encoding)));
+			Document xmlDoc = builder.parse(inputSource);
+			Node root = xmlDoc.getFirstChild();
 			
-			Node root = XMLDocument.getFirstChild();
-			
-			String sender = root.getAttributes().getNamedItem("sender").getNodeValue();
+			//Get sender and root
+			String sender = root.getAttributes().getNamedItem("sender").getTextContent();
 			Node child = root.getFirstChild();
 			
+			//Process message
 			switch(child.getNodeName()) {
-			
-			case "text": 
-				owner.ProcessChatMessage(child.getNodeValue(), sender);
+			case "text":
+				//Serialize node content to text
+				Writer out = new StringWriter();
+				OutputFormat format = new OutputFormat(xmlDoc);
+				format.setOmitXMLDeclaration(true);
+				format.setEncoding("UTF-8");
+				XMLSerializer serializer = new XMLSerializer(out, format);
+				serializer.serialize(child);
+				String text = out.toString();
+				
+				//Convert styling tags
+				String colorString = child.getAttributes().getNamedItem("color").getTextContent();
+				Color color = Color.decode(colorString);
+				text = text.replace("<fetstil>", "<b>");
+				text = text.replace("</fetstil>", "</b>");
+				text = text.replace("<kursiv>", "<i>");
+				text = text.replace("</kursiv>", "</i>");
+				
+				
+				owner.ProcessChatMessage(text, sender, color);
 				break;
+				
 			case "encrypted":
+				//Prepare message and get encryption type
 				String decryptedMessage = null;
 				String encryption = child.getAttributes().getNamedItem("type").getNodeValue();
+				
+				//TODO: Decrypt correct type
 				switch(encryption) {
 				case "RSA":
 					break;
@@ -150,24 +204,30 @@ public class ChatMdl extends Thread {
 					decryptedMessage = "unknown encryption";
 					break;
 				}
-				owner.ProcessChatMessage(decryptedMessage, sender);
+				owner.ProcessChatMessage(decryptedMessage, sender, Color.black);
 				break;
+				
 			case "filerequest":
+				//Get file parameters
 				int size = Integer.parseInt(child.getAttributes().getNamedItem("size").getNodeValue());
 				String name = child.getAttributes().getNamedItem("name").getNodeValue();
 				String message = child.getNodeValue();
 				
 				owner.ProcessFileTransferRequest(sender, name, size, message);
 				break;
+				
 			case "fileresponse":
+				//Get response
 				boolean reply = Boolean.parseBoolean(child.getAttributes().getNamedItem("reply").getNodeValue());
 				int port = Integer.parseInt(child.getAttributes().getNamedItem("port").getNodeValue());
 				
+				//TODO: 
 				if(reply) {
 					owner.ProcessFileTransferResponse(reply, port);
-					break;
+				} else {
+					owner.ProcessChatMessage(sender + "nekade din filöverföring", "System", Color.black);
 				}
-				owner.ProcessChatMessage(sender + "nekade din filöverföring", "System");
+				
 				break;
 			case "request":
 				owner.ProcessChatRequest(sender);

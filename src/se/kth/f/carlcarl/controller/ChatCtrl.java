@@ -1,5 +1,6 @@
 package se.kth.f.carlcarl.controller;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
@@ -35,19 +36,15 @@ public class ChatCtrl {
 	public ChatView getView() {
 		return view;
 	}
-	
-	public void RecieveMessage(String message, String user) {
-		view.addMessage(message, user);
-	}
 
-	public void Send(String text, String encryption) {
+	public void Send(String text, String encryption, Color color) {
 		String username = owner.getSettings().getUserName();
-		model.sendMessage(text, username);
-		view.addMessage(text, username);
+		model.sendMessage(text, username, color);
+		view.addMessage(text, username, color);
 	}
 	
-	public void ProcessChatMessage(String message, String username) {
-		view.addMessage(message, username);
+	public void ProcessChatMessage(String message, String username, Color color) {
+		view.addMessage(message, username, color);
 	}
 	
 	public void ProcessFileTransferRequest(String username, String fileName, int fileSize, String message) {
@@ -64,7 +61,7 @@ public class ChatCtrl {
 	}
 	
 	public void ProcessDisconnect(String username) {
-		view.addMessage(" has disconnected.", username);
+		view.addMessage(" has disconnected.", username, Color.black);
 	}
 	
 	public void ProcessKeyRequest(String type) {

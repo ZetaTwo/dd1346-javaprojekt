@@ -15,8 +15,8 @@ import javax.swing.JTabbedPane;
 
 import se.kth.f.carlcarl.controller.ProgramCtrl;
 import se.kth.f.carlcarl.model.ProgramSettingsMdl;
-import se.kth.f.carlcarl.scrapbook.TestDialog;
 
+import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -147,12 +147,15 @@ public class ProgramView extends JFrame {
 
 	private void EditSettings() {
 		ProgramSettingsMdl settings = ctrl.getSettings();
-		SettingsView dialog = new SettingsView(settings.getUserName(), settings.getListeningPort());
+		SettingsView dialog = new SettingsView(this, settings.getUserName(), settings.getListeningPort());
 		dialog.setVisible(true);
 		
 		if(dialog.getResult() == 1) {
-			ctrl.getSettings().setListeningPort(dialog.getListeningPort());
-			ctrl.getSettings().setUserName(dialog.getName());
+			int port = dialog.getListeningPort();
+			ctrl.getSettings().setListeningPort(port);
+			
+			String name = dialog.getName();
+			ctrl.getSettings().setUserName(name);
 			try {
 				ctrl.getSettings().save();
 			} catch (IOException e) {
@@ -186,8 +189,11 @@ public class ProgramView extends JFrame {
 	private void Send() {
 		String text = messageComposerView.getText();
 		String encryption = messageComposerView.getEncryption();
+		Color color = messageComposerView.getActiveColor();
 		
-		ctrl.Send(text, encryption);
+		if(ctrl.Send(text, encryption, color)) {
+			messageComposerView.Clear();
+		}
 	}
 	
 	private void SendFile() {

@@ -1,18 +1,20 @@
 package se.kth.f.carlcarl.view;
 
 import java.awt.Container;
+import java.awt.Dialog;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
-public class SettingsView extends JFrame{
+public class SettingsView extends JDialog {
 	
 	/**
 	 * 
@@ -24,12 +26,11 @@ public class SettingsView extends JFrame{
 	
 	int result;
 	
-	public SettingsView(String name, int port) {
+	public SettingsView(Window parent, String name, int port) {
+		super(parent, "Inställningar", Dialog.ModalityType.APPLICATION_MODAL);
 		
 		// Titel och exitonclose
-		setTitle("Inställningar");
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
+		//setTitle("Inställningar");
 		
 		// Skapar komponenter
 		JLabel nameLabel = new JLabel("Name :");
@@ -96,10 +97,9 @@ public class SettingsView extends JFrame{
 		
 		setResizable(false);
 		
-		// Packar och visar
+		// Packar
 		getContentPane().setLayout(layout);
 		pack();
-		setVisible(true);
 	}
 	
 	private void Ok() {
@@ -121,7 +121,7 @@ public class SettingsView extends JFrame{
 	}
 	
 	public int getListeningPort() {
-		return (int)portField.getValue();
+		return Integer.parseInt(portField.getText());
 	}
 	
 	public String getName() {
@@ -129,4 +129,3 @@ public class SettingsView extends JFrame{
 	}
 	
 }
-

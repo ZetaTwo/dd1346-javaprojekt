@@ -75,7 +75,7 @@ public class ProgramSettingsMdl {
 		Ini ini = new Ini(saveFile);
 		
 		Preferences prefs = new IniPreferences(ini);
-        Preferences data = prefs.node("data");
+        Preferences data = prefs.node("Data");
 		
 		returnMdl.setListeningPort(data.getInt("ListeningPort", 0));
 		returnMdl.setUserName(data.get("Username", ""));
