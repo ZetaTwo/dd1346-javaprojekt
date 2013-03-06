@@ -152,11 +152,13 @@ public class ProgramView extends JFrame {
 		helpMenu.add(aboutItem);
 	}
 	
-	protected void CloseChat() {
+	private void CloseChat() {
 		ChatView closedView = ctrl.closeCurrentChat();
 		if(closedView != null) {
 			tabbedPane.remove(closedView);	
-			tabbedPane.setSelectedIndex(0);
+			if(tabbedPane.getTabCount() > 0) {
+				tabbedPane.setSelectedIndex(0);
+			}
 		}
 	}
 
