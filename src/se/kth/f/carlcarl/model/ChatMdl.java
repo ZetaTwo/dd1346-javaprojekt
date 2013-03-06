@@ -13,9 +13,6 @@ import org.xml.sax.InputSource;
 
 import javax.xml.parsers.*;
 
-
->>>>>>> Added xml-parsing to chatMdl
-
 import se.kth.f.carlcarl.controller.ChatCtrl;
 
 public class ChatMdl extends Thread {
@@ -156,10 +153,21 @@ public class ChatMdl extends Thread {
 				owner.ProcessChatMessage(decryptedMessage, sender);
 				break;
 			case "filerequest":
-				owner.ProcessFileTransferRequest(sender, child.getAttributes().getNamedItem("name").getNodeValue(), Integer.parseInt(child.getAttributes().getNamedItem("size").getNodeValue()), child.getNodeValue());
+				int size = Integer.parseInt(child.getAttributes().getNamedItem("size").getNodeValue());
+				String name = child.getAttributes().getNamedItem("name").getNodeValue();
+				String message = child.getNodeValue();
+				
+				owner.ProcessFileTransferRequest(sender, name, size, message);
 				break;
 			case "fileresponse":
-				owner.ProcessFileTransferResponse(Boolean.parseBoolean(child.getAttributes().getNamedItem("reply").getNodeValue()), Integer.parseInt(child.getAttributes().getNamedItem("port").getNodeValue()));
+				boolean reply = Boolean.parseBoolean(child.getAttributes().getNamedItem("reply").getNodeValue());
+				int port = Integer.parseInt(child.getAttributes().getNamedItem("port").getNodeValue());
+				
+				if(reply) {
+					owner.ProcessFileTransferResponse(reply, port);
+					break;
+				}
+				owner.ProcessChatMessage(sender + "nekade din filöverföring", "System");
 				break;
 			case "request":
 				owner.ProcessChatRequest(sender);
@@ -168,7 +176,8 @@ public class ChatMdl extends Thread {
 				owner.ProcessDisconnect(sender);
 				break;
 			case "keyrequest":
-				owner.ProcessKeyRequest(child.getAttributes().getNamedItem("type").getNodeValue());
+				String keyType = child.getAttributes().getNamedItem("type").getNodeValue();
+				owner.ProcessKeyRequest(keyType);
 				break;
 			
 			}
