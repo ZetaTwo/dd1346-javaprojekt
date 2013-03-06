@@ -140,6 +140,13 @@ public class ChatMdl extends Thread {
 	public void close(String sender) {
 		String messageData = "<message sender=\"" + sender + "\"><disconnect /></message>";
 		postMessage(messageData);
+		
+		ArrayList<Connection> connectionsCopy = new ArrayList<>(connections);
+		for(Connection conn : connectionsCopy) {
+			if(conn != null) {
+				conn.Close();
+			}
+		}
 		connections.clear();
 	}
 	
@@ -168,43 +175,11 @@ public class ChatMdl extends Thread {
 			//Process message
 			switch(child.getNodeName()) {
 			case "text":
-				//Serialize node content to text
-				Writer out = new StringWriter();
-				OutputFormat format = new OutputFormat(xmlDoc);
-				format.setOmitXMLDeclaration(true);
-				format.setEncoding("UTF-8");
-				XMLSerializer serializer = new XMLSerializer(out, format);
-				serializer.serialize(child);
-				String text = out.toString();
-				
-				//Convert styling tags
-				String colorString = child.getAttributes().getNamedItem("color").getTextContent();
-				Color color = Color.decode(colorString);
-				text = text.replace("<fetstil>", "<b>");
-				text = text.replace("</fetstil>", "</b>");
-				text = text.replace("<kursiv>", "<i>");
-				text = text.replace("</kursiv>", "</i>");
-				
-				
-				owner.ProcessChatMessage(text, sender, color);
+				ParseTextMessage(xmlDoc, sender, child);
 				break;
 				
 			case "encrypted":
-				//Prepare message and get encryption type
-				String decryptedMessage = null;
-				String encryption = child.getAttributes().getNamedItem("type").getNodeValue();
-				
-				//TODO: Decrypt correct type
-				switch(encryption) {
-				case "RSA":
-					break;
-				case "ceasar":
-					break;
-				default:
-					decryptedMessage = "unknown encryption";
-					break;
-				}
-				owner.ProcessChatMessage(decryptedMessage, sender, Color.black);
+				ParseEncryptedMessage(sender, child);
 				break;
 				
 			case "filerequest":
@@ -246,6 +221,47 @@ public class ChatMdl extends Thread {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void ParseEncryptedMessage(String sender, Node child) {
+		//Prepare message and get encryption type
+		String decryptedMessage = null;
+		String encryption = child.getAttributes().getNamedItem("type").getNodeValue();
+		
+		//TODO: Decrypt correct type
+		switch(encryption) {
+		case "RSA":
+			break;
+		case "ceasar":
+			break;
+		default:
+			decryptedMessage = "unknown encryption";
+			break;
+		}
+		owner.ProcessChatMessage(decryptedMessage, sender, Color.black);
+	}
+
+	private void ParseTextMessage(Document xmlDoc, String sender, Node child)
+			throws IOException {
+		//Serialize node content to text
+		Writer out = new StringWriter();
+		OutputFormat format = new OutputFormat(xmlDoc);
+		format.setOmitXMLDeclaration(true);
+		format.setEncoding("UTF-8");
+		XMLSerializer serializer = new XMLSerializer(out, format);
+		serializer.serialize(child);
+		String text = out.toString();
+		
+		//Convert styling tags
+		String colorString = child.getAttributes().getNamedItem("color").getTextContent();
+		Color color = Color.decode(colorString);
+		text = text.replace("<fetstil>", "<b>");
+		text = text.replace("</fetstil>", "</b>");
+		text = text.replace("<kursiv>", "<i>");
+		text = text.replace("</kursiv>", "</i>");
+		
+		
+		owner.ProcessChatMessage(text, sender, color);
 	}    
 	
 }

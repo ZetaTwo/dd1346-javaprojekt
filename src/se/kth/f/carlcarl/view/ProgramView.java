@@ -66,6 +66,14 @@ public class ProgramView extends JFrame {
 			}
 		});
 		
+		JButton closeButton = new JButton("Close");
+		closeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CloseChat();
+			}
+		});
+		contentPane.add(closeButton);
+		
 		JButton sendButton = new JButton("Send");
 		sendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -80,11 +88,15 @@ public class ProgramView extends JFrame {
 				SendFile();
 			}
 		});
+		sl_contentPane.putConstraint(SpringLayout.WEST, closeButton, 0, SpringLayout.WEST, sendFileButton);
+		sl_contentPane.putConstraint(SpringLayout.EAST, closeButton, 0, SpringLayout.EAST, sendFileButton);
 		sl_contentPane.putConstraint(SpringLayout.WEST, sendButton, 0, SpringLayout.WEST, sendFileButton);
 		sl_contentPane.putConstraint(SpringLayout.EAST, sendButton, 0, SpringLayout.EAST, sendFileButton);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, sendFileButton, 0, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, sendFileButton, 0, SpringLayout.EAST, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, sendButton, -6, SpringLayout.NORTH, sendFileButton);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, closeButton, -6, SpringLayout.NORTH, sendButton);
+		
 		contentPane.add(sendFileButton);
 		
 		messageComposerView = new MessageComposerView();
@@ -140,6 +152,14 @@ public class ProgramView extends JFrame {
 		helpMenu.add(aboutItem);
 	}
 	
+	protected void CloseChat() {
+		ChatView closedView = ctrl.closeCurrentChat();
+		if(closedView != null) {
+			tabbedPane.remove(closedView);	
+			tabbedPane.setSelectedIndex(0);
+		}
+	}
+
 	private void HelpAbout() {
 		AboutBoxView aboutBox = new AboutBoxView();
 		aboutBox.setVisible(true);

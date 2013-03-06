@@ -23,6 +23,14 @@ public class Connection {
 		}
 	}
 	
+	public void Close() {
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public PrintWriter getOut() {
 		return out;
 	}

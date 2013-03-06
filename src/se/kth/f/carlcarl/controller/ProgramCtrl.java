@@ -124,4 +124,11 @@ public class ProgramCtrl {
 		activeChat.SendFileRequest(user, fileName, fileSize, message);
 		
 	}
+
+	public ChatView closeCurrentChat() {
+		ChatView result = activeChat.getView();
+		activeChat.Close();
+		
+		return result;
+	}
 }

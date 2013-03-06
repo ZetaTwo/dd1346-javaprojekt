@@ -61,7 +61,7 @@ public class ChatCtrl {
 	}
 	
 	public void ProcessDisconnect(String username) {
-		view.addMessage(" has disconnected.", username, Color.black);
+		view.addMessage(username + " has disconnected.", "System", Color.black);
 	}
 	
 	public void ProcessKeyRequest(String type) {
@@ -84,5 +84,10 @@ public class ChatCtrl {
 	public void SendFileRequest(String user, String fileName, long fileSize,
 			String message) {
 		model.sendFile(fileName, message, fileSize, user);
+	}
+
+	public void Close() {
+		String username = owner.getSettings().getUserName();
+		model.close(username);
 	}
 }
