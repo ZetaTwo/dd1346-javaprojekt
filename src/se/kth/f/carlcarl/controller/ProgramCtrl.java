@@ -105,7 +105,8 @@ public class ProgramCtrl {
 	}
 
 	public void FileTransferResponse(boolean reply, int port) {
-		// TODO Auto-generated method stub
+		// TODO filöverföring
+		// skapa filetransferview, en filetransfertråd, göra oberserver/oberservable, öppna en socket
 		
 	}
 

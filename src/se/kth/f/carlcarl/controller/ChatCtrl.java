@@ -49,6 +49,10 @@ public class ChatCtrl {
 	
 	public void ProcessFileTransferRequest(String username, String fileName, int fileSize, String message) {
 		boolean accept = owner.FileTransferRequest(username, fileName, fileSize, message);
+		
+		// TODO Filöverföring 
+		// om ja, skapa en filöverföringstråd och view, koppla ihop med avsändaren.
+		
 		model.sendFileResponse(accept, "", 50000, owner.getSettings().getUserName());
 	}
 	

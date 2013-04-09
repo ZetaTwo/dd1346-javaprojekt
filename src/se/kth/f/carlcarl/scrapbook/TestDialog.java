@@ -88,7 +88,6 @@ public class TestDialog extends JDialog {
 	}
 
 	private void Ok() {
-		// TODO Auto-generated method stub
 		result = 1;
 		Close();
 	}

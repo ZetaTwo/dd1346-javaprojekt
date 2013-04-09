@@ -38,7 +38,6 @@ public class ChatMdl extends Thread {
 		try {
 			builder = factory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -48,7 +47,6 @@ public class ChatMdl extends Thread {
 		try {
 			builder = factory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Connect(adress, port);
@@ -196,11 +194,11 @@ public class ChatMdl extends Thread {
 				boolean reply = Boolean.parseBoolean(child.getAttributes().getNamedItem("reply").getNodeValue());
 				int port = Integer.parseInt(child.getAttributes().getNamedItem("port").getNodeValue());
 				
-				//TODO: 
+				//TODO: Filöverföring
 				if(reply) {
 					owner.ProcessFileTransferResponse(reply, port);
 				} else {
-					owner.ProcessChatMessage(sender + "nekade din filöverföring", "System", Color.black);
+					owner.ProcessChatMessage(sender + " nekade din filöverföring", "System", Color.black);
 				}
 				
 				break;
