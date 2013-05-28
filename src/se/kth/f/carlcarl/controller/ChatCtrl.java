@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 import se.kth.f.carlcarl.model.ChatMdl;
+import se.kth.f.carlcarl.model.EncryptionHandler;
 import se.kth.f.carlcarl.model.MessageSettings;
 import se.kth.f.carlcarl.view.ChatView;
 import se.kth.f.carlcarl.view.ChatViewSingle;
@@ -37,9 +38,21 @@ public class ChatCtrl {
 		return view;
 	}
 
-	public void Send(String text, String encryption, Color color) {
+	public void Send(String text, EncryptionHandler.Encryption encryption, Color color) {
 		String username = owner.getSettings().getUserName();
-		model.sendMessage(text, username, color);
+        String key = "";
+        switch(encryption) {
+            case CASEAR:
+                key = Integer.toString(owner.getSettings().getCeasarKey());
+                break;
+            case AES:
+                key = owner.getSettings().getAESKey();
+                break;
+            default:
+                break;
+        }
+
+		model.sendMessage(text, username, color, encryption, key);
 		view.addMessage(text, username, color);
 	}
 	
@@ -50,8 +63,8 @@ public class ChatCtrl {
 	public void ProcessFileTransferRequest(String username, String fileName, int fileSize, String message) {
 		boolean accept = owner.FileTransferRequest(username, fileName, fileSize, message);
 		
-		// TODO Filöverföring 
-		// om ja, skapa en filöverföringstråd och view, koppla ihop med avsändaren.
+		// TODO Filï¿½verfï¿½ring 
+		// om ja, skapa en filï¿½verfï¿½ringstrï¿½d och view, koppla ihop med avsï¿½ndaren.
 		
 		model.sendFileResponse(accept, "", 50000, owner.getSettings().getUserName());
 	}
@@ -72,7 +85,7 @@ public class ChatCtrl {
 		String key = "";
 		switch(type) {
 		case "RSA":
-			key = owner.getSettings().getRSAKey();
+			key = owner.getSettings().getAESKey();
 			break;
 		case "Caesar":
 			key = String.valueOf(owner.getSettings().getCeasarKey());

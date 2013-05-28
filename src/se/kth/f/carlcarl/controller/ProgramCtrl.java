@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+import se.kth.f.carlcarl.model.EncryptionHandler;
 import se.kth.f.carlcarl.model.ProgramSettingsMdl;
 import se.kth.f.carlcarl.view.ChatView;
 import se.kth.f.carlcarl.view.FileTransferRequestView;
@@ -82,9 +83,20 @@ public class ProgramCtrl {
 		ctrl.Start();
 	}
 
-	public boolean Send(String text, String encryption, Color color) {
+	public boolean Send(String text, String encryptionString, Color color) {
 		boolean result = activeChat != null;
 		if(result) {
+            EncryptionHandler.Encryption encryption = EncryptionHandler.Encryption.NONE;
+            switch (encryptionString) {
+                case "Caesar":
+                    encryption = EncryptionHandler.Encryption.CASEAR;
+                    break;
+                case "AES":
+                    encryption = EncryptionHandler.Encryption.AES;
+                    break;
+                default:
+                    break;
+            }
 			activeChat.Send(text, encryption, color);
 		}
 		
@@ -99,8 +111,8 @@ public class ProgramCtrl {
 	}
 
 	public void FileTransferResponse(boolean reply, int port) {
-		// TODO filöverföring
-		// skapa filetransferview, en filetransfertråd, göra oberserver/oberservable, öppna en socket
+		// TODO filï¿½verfï¿½ring
+		// skapa filetransferview, en filetransfertrï¿½d, gï¿½ra oberserver/oberservable, ï¿½ppna en socket
 		
 	}
 

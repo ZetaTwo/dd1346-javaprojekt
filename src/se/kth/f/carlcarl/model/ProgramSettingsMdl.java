@@ -30,8 +30,8 @@ public class ProgramSettingsMdl {
 		privateKey.put("ceasar", ceasarKey);
 	}
 	
-	public void setRSAKey(String RSAKey) {
-		privateKey.put("RSA", RSAKey);
+	public void setRSAKey(String AESKey) {
+		privateKey.put("AES", AESKey);
 	}
 	
 	public int getListeningPort() {
@@ -46,8 +46,8 @@ public class ProgramSettingsMdl {
 		return (Integer)privateKey.get("ceasar");
 	}
 	
-	public String getRSAKey() {
-		return (String)privateKey.get("RSA");
+	public String getAESKey() {
+		return (String)privateKey.get("AES");
 	}
 	
 	public void save() throws IOException {
@@ -58,7 +58,7 @@ public class ProgramSettingsMdl {
 		ini.add("Data","Username", getUserName());
 		ini.add("Data","ListeningPort", getListeningPort());
 		ini.add("Data","CeasarKey", getCeasarKey());
-		ini.add("Data","RSAKey", getRSAKey());
+		ini.add("Data","AESKey", getAESKey());
 		ini.store();
 
 	}
@@ -79,7 +79,7 @@ public class ProgramSettingsMdl {
 		returnMdl.setListeningPort(data.getInt("ListeningPort", 0));
 		returnMdl.setUserName(data.get("Username", ""));
 		returnMdl.setCeasarKey(data.getInt("CeasarKey", 0));
-		returnMdl.setRSAKey(data.get("RSAKey", ""));		
+		returnMdl.setRSAKey(data.get("AESKey", ""));
 		
 		return returnMdl;
 	}
@@ -94,7 +94,7 @@ public class ProgramSettingsMdl {
 			e1.printStackTrace();
             return;
 		}
-		model.setCeasarKey(2002);
+		model.setCeasarKey(13);
 		model.setListeningPort(20030);
 		model.setUserName("Carl");
 		model.setRSAKey("ksanfdpijanfu9qh318412");

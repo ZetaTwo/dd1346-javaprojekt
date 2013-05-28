@@ -69,7 +69,7 @@ public class MessageComposerView extends JPanel {
 		add(colorButton);
 		
 		encryptionComboBox = new JComboBox<>();
-		encryptionComboBox.setModel(new DefaultComboBoxModel<>(new String[] {"Caesar", "RSA"}));
+		encryptionComboBox.setModel(new DefaultComboBoxModel<>(new String[] {"Okrypterat", "Caesar", "AES"}));
 		springLayout.putConstraint(SpringLayout.NORTH, encryptionComboBox, 0, SpringLayout.NORTH, boldButton);
 		springLayout.putConstraint(SpringLayout.WEST, encryptionComboBox, 6, SpringLayout.EAST, colorButton);
 		springLayout.putConstraint(SpringLayout.SOUTH, encryptionComboBox, 0, SpringLayout.SOUTH, boldButton);

@@ -74,31 +74,36 @@ public class ChatMdl extends Thread {
 					e.printStackTrace();
 				}
 			}
+            try {
+                Thread.sleep(50);
+            } catch (Exception e) {
+
+            }
 		}
 	}
 	
 	public void Connect(String host, int port) throws UnknownHostException, IOException {
 		Socket target = new Socket(host, port);
-		Connection conection = new Connection(target);
-		
-		addConnection(conection);
+		Connection connection = new Connection(target);
+		addConnection(connection);
 	}
 	
 	public void addConnection(Connection connection) {
 		connections.add(connection);
 	}
 	
-	public void sendMessage(String htmlMessage, String sender, Color color) {
+	public void sendMessage(String htmlMessage, String sender, Color color, EncryptionHandler.Encryption encryption, String key) {
 		String colorString = String.format("#%06X", (0xFFFFFF & color.getRGB()));
 		
 		htmlMessage = htmlMessage.replace("<b>", "<fetstil>");
 		htmlMessage = htmlMessage.replace("</b>", "</fetstil>");
 		htmlMessage = htmlMessage.replace("<i>", "<kursiv>");
 		htmlMessage = htmlMessage.replace("</i>", "</kursiv>");
+
+        String messageTag = "<text color=\"" + colorString + "\">" + htmlMessage + "</text>";
+        String messageFinal = EncryptionHandler.Encrypt(encryption, messageTag, key);
 		
-		String messageData = "<message sender=\"" + sender + "\">" + 
-							  "<text color=\"" + colorString + "\">" + htmlMessage + "</text>" +
-							 "</message>";
+		String messageData = "<message sender=\"" + sender + "\">" + messageFinal + "</message>";
 							  
 		postMessage(messageData);
 	}
@@ -158,10 +163,10 @@ public class ChatMdl extends Thread {
 		return messageSettings;
 	}
 	
-	private void ParseMessage(String string) throws IOException {
+	private void ParseMessage(String string) {
 		try {
 			//Create xml doc from string
-			String encoding = "latin1"; //UTF-8 or latin1
+			String encoding = "utf-8"; //UTF-8 or latin1
 			InputSource inputSource = new InputSource(new ByteArrayInputStream(string.getBytes(encoding)));
 			Document xmlDoc = builder.parse(inputSource);
 			Node root = xmlDoc.getFirstChild();
@@ -175,7 +180,7 @@ public class ChatMdl extends Thread {
 			case "text":
 				ParseTextMessage(xmlDoc, sender, child);
 				break;
-				
+
 			case "encrypted":
 				ParseEncryptedMessage(sender, child);
 				break;
@@ -225,18 +230,22 @@ public class ChatMdl extends Thread {
 		//Prepare message and get encryption type
 		String decryptedMessage = null;
 		String encryption = child.getAttributes().getNamedItem("type").getNodeValue();
+        String encryptedMessage = child.getFirstChild().getNodeValue();
 		
 		//TODO: Decrypt correct type
 		switch(encryption) {
-		case "RSA":
+		case "AES":
+            decryptedMessage = EncryptionHandler.Decrypt(EncryptionHandler.Encryption.AES, encryptedMessage, "13");
 			break;
-		case "ceasar":
+		case "caesar":
+            decryptedMessage = EncryptionHandler.Decrypt(EncryptionHandler.Encryption.CASEAR, encryptedMessage, "13");
 			break;
 		default:
-			decryptedMessage = "unknown encryption";
+			decryptedMessage = "<text>unknown encryption</text>";
 			break;
 		}
-		owner.ProcessChatMessage(decryptedMessage, sender, Color.black);
+        ParseMessage("<message sender=\""+sender+"\">" + decryptedMessage + "</message>");
+		//owner.ProcessChatMessage(decryptedMessage, sender, Color.black);
 	}
 
 	private void ParseTextMessage(Document xmlDoc, String sender, Node child)
