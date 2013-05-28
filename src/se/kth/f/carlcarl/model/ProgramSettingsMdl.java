@@ -13,7 +13,7 @@ public class ProgramSettingsMdl {
 	
 	int listeningPort;
 	String username, filePath;
-	Map<String, Object> privateKey = new HashMap<String, Object>();
+	Map<String, Object> privateKey = new HashMap<>();
 	
 	private ProgramSettingsMdl() {
 	}
@@ -43,7 +43,7 @@ public class ProgramSettingsMdl {
 	}
 	
 	public int getCeasarKey() {
-		return (int)privateKey.get("ceasar");
+		return (Integer)privateKey.get("ceasar");
 	}
 	
 	public String getRSAKey() {
@@ -68,7 +68,6 @@ public class ProgramSettingsMdl {
 		returnMdl.filePath = path;
 		File saveFile = new File(path);
 		
-		
 		if(!saveFile.exists()) {
 			saveFile.createNewFile();
 		}
@@ -85,15 +84,15 @@ public class ProgramSettingsMdl {
 		return returnMdl;
 	}
 	
-	
 	 public static void main(String[] args) {
-	 
-		ProgramSettingsMdl model = null;
-		
+
+		ProgramSettingsMdl model;
+
 		try {
 			model = open("filepath.ini");
 		} catch (IOException e1) {
 			e1.printStackTrace();
+            return;
 		}
 		model.setCeasarKey(2002);
 		model.setListeningPort(20030);

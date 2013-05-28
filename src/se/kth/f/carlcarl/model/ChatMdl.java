@@ -22,16 +22,16 @@ import javax.xml.parsers.*;
 import se.kth.f.carlcarl.controller.ChatCtrl;
 
 public class ChatMdl extends Thread {
-	ArrayList<String> messages = new ArrayList<String>();
-	ArrayList<String> users = new ArrayList<String>();
-	protected ArrayList<Connection> connections = new ArrayList<Connection>();
+	ArrayList<String> messages = new ArrayList<>();
+	ArrayList<String> users = new ArrayList<>();
+	protected ArrayList<Connection> connections = new ArrayList<>();
 	MessageSettings messageSettings = new MessageSettings();
 	protected boolean running = true;
 	ChatCtrl owner;
 	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder builder;
 	
-	Queue<String> pendingFileRequests = new LinkedList<String>();
+	Queue<String> pendingFileRequests = new LinkedList<>();
 	
 	protected ChatMdl(ChatCtrl ctrl) {
 		owner = ctrl;
@@ -194,11 +194,11 @@ public class ChatMdl extends Thread {
 				boolean reply = Boolean.parseBoolean(child.getAttributes().getNamedItem("reply").getNodeValue());
 				int port = Integer.parseInt(child.getAttributes().getNamedItem("port").getNodeValue());
 				
-				//TODO: Filöverföring
+				//TODO: FilÃ¶verfÃ¶ring
 				if(reply) {
 					owner.ProcessFileTransferResponse(reply, port);
 				} else {
-					owner.ProcessChatMessage(sender + " nekade din filöverföring", "System", Color.black);
+					owner.ProcessChatMessage(sender + "nekade din filÃ¶verfÃ¶ring", "System", Color.black);
 				}
 				
 				break;

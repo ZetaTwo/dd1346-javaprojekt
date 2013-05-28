@@ -27,9 +27,8 @@ public class MessageComposerView extends JPanel {
 	JButton boldButton, italicsButton, colorButton;
 	JTextPane editorPane;
 	JComboBox<String> encryptionComboBox;
-	private final ButtonGroup buttonGroup = new ButtonGroup();
-	
-	/**
+
+    /**
 	 * Create the panel.
 	 */
 	public MessageComposerView() {
@@ -38,7 +37,8 @@ public class MessageComposerView extends JPanel {
 		
 		boldButton = new JButton("B");
 		boldButton.setAction(new BoldAction());
-		buttonGroup.add(boldButton);
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(boldButton);
 		springLayout.putConstraint(SpringLayout.NORTH, boldButton, 0, SpringLayout.NORTH, this);
 		springLayout.putConstraint(SpringLayout.WEST, boldButton, 0, SpringLayout.WEST, this);
 		add(boldButton);
@@ -68,8 +68,8 @@ public class MessageComposerView extends JPanel {
 		springLayout.putConstraint(SpringLayout.SOUTH, colorButton, 0, SpringLayout.SOUTH, boldButton);
 		add(colorButton);
 		
-		encryptionComboBox = new JComboBox<String>();
-		encryptionComboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"Caesar", "RSA"}));
+		encryptionComboBox = new JComboBox<>();
+		encryptionComboBox.setModel(new DefaultComboBoxModel<>(new String[] {"Caesar", "RSA"}));
 		springLayout.putConstraint(SpringLayout.NORTH, encryptionComboBox, 0, SpringLayout.NORTH, boldButton);
 		springLayout.putConstraint(SpringLayout.WEST, encryptionComboBox, 6, SpringLayout.EAST, colorButton);
 		springLayout.putConstraint(SpringLayout.SOUTH, encryptionComboBox, 0, SpringLayout.SOUTH, boldButton);
@@ -181,7 +181,7 @@ public class MessageComposerView extends JPanel {
 	    if (editor != null) {
 	      StyledEditorKit kit = getStyledEditorKit(editor);
 	      MutableAttributeSet attr = kit.getInputAttributes();
-	      boolean bold = (StyleConstants.isBold(attr)) ? false : true;
+	      boolean bold = (!StyleConstants.isBold(attr));
 	      SimpleAttributeSet sas = new SimpleAttributeSet();
 	      StyleConstants.setBold(sas, bold);
 	      setCharacterAttributes(editor, sas, false);
@@ -197,7 +197,7 @@ public class MessageComposerView extends JPanel {
 		  if(!isActive) {
 			  StyledEditorKit kit = getStyledEditorKit(editorPane);
 		      MutableAttributeSet attr = kit.getInputAttributes();
-		      boolean bold = (StyleConstants.isBold(attr)) ? false : true;
+		      boolean bold = (!StyleConstants.isBold(attr));
 		      SimpleAttributeSet sas = new SimpleAttributeSet();
 		      StyleConstants.setBold(sas, bold);
 		      setCharacterAttributes(editorPane, sas, false);
@@ -227,7 +227,7 @@ public class MessageComposerView extends JPanel {
 		    if (editor != null) {
 		      StyledEditorKit kit = getStyledEditorKit(editor);
 		      MutableAttributeSet attr = kit.getInputAttributes();
-		      boolean italic = (StyleConstants.isItalic(attr)) ? false : true;
+		      boolean italic = (!StyleConstants.isItalic(attr));
 		      SimpleAttributeSet sas = new SimpleAttributeSet();
 		      StyleConstants.setItalic(sas, italic);
 		      setCharacterAttributes(editor, sas, false);
@@ -242,7 +242,7 @@ public class MessageComposerView extends JPanel {
 		  public void activate() {
 		      StyledEditorKit kit = getStyledEditorKit(editorPane);
 		      MutableAttributeSet attr = kit.getInputAttributes();
-		      boolean italic = (StyleConstants.isItalic(attr)) ? false : true;
+		      boolean italic = (!StyleConstants.isItalic(attr));
 		      SimpleAttributeSet sas = new SimpleAttributeSet();
 		      StyleConstants.setItalic(sas, italic);
 		      setCharacterAttributes(editorPane, sas, false);

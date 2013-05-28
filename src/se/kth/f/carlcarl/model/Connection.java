@@ -17,12 +17,6 @@ public class Connection {
 		this.in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 	}
 	
-	public void Update() {
-		while(true) {
-			
-		}
-	}
-	
 	public void Close() {
 		try {
 			socket.close();

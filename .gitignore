@@ -12,3 +12,6 @@ programSettings.ini
 *.aux
 *.log
 *.synctex.gz
+
+*.iml
+.idea

@@ -4,20 +4,11 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.SpringLayout;
-import javax.swing.JTabbedPane;
 
 import se.kth.f.carlcarl.controller.ProgramCtrl;
 import se.kth.f.carlcarl.model.ProgramSettingsMdl;
@@ -34,8 +25,7 @@ import java.io.IOException;
 public class ProgramView extends JFrame {
 
 	private static final long serialVersionUID = -7022872006598970444L;
-	private JPanel contentPane;
-	public JTabbedPane tabbedPane;
+    public JTabbedPane tabbedPane;
 	public MessageComposerView messageComposerView;
 	ProgramCtrl ctrl;
 	int chatIndex = 1;
@@ -50,9 +40,9 @@ public class ProgramView extends JFrame {
 	public ProgramView(ProgramCtrl owner) {
 		this.ctrl = owner;
 		setTitle("CoC Chat");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 640);
-		contentPane = new JPanel();
+        JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		SpringLayout sl_contentPane = new SpringLayout();
@@ -297,7 +287,7 @@ public class ProgramView extends JFrame {
 	}
 	
 	public int IncomingChatRequest(String name) {
-		return JOptionPane.showConfirmDialog(null, name + " vill chatta med dig. Vill du?", "Inkommande chatförfrågan", JOptionPane.YES_NO_OPTION);
+		return JOptionPane.showConfirmDialog(null, name + " vill chatta med dig. Vill du?", "Inkommande chatfï¿½rfrï¿½gan", JOptionPane.YES_NO_OPTION);
 	}
 	
 	/* SettingsView v = new SetingsView();

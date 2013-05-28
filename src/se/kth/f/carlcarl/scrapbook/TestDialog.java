@@ -20,8 +20,7 @@ public class TestDialog extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = 3634791122563985158L;
-	private final JPanel contentPanel = new JPanel();
-	private JTextField textField;
+    private JTextField textField;
 	private int result;
 
 	/**
@@ -49,7 +48,8 @@ public class TestDialog extends JDialog {
 		
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+        JPanel contentPanel = new JPanel();
+        contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		SpringLayout sl_contentPanel = new SpringLayout();
 		contentPanel.setLayout(sl_contentPanel);

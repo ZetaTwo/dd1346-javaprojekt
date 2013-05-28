@@ -20,7 +20,7 @@ public class FileTransferView extends JDialog {
 	int result;
 
 	public FileTransferView(Window parent, File file) {
-		super(parent, "Filöverföring");
+		super(parent, "FilÃ¶verfÃ¶ring");
 		
 		String filename = file.getName();
 		

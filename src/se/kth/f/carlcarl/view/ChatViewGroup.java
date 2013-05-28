@@ -30,7 +30,7 @@ public class ChatViewGroup extends ChatView {
 		springLayout.putConstraint(SpringLayout.EAST, editorPane, 0, SpringLayout.EAST, scrollPane);
 		scrollPane.add(editorPane);*/
 		
-		JList<String> list = new JList<String>();
+		JList<String> list = new JList<>();
 		springLayout.putConstraint(SpringLayout.EAST, editorPane, -6, SpringLayout.WEST, list);
 		springLayout.putConstraint(SpringLayout.NORTH, list, 0, SpringLayout.NORTH, this);
 		springLayout.putConstraint(SpringLayout.WEST, list, -150, SpringLayout.EAST, this);

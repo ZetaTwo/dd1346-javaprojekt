@@ -94,13 +94,7 @@ public class ProgramCtrl {
 	public boolean FileTransferRequest(String user, String fileName, int fileSize, String message) {
 		FileTransferRequestView dialog = new FileTransferRequestView(programView, user, fileName, fileSize, message);
 		dialog.setVisible(true);
-		if(dialog.getResult() == 1) {
-			//Accept request
-			return true;
-		} else {
-			//Deny request
-			return false;
-		}
+        return dialog.getResult() == 1;
 		
 	}
 
@@ -112,9 +106,9 @@ public class ProgramCtrl {
 
 	public boolean ChatRequest(boolean groupChat, String username) {
 		if(username.isEmpty()) {
-			username = "Någon";
+			username = "Nï¿½gon";
 		}
-		int answer = JOptionPane.showConfirmDialog(programView, username + " vill chatta med dig.", "Chattförfrågan", JOptionPane.YES_NO_OPTION);
+		int answer = JOptionPane.showConfirmDialog(programView, username + " vill chatta med dig.", "Chattfï¿½rfrï¿½gan", JOptionPane.YES_NO_OPTION);
 		return (answer == JOptionPane.YES_OPTION);		
 		 
 	}
