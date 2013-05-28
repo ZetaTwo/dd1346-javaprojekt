@@ -1,12 +1,18 @@
 package se.kth.f.carlcarl.view;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -19,6 +25,7 @@ import se.kth.f.carlcarl.model.ProgramSettingsMdl;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -76,7 +83,24 @@ public class ProgramView extends JFrame {
 			}
 		});
 		
+		
+		Action actionListenerTabbed = new AbstractAction() {
+		      public void actionPerformed(ActionEvent actionEvent) {
+		        NextTab();
+		      }
+		 };
+		String ACTION_KEY_TABBED = "The Action";
+		KeyStroke tab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, java.awt.event.InputEvent.SHIFT_DOWN_MASK, false);
+		InputMap inputMapTabbed = tabbedPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		inputMapTabbed.put(tab, ACTION_KEY_TABBED);
+		ActionMap actionMapTabbed = tabbedPane.getActionMap();
+		actionMapTabbed.put(ACTION_KEY_TABBED, actionListenerTabbed);
+		tabbedPane.setActionMap(actionMapTabbed);
+		
+		
 		JButton closeButton = new JButton("Close");
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, closeButton, -10, SpringLayout.SOUTH, contentPane);
+		sl_contentPane.putConstraint(SpringLayout.EAST, closeButton, 0, SpringLayout.EAST, contentPane);
 		closeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CloseChat();
@@ -85,34 +109,50 @@ public class ProgramView extends JFrame {
 		contentPane.add(closeButton);
 		
 		JButton sendButton = new JButton("Send");
+		sl_contentPane.putConstraint(SpringLayout.WEST, sendButton, 0, SpringLayout.WEST, closeButton);
+		sl_contentPane.putConstraint(SpringLayout.EAST, sendButton, 0, SpringLayout.EAST, tabbedPane);
 		sendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Send();
 			}
 		});
+		
+	
+		 Action actionListener = new AbstractAction() {
+		      public void actionPerformed(ActionEvent actionEvent) {
+		        Send();
+		      }
+		 };
+		String ACTION_KEY = "The Action";
+		KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, java.awt.event.InputEvent.SHIFT_DOWN_MASK, false);
+		InputMap inputMap = sendButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		inputMap.put(enter, ACTION_KEY);
+		ActionMap actionMap = sendButton.getActionMap();
+		actionMap.put(ACTION_KEY, actionListener);
+		sendButton.setActionMap(actionMap);
+		
+		
+		
+		
 		contentPane.add(sendButton);
 		
 		JButton sendFileButton = new JButton("Send file");
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, sendButton, -6, SpringLayout.NORTH, sendFileButton);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, sendFileButton, -6, SpringLayout.NORTH, closeButton);
+		sl_contentPane.putConstraint(SpringLayout.EAST, sendFileButton, 0, SpringLayout.EAST, tabbedPane);
 		sendFileButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SendFile();
 			}
 		});
-		sl_contentPane.putConstraint(SpringLayout.WEST, closeButton, 0, SpringLayout.WEST, sendFileButton);
-		sl_contentPane.putConstraint(SpringLayout.EAST, closeButton, 0, SpringLayout.EAST, sendFileButton);
-		sl_contentPane.putConstraint(SpringLayout.WEST, sendButton, 0, SpringLayout.WEST, sendFileButton);
-		sl_contentPane.putConstraint(SpringLayout.EAST, sendButton, 0, SpringLayout.EAST, sendFileButton);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, sendFileButton, 0, SpringLayout.SOUTH, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.EAST, sendFileButton, 0, SpringLayout.EAST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, sendButton, -6, SpringLayout.NORTH, sendFileButton);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, closeButton, -6, SpringLayout.NORTH, sendButton);
 		
 		contentPane.add(sendFileButton);
 		
 		messageComposerView = new MessageComposerView();
+		sl_contentPane.putConstraint(SpringLayout.WEST, closeButton, 6, SpringLayout.EAST, messageComposerView);
 		sl_contentPane.putConstraint(SpringLayout.WEST, messageComposerView, 0, SpringLayout.WEST, contentPane);
-		sl_contentPane.putConstraint(SpringLayout.SOUTH, messageComposerView, 0, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, messageComposerView, -6, SpringLayout.WEST, sendFileButton);
+		sl_contentPane.putConstraint(SpringLayout.SOUTH, messageComposerView, 0, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, tabbedPane, -6, SpringLayout.NORTH, messageComposerView);
 		sl_contentPane.putConstraint(SpringLayout.NORTH, messageComposerView, -110, SpringLayout.SOUTH, contentPane);
 		contentPane.add(messageComposerView);
@@ -162,6 +202,18 @@ public class ProgramView extends JFrame {
 		helpMenu.add(aboutItem);
 	}
 	
+	protected void NextTab() {
+		int tabCount = tabbedPane.getTabCount();
+		int currentIndex = tabbedPane.getSelectedIndex();
+		if(tabCount - currentIndex == 1){
+			tabbedPane.setSelectedIndex(0);
+			return;
+		}
+		tabbedPane.setSelectedIndex(currentIndex + 1);
+		return;
+		
+	}
+
 	private void CloseChat() {
 		ChatView closedView = ctrl.closeCurrentChat();
 		if(closedView != null) {
@@ -219,6 +271,9 @@ public class ProgramView extends JFrame {
 	
 	private void Send() {
 		String text = messageComposerView.getText();
+		if(text.length() == 0){
+			return;
+		}
 		String encryption = messageComposerView.getEncryption();
 		Color color = messageComposerView.getActiveColor();
 		
