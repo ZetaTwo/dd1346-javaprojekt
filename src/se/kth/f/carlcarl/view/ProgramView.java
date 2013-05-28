@@ -1,11 +1,7 @@
 package se.kth.f.carlcarl.view;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
+import javax.swing.*;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -13,7 +9,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.KeyStroke;
 import javax.swing.SpringLayout;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
@@ -303,7 +298,7 @@ public class ProgramView extends JFrame {
 	/* SettingsView v = new SetingsView();
 	 * int result = v.show();
 	 * if(result > 0) {
-	 *      SPARA INSTÄLLNINGAR;
+	 *      SPARA INSTï¿½LLNINGAR;
 	 * }
 	 * 
 	 */

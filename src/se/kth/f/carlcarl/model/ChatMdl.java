@@ -238,21 +238,22 @@ public class ChatMdl extends Thread {
 		//Prepare message and get encryption type
 		String decryptedMessage = null;
 		String encryption = child.getAttributes().getNamedItem("type").getNodeValue();
+		String key = child.getAttributes().getNamedItem("key").getNodeValue();
         String encryptedMessage = child.getFirstChild().getNodeValue();
 		
-		//TODO: Decrypt correct type
+		//TODO: Use correct key
 		switch(encryption) {
-		case "AES":
-            decryptedMessage = EncryptionHandler.Decrypt(EncryptionHandler.Encryption.AES, encryptedMessage, "13");
+		case "aes":
+            decryptedMessage = EncryptionHandler.Decrypt(EncryptionHandler.Encryption.AES, encryptedMessage, key);
 			break;
 		case "caesar":
-            decryptedMessage = EncryptionHandler.Decrypt(EncryptionHandler.Encryption.CASEAR, encryptedMessage, "13");
+            decryptedMessage = EncryptionHandler.Decrypt(EncryptionHandler.Encryption.CASEAR, encryptedMessage, key);
 			break;
 		default:
 			decryptedMessage = "<text>unknown encryption</text>";
 			break;
 		}
-        ParseMessage("<message sender=\""+sender+"\">" + decryptedMessage + "</message>");
+        ParseMessage("<message sender=\"" + sender + "\">" + decryptedMessage + "</message>");
 		//owner.ProcessChatMessage(decryptedMessage, sender, Color.black);
 	}
 
@@ -268,7 +269,12 @@ public class ChatMdl extends Thread {
 		String text = out.toString();
 		
 		//Convert styling tags
-		String colorString = child.getAttributes().getNamedItem("color").getTextContent();
+		String colorString;
+        try {
+            colorString = child.getAttributes().getNamedItem("color").getTextContent();
+        } catch (Exception e) {
+            colorString = "#000000";
+        }
 		Color color = Color.decode(colorString);
 		text = text.replace("<fetstil>", "<b>");
 		text = text.replace("</fetstil>", "</b>");
