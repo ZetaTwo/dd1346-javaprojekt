@@ -68,6 +68,14 @@ public class ChatMdl extends Thread {
 						}
 						if(!data.isEmpty()) {
 							ParseMessage(data);
+							if(connectionsCopy.size() > 1){
+								for(Connection connect: connectionsCopy) {
+									if(connect != conn){
+										connect.getOut().println(data);
+										connect.getOut().flush();
+									}
+								}
+							}
 						}
 					}
 				} catch (IOException e) {
