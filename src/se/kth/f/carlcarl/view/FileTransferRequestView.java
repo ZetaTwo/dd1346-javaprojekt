@@ -24,7 +24,7 @@ public class FileTransferRequestView extends JDialog{
 	int result;
 
 	public FileTransferRequestView(Window parent, String user, String fileName, int fileSize, String message) {
-		super(parent, "Filöverföringsförfrågan", Dialog.ModalityType.APPLICATION_MODAL);
+		super(parent, "FilÃ¶verfÃ¶ringsfÃ¶rfrÃ¥gan", Dialog.ModalityType.APPLICATION_MODAL);
 		
 		setResizable(false);
 		
@@ -131,7 +131,7 @@ public class FileTransferRequestView extends JDialog{
 
 	public static void main(String[] args) {
 		try {
-			FileTransferRequestView dialog = new FileTransferRequestView(null, "Peter", "file.jpg", 1024, "Hej jag tänkte skicka med den här lilla filen jag hoppas att den är trevlig jag vet inte riktigt vad den innehåller med det är säkert bra i alla fall.");
+			FileTransferRequestView dialog = new FileTransferRequestView(null, "Peter", "file.jpg", 1024, "Hej jag tÃ¤nkte skicka med den hÃ¤r lilla filen jag hoppas att den Ã¤r trevlig jag vet inte riktigt vad den innehÃ¥ller men det Ã¤r sÃ¤kert bra i alla fall.");
 			dialog.setVisible(true);
 			
 		} catch (Exception e) {

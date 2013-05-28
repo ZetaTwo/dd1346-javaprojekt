@@ -1,12 +1,15 @@
 package se.kth.f.carlcarl.controller;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+import se.kth.f.carlcarl.model.Connection;
 import se.kth.f.carlcarl.model.EncryptionHandler;
+import se.kth.f.carlcarl.model.FileTransferMdl;
 import se.kth.f.carlcarl.model.ProgramSettingsMdl;
 import se.kth.f.carlcarl.view.ChatView;
 import se.kth.f.carlcarl.view.FileTransferRequestView;
@@ -107,28 +110,25 @@ public class ProgramCtrl {
 		FileTransferRequestView dialog = new FileTransferRequestView(programView, user, fileName, fileSize, message);
 		dialog.setVisible(true);
         return dialog.getResult() == 1;
-		
 	}
 
-	public void FileTransferResponse(boolean reply, int port) {
-		// TODO fil�verf�ring
-		// skapa filetransferview, en filetransfertr�d, g�ra oberserver/oberservable, �ppna en socket
-		
+	public void FileTransferResponse(Connection conn, boolean reply, int port, String filePath) {
+        FileTransferMdl.Connect(conn, port, filePath);
 	}
 
 	public boolean ChatRequest(boolean groupChat, String username) {
 		if(username.isEmpty()) {
-			username = "N�gon";
+			username = "Någon";
 		}
-		int answer = JOptionPane.showConfirmDialog(programView, username + " vill chatta med dig.", "Chattf�rfr�gan", JOptionPane.YES_NO_OPTION);
+		int answer = JOptionPane.showConfirmDialog(programView, username + " vill chatta med dig.", "Chattförfrågan", JOptionPane.YES_NO_OPTION);
 		return (answer == JOptionPane.YES_OPTION);		
 		 
 	}
 
-	public void SendFileTransferRequest(String fileName, long fileSize,
+	public void SendFileTransferRequest(File file, long fileSize,
 			String message) {
 		String user = programMdl.getUserName();
-		activeChat.SendFileRequest(user, fileName, fileSize, message);
+		activeChat.SendFileRequest(user, file, fileSize, message);
 		
 	}
 

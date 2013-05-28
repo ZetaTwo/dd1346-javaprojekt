@@ -284,21 +284,20 @@ public class ProgramView extends JFrame {
 		if(dialog.getResult() == 1) {
 			File file = new File(dialog.getFilePath());
 			long fileSize = file.length();
-			String fileName = file.getName();
 			String message = dialog.getMessage();
 			
-			ctrl.SendFileTransferRequest(fileName, fileSize, message);
+			ctrl.SendFileTransferRequest(file, fileSize, message);
 		}
 	}
 	
 	public int IncomingChatRequest(String name) {
-		return JOptionPane.showConfirmDialog(null, name + " vill chatta med dig. Vill du?", "Inkommande chatf�rfr�gan", JOptionPane.YES_NO_OPTION);
+		return JOptionPane.showConfirmDialog(null, name + " vill chatta med dig. Vill du?", "Inkommande chatförfrågan", JOptionPane.YES_NO_OPTION);
 	}
 	
 	/* SettingsView v = new SetingsView();
 	 * int result = v.show();
 	 * if(result > 0) {
-	 *      SPARA INST�LLNINGAR;
+	 *      SPARA INSTÄLLNINGAR;
 	 * }
 	 * 
 	 */

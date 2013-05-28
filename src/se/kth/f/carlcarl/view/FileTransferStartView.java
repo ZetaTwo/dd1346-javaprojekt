@@ -26,7 +26,7 @@ public class FileTransferStartView extends JDialog {
 	int result;
 	
 	public FileTransferStartView(Window parent) {
-		super(parent, "Filöverföring", Dialog.ModalityType.APPLICATION_MODAL);
+		super(parent, "FilÃ¶verfÃ¶ring", Dialog.ModalityType.APPLICATION_MODAL);
 				
 		setBounds(100, 100, 450, 300);
 		
@@ -104,7 +104,7 @@ public class FileTransferStartView extends JDialog {
 		result = 1;
 		File f = new File(this.getFilePath());
 		if(!f.exists() || f.isDirectory()){
-			JOptionPane.showMessageDialog(this, "Filen existerar inte", "Filöverföringsfel",JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Filen existerar inte", "FilÃ¶verfÃ¶ringsfel",JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		Close();

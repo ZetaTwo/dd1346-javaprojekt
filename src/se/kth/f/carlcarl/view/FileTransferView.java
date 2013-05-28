@@ -42,7 +42,7 @@ public class FileTransferView extends JDialog {
 		springLayout.putConstraint(SpringLayout.WEST, progressBar, 10, SpringLayout.WEST, getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, progressBar, -10, SpringLayout.EAST, getContentPane());
 		getContentPane().add(progressBar);
-		// TODO Filöverföring
+		// TODO Filï¿½verfï¿½ring
 		// Make observer;
 		
 		JLabel lblTidKvar = new JLabel("Tid kvar :");
@@ -75,7 +75,7 @@ public class FileTransferView extends JDialog {
 		springLayout.putConstraint(SpringLayout.EAST, btnAvbryt, 0, SpringLayout.EAST, progressBar);
 		getContentPane().add(btnAvbryt);
 		
-		JButton btnSlutfr = new JButton("Slutf\u00F6r");
+		JButton btnSlutfr = new JButton("SlutfÃ¶r");
 		btnSlutfr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Ok();
@@ -126,12 +126,12 @@ public class FileTransferView extends JDialog {
 	}
 	
 	private String timeLeft(){
-		// TODO Filöverföring
+		// TODO FilÃ¶verfÃ¶ring
 		return "";
 	}
 	
 	private String currentSpeed() {
-		// TODO Filöverföring
+		// TODO FilÃ¶verfÃ¶ring
 		return "";
 	}
 	

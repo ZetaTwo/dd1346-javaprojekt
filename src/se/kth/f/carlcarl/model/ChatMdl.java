@@ -1,10 +1,7 @@
 package se.kth.f.carlcarl.model;
 
 import java.awt.Color;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -67,7 +64,7 @@ public class ChatMdl extends Thread {
 							data += conn.in.readLine();
 						}
 						if(!data.isEmpty()) {
-							ParseMessage(data);
+							ParseMessage(conn, data);
 							if(connectionsCopy.size() > 1){
 								for(Connection connect: connectionsCopy) {
 									if(connect != conn){
@@ -116,7 +113,9 @@ public class ChatMdl extends Thread {
 		postMessage(messageData);
 	}
 	
-	public void sendFile(String filename, String message, long fileSize, String sender) {
+	public void sendFile(File file, String message, long fileSize, String sender) {
+        String filename = file.getName();
+        pendingFileRequests.add(file.getAbsolutePath());
 		String messageData = "<message sender=\"" + sender + "\">" + 
 				  "<filerequest name=\"" + filename + "\" size=\"" + fileSize + "\">" + message + "</filerequest>" +
 				 "</message>";
@@ -171,7 +170,7 @@ public class ChatMdl extends Thread {
 		return messageSettings;
 	}
 	
-	private void ParseMessage(String string) {
+	private void ParseMessage(Connection conn, String string) {
 		try {
 			//Create xml doc from string
 			String encoding = "utf-8"; //UTF-8 or latin1
@@ -190,7 +189,7 @@ public class ChatMdl extends Thread {
 				break;
 
 			case "encrypted":
-				ParseEncryptedMessage(sender, child);
+				ParseEncryptedMessage(conn, sender, child);
 				break;
 				
 			case "filerequest":
@@ -204,14 +203,15 @@ public class ChatMdl extends Thread {
 				
 			case "fileresponse":
 				//Get response
-				boolean reply = Boolean.parseBoolean(child.getAttributes().getNamedItem("reply").getNodeValue());
+                String replyStr = child.getAttributes().getNamedItem("reply").getNodeValue();
+				boolean reply = replyStr.equals("yes");
 				int port = Integer.parseInt(child.getAttributes().getNamedItem("port").getNodeValue());
 				
 				//TODO: Filöverföring
 				if(reply) {
-					owner.ProcessFileTransferResponse(reply, port);
+					owner.ProcessFileTransferResponse(conn, reply, port, pendingFileRequests.poll());
 				} else {
-					owner.ProcessChatMessage(sender + "nekade din filöverföring", "System", Color.black);
+					owner.ProcessChatMessage(sender + " nekade din filöverföring", "System", Color.black);
 				}
 				
 				break;
@@ -234,14 +234,13 @@ public class ChatMdl extends Thread {
 		}
 	}
 
-	private void ParseEncryptedMessage(String sender, Node child) {
+	private void ParseEncryptedMessage(Connection conn, String sender, Node child) {
 		//Prepare message and get encryption type
 		String decryptedMessage = null;
 		String encryption = child.getAttributes().getNamedItem("type").getNodeValue();
 		String key = child.getAttributes().getNamedItem("key").getNodeValue();
         String encryptedMessage = child.getFirstChild().getNodeValue();
-		
-		//TODO: Use correct key
+
 		switch(encryption) {
 		case "aes":
             decryptedMessage = EncryptionHandler.Decrypt(EncryptionHandler.Encryption.AES, encryptedMessage, key);
@@ -253,8 +252,7 @@ public class ChatMdl extends Thread {
 			decryptedMessage = "<text>unknown encryption</text>";
 			break;
 		}
-        ParseMessage("<message sender=\"" + sender + "\">" + decryptedMessage + "</message>");
-		//owner.ProcessChatMessage(decryptedMessage, sender, Color.black);
+        ParseMessage(conn, "<message sender=\"" + sender + "\">" + decryptedMessage + "</message>");
 	}
 
 	private void ParseTextMessage(Document xmlDoc, String sender, Node child)

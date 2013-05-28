@@ -1,10 +1,12 @@
 package se.kth.f.carlcarl.controller;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
 import se.kth.f.carlcarl.model.ChatMdl;
+import se.kth.f.carlcarl.model.Connection;
 import se.kth.f.carlcarl.model.EncryptionHandler;
 import se.kth.f.carlcarl.model.MessageSettings;
 import se.kth.f.carlcarl.view.ChatView;
@@ -69,8 +71,8 @@ public class ChatCtrl {
 		model.sendFileResponse(accept, "", 50000, owner.getSettings().getUserName());
 	}
 	
-	public void ProcessFileTransferResponse(boolean reply, int port) {
-		owner.FileTransferResponse(reply, port);
+	public void ProcessFileTransferResponse(Connection conn, boolean reply, int port, String file) {
+		owner.FileTransferResponse(conn, reply, port, file);
 	}
 	
 	public void ProcessChatRequest(String username) {
@@ -98,9 +100,9 @@ public class ChatCtrl {
 		}
 	}
 
-	public void SendFileRequest(String user, String fileName, long fileSize,
+	public void SendFileRequest(String user, File file, long fileSize,
 			String message) {
-		model.sendFile(fileName, message, fileSize, user);
+		model.sendFile(file, message, fileSize, user);
 	}
 
 	public void Close() {
