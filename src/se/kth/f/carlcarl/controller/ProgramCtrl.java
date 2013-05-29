@@ -115,14 +115,15 @@ public class ProgramCtrl {
 	public void FileTransferResponse(Connection conn, boolean reply, int port, String filePath) {
         FileTransferMdl.Connect(conn, port, filePath);
 	}
+	public void ChatRequest(Connection conn) {
+		ChatRequest(false, "N�gon", conn);
+	}
 
-	public boolean ChatRequest(boolean groupChat, String username) {
-		if(username.isEmpty()) {
-			username = "Någon";
+	public void ChatRequest(boolean groupChat, String username, Connection conn) {
+		int answer = JOptionPane.showConfirmDialog(programView, username + " vill chatta med dig.", "Chattf�rfr�gan", JOptionPane.YES_NO_OPTION);
+		if(answer == JOptionPane.YES_OPTION) {
+			
 		}
-		int answer = JOptionPane.showConfirmDialog(programView, username + " vill chatta med dig.", "Chattförfrågan", JOptionPane.YES_NO_OPTION);
-		return (answer == JOptionPane.YES_OPTION);		
-		 
 	}
 
 	public void SendFileTransferRequest(File file, long fileSize,
@@ -139,3 +140,5 @@ public class ProgramCtrl {
 		return result;
 	}
 }
+
+	
