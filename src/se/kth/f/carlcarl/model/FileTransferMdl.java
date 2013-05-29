@@ -7,7 +7,7 @@ public class FileTransferMdl extends Thread {
     Connection connection;
     boolean send = false;
     String filePath;
-    int fileSize;
+    long fileSize;
     int bytesProcessed = 0;
 
     public static FileTransferMdl Host(int port, String filePath, int fileSize) {
@@ -25,10 +25,11 @@ public class FileTransferMdl extends Thread {
 
         try {
             Connection newconn = new Connection(new Socket(conn.GetAdress(), port));
-            result.connect(newconn);
             result.send = true;
             result.filePath = filePath;
-            result.start();
+            File file = new File(filePath);
+            result.fileSize = file.length();
+            result.connect(newconn);
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -42,27 +43,11 @@ public class FileTransferMdl extends Thread {
 
     public void connect(Connection connection) {
         this.connection = connection;
+        start();
     }
 
     public void run() {
         if(send) {
-            File file = new File(filePath);
-            FileOutputStream in = null;
-
-            try {
-                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-                BufferedInputStream bis = new BufferedInputStream(connection.getSocket().getInputStream());
-                byte[] byteArray = new byte[1000];
-                int i=0;
-
-                while ((i = bis.read(byteArray)) != fileSize){ //in = int; byteArray = byte[]
-                    bos.write(byteArray, 0, i);
-                    bytesProcessed += i;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        } else {
             File file = new File(filePath);
             FileOutputStream in = null;
 
@@ -72,10 +57,34 @@ public class FileTransferMdl extends Thread {
                 BufferedOutputStream bos = new BufferedOutputStream(connection.getSocket().getOutputStream());
                 byte[] byteArray = new byte[1000];
                 int i=0;
-                while ((i = bis.read(byteArray)) != len){ //in = int; byteArray = byte[]
+
+                while ((i = bis.read(byteArray)) != -1){ //in = int; byteArray = byte[]
                     bos.write(byteArray, 0, i);
                     bytesProcessed += i;
                 }
+                bos.flush();
+                bos.close();
+                bis.close();
+            } catch (Exception e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        } else {
+            File file = new File(filePath);
+            FileOutputStream in = null;
+
+            try {
+                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                BufferedInputStream bis = new BufferedInputStream(connection.getSocket().getInputStream());
+                byte[] byteArray = new byte[1000];
+
+                int i=0;
+                while ((i = bis.read(byteArray)) != -1){ //in = int; byteArray = byte[]
+                    bos.write(byteArray, 0, i);
+                    bytesProcessed += i;
+                }
+                bos.flush();
+                bos.close();
+                bis.close();
             } catch (Exception e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
@@ -83,7 +92,7 @@ public class FileTransferMdl extends Thread {
 
     }
 
-    public int getFileSize() {
+    public long getFileSize() {
         return fileSize;
     }
 

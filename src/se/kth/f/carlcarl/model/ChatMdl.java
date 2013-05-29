@@ -206,8 +206,8 @@ public class ChatMdl extends Thread {
 				//Get file parameters
 				int size = Integer.parseInt(child.getAttributes().getNamedItem("size").getNodeValue());
 				String name = child.getAttributes().getNamedItem("name").getNodeValue();
-				String message = child.getNodeValue();
-				
+                String message = child.getTextContent();
+
 				owner.ProcessFileTransferRequest(sender, name, size, message);
 				break;
 				

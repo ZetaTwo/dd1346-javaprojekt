@@ -120,10 +120,12 @@ public class ProgramCtrl {
 	}
 
 	public void FileTransferResponse(Connection conn, boolean reply, int port, String filePath) {
-        FileTransferMdl.Connect(conn, port, filePath);
+        FileTransferMdl fileTransferMdl = FileTransferMdl.Connect(conn, port, filePath);
+        FileTransferView fileTransferView = new FileTransferView(programView, fileTransferMdl);
+        fileTransferView.setVisible(true);
 	}
 	public void ChatRequest(Connection conn) {
-		ChatRequest(false, "Någon", conn, "");
+		ChatRequest(false, "NÃ¥gon", conn, "");
 	}
 
 	public void ChatRequest(boolean groupChat, String username, Connection conn, String string) {
@@ -150,6 +152,7 @@ public class ProgramCtrl {
     public void CreateFileTransfer(String fileName, int fileSize) {
         FileTransferMdl fileTransfer = FileTransferMdl.Host(50000, fileName, fileSize);
         FileTransferView fileTransferView = new FileTransferView(programView, fileTransfer);
+        fileTransferView.setVisible(true);
     }
 }
 

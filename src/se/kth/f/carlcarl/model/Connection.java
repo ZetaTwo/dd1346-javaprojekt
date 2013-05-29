@@ -29,11 +29,11 @@ public class Connection {
     public Socket getSocket() {
         return socket;
     }
-	
+
 	public PrintWriter getOut() {
 		return out;
 	}
-	
+
 	public BufferedReader getIn() {
 		return in;
 	}

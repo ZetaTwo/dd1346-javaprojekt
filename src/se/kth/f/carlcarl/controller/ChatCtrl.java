@@ -69,7 +69,9 @@ public class ChatCtrl {
 	public void ProcessFileTransferRequest(String username, String fileName, int fileSize, String message) {
 		boolean accept = owner.FileTransferRequest(username, fileName, fileSize, message);
 
-        owner.CreateFileTransfer(fileName, fileSize);
+        if(accept) {
+            owner.CreateFileTransfer(fileName, fileSize);
+        }
 
         model.sendFileResponse(accept, "", 50000, owner.getSettings().getUserName());
 	}

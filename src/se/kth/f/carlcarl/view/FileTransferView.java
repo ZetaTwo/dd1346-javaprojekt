@@ -5,15 +5,11 @@ import se.kth.f.carlcarl.model.FileTransferMdl;
 import java.awt.Window;
 import java.io.File;
 
-import javax.swing.JDialog;
-import javax.swing.JProgressBar;
-import javax.swing.SpringLayout;
-import javax.swing.JLabel;
-import javax.swing.JButton;
+import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class FileTransferView extends JDialog {
+public class FileTransferView extends JDialog implements ActionListener {
 	
 	/**
 	 * 
@@ -21,8 +17,11 @@ public class FileTransferView extends JDialog {
 	private static final long serialVersionUID = -91035909390392840L;
 	int result;
     FileTransferMdl fileTransferMdl;
+    private final Timer timer = new Timer(40, this);
+    private final JProgressBar progressBar;
+    private final JButton btnSlutfr;
 
-	public FileTransferView(Window parent, FileTransferMdl fileTransferMdl) {
+    public FileTransferView(Window parent, FileTransferMdl fileTransferMdl) {
 		super(parent, "Filöverföring");
 		
 		this.fileTransferMdl = fileTransferMdl;
@@ -39,8 +38,9 @@ public class FileTransferView extends JDialog {
 		springLayout.putConstraint(SpringLayout.WEST, lblFilename, 6, SpringLayout.EAST, lblFil);
 		springLayout.putConstraint(SpringLayout.SOUTH, lblFilename, 0, SpringLayout.SOUTH, lblFil);
 		getContentPane().add(lblFilename);
-		
-		JProgressBar progressBar = new JProgressBar();
+
+        progressBar = new JProgressBar();
+        progressBar.setMaximum((int)fileTransferMdl.getFileSize());
 		springLayout.putConstraint(SpringLayout.NORTH, progressBar, 36, SpringLayout.SOUTH, lblFil);
 		springLayout.putConstraint(SpringLayout.WEST, progressBar, 10, SpringLayout.WEST, getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, progressBar, -10, SpringLayout.EAST, getContentPane());
@@ -59,7 +59,8 @@ public class FileTransferView extends JDialog {
 		getContentPane().add(label);
 		
 		JLabel label_1 = new JLabel(currentSpeed());
-		springLayout.putConstraint(SpringLayout.NORTH, label_1, 6, SpringLayout.SOUTH, progressBar);
+		springLayout.putConstraint(SpringLayout.NORTH, label_1, 6
+                , SpringLayout.SOUTH, progressBar);
 		springLayout.putConstraint(SpringLayout.EAST, label_1, 0, SpringLayout.EAST, progressBar);
 		getContentPane().add(label_1);
 		
@@ -77,13 +78,13 @@ public class FileTransferView extends JDialog {
 		springLayout.putConstraint(SpringLayout.SOUTH, btnAvbryt, -10, SpringLayout.SOUTH, getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, btnAvbryt, 0, SpringLayout.EAST, progressBar);
 		getContentPane().add(btnAvbryt);
-		
-		JButton btnSlutfr = new JButton("Slutför");
+
+        btnSlutfr = new JButton("Slutför");
 		btnSlutfr.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Ok();
-			}
-		});
+            public void actionPerformed(ActionEvent e) {
+                Ok();
+            }
+        });
 		btnSlutfr.setEnabled(false);
 		springLayout.putConstraint(SpringLayout.SOUTH, btnSlutfr, 0, SpringLayout.SOUTH, btnAvbryt);
 		springLayout.putConstraint(SpringLayout.EAST, btnSlutfr, -6, SpringLayout.WEST, btnAvbryt);
@@ -98,7 +99,9 @@ public class FileTransferView extends JDialog {
 		springLayout.putConstraint(SpringLayout.WEST, lblFilesize, 6, SpringLayout.EAST, lblFilstorlek);
 		springLayout.putConstraint(SpringLayout.SOUTH, lblFilesize, 0, SpringLayout.SOUTH, lblFilstorlek);
 		getContentPane().add(lblFilesize);
-		
+
+        timer.start();
+
 		setSize(450, 250);
 		setResizable(false);	
 	}
@@ -136,15 +139,14 @@ public class FileTransferView extends JDialog {
 		// TODO Filöverföring
 		return "";
 	}
-	
-	public static void main(String[] args) {
-		try {
-			FileTransferView dialog = new FileTransferView(null, null);
-			dialog.setVisible(true);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        progressBar.setValue(fileTransferMdl.getBytesProcessed());
+        if(fileTransferMdl.getBytesProcessed() == fileTransferMdl.getFileSize()) {
+            btnSlutfr.setEnabled(true);
+        }
+        this.repaint();
+    }
 }
 	

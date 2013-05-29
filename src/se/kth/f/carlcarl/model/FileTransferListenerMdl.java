@@ -21,6 +21,7 @@ public class FileTransferListenerMdl extends Thread {
         try {
             Socket socket = server.accept();
             transferMdl.connect(new Connection(socket));
+            server.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
