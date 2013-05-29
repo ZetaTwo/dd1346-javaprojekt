@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 
 import se.kth.f.carlcarl.controller.ProgramCtrl;
@@ -47,13 +48,16 @@ public class ConnListenerMdl extends Thread{
 					ParseMessage(data, conn);
 				}
 				else {
-					owner.ChatRequest(false, "", "", conn);
+					owner.ChatRequest(conn);
 				}
 			}
 			catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SAXException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -85,7 +89,7 @@ public class ConnListenerMdl extends Thread{
 		this.Start();
 	}
 	
-	private void ParseMessage(String string, Connection conn) {
+	private void ParseMessage(String string, Connection conn) throws SAXException, IOException {
 		
 		//Create xml-doc from string
 		String encoding = "utf-8"; //UTF-8 or latin1
@@ -99,7 +103,7 @@ public class ConnListenerMdl extends Thread{
 		
 		//Process message
 		String message = child.getNodeValue();
-		owner.ChatRequest(false, sender, message, conn);
+		owner.ChatRequest(false, sender,  conn, message);
 		
 	}
 }

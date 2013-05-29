@@ -48,6 +48,12 @@ public class ProgramCtrl {
 		}
 	}
 	
+	public void newChat(Connection conn) {
+		ChatCtrl ctrl;
+		ctrl = new ChatCtrl(this, conn);
+		programView.addChatView(addChat(ctrl));
+	}
+	
 	public ChatView newChat(int port) {
 		ChatCtrl ctrl;
 		try {
@@ -116,13 +122,13 @@ public class ProgramCtrl {
         FileTransferMdl.Connect(conn, port, filePath);
 	}
 	public void ChatRequest(Connection conn) {
-		ChatRequest(false, "Någon", conn);
+		ChatRequest(false, "Någon", conn, "");
 	}
 
-	public void ChatRequest(boolean groupChat, String username, Connection conn) {
+	public void ChatRequest(boolean groupChat, String username, Connection conn, String string) {
 		int answer = JOptionPane.showConfirmDialog(programView, username + " vill chatta med dig.", "Chattfï¿½rfrï¿½gan", JOptionPane.YES_NO_OPTION);
 		if(answer == JOptionPane.YES_OPTION) {
-			
+			newChat(conn);
 		}
 	}
 

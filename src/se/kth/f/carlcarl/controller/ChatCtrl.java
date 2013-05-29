@@ -20,6 +20,12 @@ public class ChatCtrl {
 	protected ChatCtrl(ProgramCtrl owner) {
 		this.owner = owner;
 	}
+	public ChatCtrl(ProgramCtrl owner, Connection conn) {
+		this.owner = owner;
+		model = new ChatMdl(this, conn);
+		model.start();
+		view = new ChatViewSingle();
+	}
 	
 	public ChatCtrl(ProgramCtrl owner, String adress, int port) throws UnknownHostException, IOException {
 		this.owner = owner;
@@ -75,9 +81,11 @@ public class ChatCtrl {
 		owner.FileTransferResponse(conn, reply, port, file);
 	}
 	
+	/*
 	public void ProcessChatRequest(String username) {
 		boolean accept = owner.ChatRequest(true, username);
 	}
+	*/
 	
 	public void ProcessDisconnect(String username) {
 		view.addMessage(username + " has disconnected.", "System", Color.black);

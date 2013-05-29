@@ -38,6 +38,16 @@ public class ChatMdl extends Thread {
 			e.printStackTrace();
 		}
 	}
+	public ChatMdl(ChatCtrl ctrl, Connection conn) {
+		owner = ctrl;
+		try {
+			builder = factory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+		addConnection(conn);
+	}
+	
 	
 	public ChatMdl(ChatCtrl ctrl, String adress, int port) throws UnknownHostException, IOException {
 		owner = ctrl;
@@ -216,7 +226,7 @@ public class ChatMdl extends Thread {
 				
 				break;
 			case "request":
-				owner.ProcessChatRequest(sender);
+				// owner.ProcessChatRequest(sender);
 				break;
 			case "disconnect":
 				owner.ProcessDisconnect(sender);
