@@ -25,6 +25,10 @@ public class Connection {
 			e.printStackTrace();
 		}
 	}
+
+    public Socket getSocket() {
+        return socket;
+    }
 	
 	public PrintWriter getOut() {
 		return out;
@@ -36,5 +40,9 @@ public class Connection {
 
     public InetAddress GetAdress() {
         return socket.getInetAddress();
+    }
+
+    public int GetPort(){
+        return socket.getPort();
     }
 }

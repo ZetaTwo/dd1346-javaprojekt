@@ -1,9 +1,6 @@
 package se.kth.f.carlcarl.model;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 
 public class FileTransferMdl {
@@ -42,20 +39,20 @@ public class FileTransferMdl {
     public void start(String filePath) {
         File file = new File(filePath);
         FileInputStream in = null;
-        try {
-            in = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
 
-        byte[] buf = new byte[1024];
         try {
-            while(in.read(buf)) {
-                connection.getOut().write(buf);
+            int len = (int)file.length();
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+            BufferedOutputStream bos = new BufferedOutputStream(connection.getSocket().getOutputStream());
+            byte[] byteArray = new byte[1000];
+            int i=0;
+            while ((i = bis.read(byteArray)) != len){ //in = int; byteArray = byte[]
+                bos.write(byteArray, 0, i);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+
 
     }
 }
