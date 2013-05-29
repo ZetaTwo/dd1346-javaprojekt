@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+import se.kth.f.carlcarl.model.ConnListenerMdl;
 import se.kth.f.carlcarl.model.Connection;
 import se.kth.f.carlcarl.model.EncryptionHandler;
 import se.kth.f.carlcarl.model.FileTransferMdl;
@@ -22,11 +23,14 @@ public class ProgramCtrl {
 	ProgramView programView;
 	ArrayList<ChatCtrl> chatCtrls = new ArrayList<>();
 	ChatCtrl activeChat;
+	ConnListenerMdl connectionListener;
 	
 	
 	public ProgramCtrl() throws IOException {
 		programMdl = ProgramSettingsMdl.open("programSettings.ini");
 		programView = new ProgramView(this);
+		connectionListener = new ConnListenerMdl(this, programMdl.getListeningPort());
+		connectionListener.start();
 	}
 	
 	protected void SaveMessageSettings() {
@@ -133,6 +137,13 @@ public class ProgramCtrl {
 		if(answer == JOptionPane.YES_OPTION) {
 			newChat(conn);
 		}
+	}
+	public void ChangeListeningPort(int port) {
+		connectionListener.setListeningPort(port);		
+	}
+	
+	public int getListeningPort() {
+		return connectionListener.getListeningPort();
 	}
 
 	public void SendFileTransferRequest(File file, long fileSize,

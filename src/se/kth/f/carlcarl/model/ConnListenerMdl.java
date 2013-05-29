@@ -19,20 +19,19 @@ import se.kth.f.carlcarl.controller.ProgramCtrl;
 public class ConnListenerMdl extends Thread{
 	
 	ProgramCtrl owner;
-	boolean running = false;
+	boolean running = true;
 	ServerSocket listeningSocket;
 	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder builder;
+	int listeningPort;
+	boolean notdone = true;
 	
 	
 	public ConnListenerMdl(ProgramCtrl owner, int port){
-		try {
-			this.owner = owner;
-			listeningSocket = new ServerSocket(port);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		this.owner = owner;
+		findSocket(listeningPort);
+		
 	}
 	public void run() {
 		while(running){
@@ -65,28 +64,47 @@ public class ConnListenerMdl extends Thread{
 	}
 	
 	public void Start(){
-		running = true;
+		this.running = true;
 	}
 	
 	public void Stop() {
-		running = false;
+		this.running = false;
 	}
 
 	public void setListeningPort(int port) {
-		this.Stop();
+		Stop();
 		try {
 			listeningSocket.close();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		try {
-			listeningSocket = new ServerSocket(port);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		findSocket(port);
+		if(listeningSocket.isClosed()){
+			System.out.println("lol");
 		}
-		this.Start();
+		Start();
+	}
+	
+	private void findSocket(int port) {
+		listeningPort = port;
+		notdone = true;
+		
+		while(notdone) {
+			try {
+				listeningSocket = new ServerSocket(listeningPort);
+				notdone = false;
+			} catch (Exception e) {
+				e.printStackTrace();
+				listeningPort++;
+				if(listeningPort > 65536){
+				}
+			}
+		}
+	}
+	
+	public int getListeningPort() {
+		return listeningPort;
 	}
 	
 	private void ParseMessage(String string, Connection conn) throws SAXException, IOException {

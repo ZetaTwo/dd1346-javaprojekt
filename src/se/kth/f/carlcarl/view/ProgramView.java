@@ -231,8 +231,9 @@ public class ProgramView extends JFrame {
 		
 		if(dialog.getResult() == 1) {
 			int port = dialog.getListeningPort();
+			ctrl.ChangeListeningPort(port);
+			port = ctrl.getListeningPort();
 			ctrl.getSettings().setListeningPort(port);
-			
 			String name = dialog.getName();
 			ctrl.getSettings().setUserName(name);
 			try {
