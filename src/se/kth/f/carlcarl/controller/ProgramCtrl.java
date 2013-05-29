@@ -13,6 +13,7 @@ import se.kth.f.carlcarl.model.FileTransferMdl;
 import se.kth.f.carlcarl.model.ProgramSettingsMdl;
 import se.kth.f.carlcarl.view.ChatView;
 import se.kth.f.carlcarl.view.FileTransferRequestView;
+import se.kth.f.carlcarl.view.FileTransferView;
 import se.kth.f.carlcarl.view.ProgramView;
 
 public class ProgramCtrl {
@@ -145,6 +146,11 @@ public class ProgramCtrl {
 		
 		return result;
 	}
+
+    public void CreateFileTransfer(String fileName, int fileSize) {
+        FileTransferMdl fileTransfer = FileTransferMdl.Host(50000, fileName, fileSize);
+        FileTransferView fileTransferView = new FileTransferView(programView, fileTransfer);
+    }
 }
 
 	

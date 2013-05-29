@@ -1,5 +1,7 @@
 package se.kth.f.carlcarl.view;
 
+import se.kth.f.carlcarl.model.FileTransferMdl;
+
 import java.awt.Window;
 import java.io.File;
 
@@ -18,11 +20,12 @@ public class FileTransferView extends JDialog {
 	 */
 	private static final long serialVersionUID = -91035909390392840L;
 	int result;
+    FileTransferMdl fileTransferMdl;
 
-	public FileTransferView(Window parent, File file) {
+	public FileTransferView(Window parent, FileTransferMdl fileTransferMdl) {
 		super(parent, "Filöverföring");
 		
-		String filename = file.getName();
+		this.fileTransferMdl = fileTransferMdl;
 		
 		SpringLayout springLayout = new SpringLayout();
 		getContentPane().setLayout(springLayout);
@@ -32,7 +35,7 @@ public class FileTransferView extends JDialog {
 		springLayout.putConstraint(SpringLayout.WEST, lblFil, 10, SpringLayout.WEST, getContentPane());
 		getContentPane().add(lblFil);
 		
-		JLabel lblFilename = new JLabel(filename);
+		JLabel lblFilename = new JLabel(fileTransferMdl.getFilePath());
 		springLayout.putConstraint(SpringLayout.WEST, lblFilename, 6, SpringLayout.EAST, lblFil);
 		springLayout.putConstraint(SpringLayout.SOUTH, lblFilename, 0, SpringLayout.SOUTH, lblFil);
 		getContentPane().add(lblFilename);
@@ -91,7 +94,7 @@ public class FileTransferView extends JDialog {
 		springLayout.putConstraint(SpringLayout.WEST, lblFilstorlek, 0, SpringLayout.WEST, lblFil);
 		getContentPane().add(lblFilstorlek);
 		
-		JLabel lblFilesize = new JLabel(getFileSize(file));
+		JLabel lblFilesize = new JLabel(getFileSize(fileTransferMdl.getFileSize()));
 		springLayout.putConstraint(SpringLayout.WEST, lblFilesize, 6, SpringLayout.EAST, lblFilstorlek);
 		springLayout.putConstraint(SpringLayout.SOUTH, lblFilesize, 0, SpringLayout.SOUTH, lblFilstorlek);
 		getContentPane().add(lblFilesize);
@@ -100,15 +103,14 @@ public class FileTransferView extends JDialog {
 		setResizable(false);	
 	}
 	
-	private static String getFileSize(File file) {
+	private static String getFileSize(long bytes) {
 		String[] suffixList = new String[]{"B", "kB", "MB", "GB", "TB"};
-		long bytes = file.length();
-		int numberOfItterations = 0;
+		int numberOfIterations = 0;
 		while(bytes > 1000) {
 			bytes = bytes / 1000;
-			numberOfItterations += 1;
+			numberOfIterations += 1;
 		}
-		return Long.toString(bytes) + " "  + suffixList[numberOfItterations];
+		return Long.toString(bytes) + " "  + suffixList[numberOfIterations];
 	}
 
 	private void Cancel(){
@@ -137,7 +139,7 @@ public class FileTransferView extends JDialog {
 	
 	public static void main(String[] args) {
 		try {
-			FileTransferView dialog = new FileTransferView(null, new File("newFile.txt"));
+			FileTransferView dialog = new FileTransferView(null, null);
 			dialog.setVisible(true);
 			
 		} catch (Exception e) {

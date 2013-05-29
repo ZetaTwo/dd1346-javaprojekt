@@ -5,12 +5,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import se.kth.f.carlcarl.model.ChatMdl;
-import se.kth.f.carlcarl.model.Connection;
-import se.kth.f.carlcarl.model.EncryptionHandler;
-import se.kth.f.carlcarl.model.MessageSettings;
+import se.kth.f.carlcarl.model.*;
 import se.kth.f.carlcarl.view.ChatView;
 import se.kth.f.carlcarl.view.ChatViewSingle;
+import se.kth.f.carlcarl.view.FileTransferView;
 
 public class ChatCtrl {
 	ProgramCtrl owner;
@@ -70,20 +68,20 @@ public class ChatCtrl {
 	
 	public void ProcessFileTransferRequest(String username, String fileName, int fileSize, String message) {
 		boolean accept = owner.FileTransferRequest(username, fileName, fileSize, message);
-		
-		// TODO Fil�verf�ring 
-		// om ja, skapa en fil�verf�ringstr�d och view, koppla ihop med avs�ndaren.
-		
-		model.sendFileResponse(accept, "", 50000, owner.getSettings().getUserName());
+
+        owner.CreateFileTransfer(fileName, fileSize);
+
+        model.sendFileResponse(accept, "", 50000, owner.getSettings().getUserName());
 	}
-	
-	public void ProcessFileTransferResponse(Connection conn, boolean reply, int port, String file) {
+
+    public void ProcessFileTransferResponse(Connection conn, boolean reply, int port, String file) {
 		owner.FileTransferResponse(conn, reply, port, file);
 	}
 	
 	/*
 	public void ProcessChatRequest(String username) {
-		boolean accept = owner.ChatRequest(true, username);
+		// TODO
+		// boolean accept = owner.ChatRequest(true, username);
 	}
 	*/
 	
