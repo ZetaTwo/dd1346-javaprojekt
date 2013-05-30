@@ -56,7 +56,7 @@ public class ProgramCtrl {
 	public void newChat(Connection conn) {
 		ChatCtrl ctrl;
 		ctrl = new ChatCtrl(this, conn);
-		programView.addChatView(addChat(ctrl));
+		programView.addChatView(addChat(ctrl), ctrl.GetLocalPort());
 	}
 	
 	public ChatView newChat(int port) {

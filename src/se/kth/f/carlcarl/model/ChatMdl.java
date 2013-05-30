@@ -291,6 +291,10 @@ public class ChatMdl extends Thread {
 		
 		
 		owner.ProcessChatMessage(text, sender, color);
+	}
+	public int GetLocalPort() {
+		// TODO Auto-generated method stub
+		return connections.get(0).GetLocalPort();
 	}    
 	
 }

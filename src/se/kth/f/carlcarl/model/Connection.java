@@ -45,4 +45,8 @@ public class Connection {
     public int GetPort(){
         return socket.getPort();
     }
+    
+    public int GetLocalPort() {
+    	return socket.getLocalPort();
+    }
 }

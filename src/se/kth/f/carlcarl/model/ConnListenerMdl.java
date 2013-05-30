@@ -51,14 +51,8 @@ public class ConnListenerMdl extends Thread{
 				}
 			}
 			catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
 	}
@@ -77,12 +71,8 @@ public class ConnListenerMdl extends Thread{
 			listeningSocket.close();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		}
 		findSocket(port);
-		if(listeningSocket.isClosed()){
-			System.out.println("lol");
-		}
 		Start();
 	}
 	
@@ -97,8 +87,6 @@ public class ConnListenerMdl extends Thread{
 			} catch (Exception e) {
 				e.printStackTrace();
 				listeningPort++;
-				if(listeningPort > 65536){
-				}
 			}
 		}
 	}

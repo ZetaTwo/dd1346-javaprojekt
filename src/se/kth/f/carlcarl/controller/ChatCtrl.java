@@ -117,4 +117,7 @@ public class ChatCtrl {
 		String username = owner.getSettings().getUserName();
 		model.close(username);
 	}
+	public int GetLocalPort() {
+		return model.GetLocalPort();
+	}
 }

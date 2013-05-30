@@ -251,16 +251,18 @@ public class ProgramView extends JFrame {
 	private void NewChat() {
 		NewChatView newChatView = new NewChatView(this, ctrl.getSettings().getListeningPort() + 1);
 		newChatView.setVisible(true);
+		int port = newChatView.getListeningPort();
 		//Process results
 		if(newChatView.result == 1) {
 			ChatView newView;
 			if(newChatView.getChatType() == 1) {
-				newView = ctrl.newChat(newChatView.getListeningPort());
+				newView = ctrl.newChat(port);
+				port = ctrl.getListeningPort();
 			} else {
-				newView = ctrl.connectChat(newChatView.getAdress(), newChatView.getListeningPort());
+				newView = ctrl.connectChat(newChatView.getAdress(), port);
 			}
 			
-			addChatView(newView);
+			addChatView(newView, port);
 			
 		}
 	}
@@ -295,8 +297,8 @@ public class ProgramView extends JFrame {
 		return JOptionPane.showConfirmDialog(null, name + " vill chatta med dig. Vill du?", "Inkommande chatförfrågan", JOptionPane.YES_NO_OPTION);
 	}
 	
-	public void addChatView(ChatView view) {
-		tabbedPane.add("Chat " + (chatIndex++), view);
+	public void addChatView(ChatView view, int port) {
+		tabbedPane.add("Chat (port: " + port + ")" , view);
 	}
 	
 	/* SettingsView v = new SetingsView();
