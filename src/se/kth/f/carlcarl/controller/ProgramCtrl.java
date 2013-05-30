@@ -128,16 +128,24 @@ public class ProgramCtrl {
         FileTransferView fileTransferView = new FileTransferView(programView, fileTransferMdl);
         fileTransferView.setVisible(true);
 	}
+	
 	public void ChatRequest(Connection conn) {
-		ChatRequest(false, "NÃ¥gon", conn, "");
+		ChatRequest(false, "Någon", conn, "");
 	}
 
 	public void ChatRequest(boolean groupChat, String username, Connection conn, String string) {
-		int answer = JOptionPane.showConfirmDialog(programView, username + " vill chatta med dig.", "Chattfï¿½rfrï¿½gan", JOptionPane.YES_NO_OPTION);
+		int answer = JOptionPane.showConfirmDialog(programView, username + " vill chatta med dig.", "Chattförfrågan", JOptionPane.YES_NO_OPTION);
 		if(answer == JOptionPane.YES_OPTION) {
 			newChat(conn);
+			System.out.println(getUserName());
+			conn.getOut().println("<message sender=\""+ getUserName() + "\"><request reply=\"yes\"> yes </request> </message>");
+		}
+		else{
+			conn.getOut().println("<message sender=\""+ getUserName() + "\"><request reply=\"no\"> no </request> </message>");
+			conn.Close();
 		}
 	}
+
 	public void ChangeListeningPort(int port) {
 		connectionListener.setListeningPort(port);		
 	}
@@ -165,6 +173,11 @@ public class ProgramCtrl {
         FileTransferView fileTransferView = new FileTransferView(programView, fileTransfer);
         fileTransferView.setVisible(true);
     }
+
+	
+    public String getUserName() {
+		return getSettings().getUserName();
+	}
 }
 
 	

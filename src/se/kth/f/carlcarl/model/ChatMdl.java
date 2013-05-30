@@ -103,6 +103,7 @@ public class ChatMdl extends Thread {
     public void Connect(String host, int port) throws UnknownHostException, IOException {
 		Socket target = new Socket(host, port);
 		Connection connection = new Connection(target);
+		connection.getOut().println("<message sender=\"" + getUserName() + "\"> <request>" + "</request> </message>");
 		addConnection(connection);
 	}
 	
@@ -188,6 +189,10 @@ public class ChatMdl extends Thread {
 		return messageSettings;
 	}
 	
+	public String getUserName() {
+		return owner.getUserName();
+	}
+	
 	private void ParseMessage(Connection conn, String string) {
 		try {
 			//Create xml doc from string
@@ -238,7 +243,13 @@ public class ChatMdl extends Thread {
 				
 				break;
 			case "request":
-				// owner.ProcessChatRequest(sender);
+				String requestStr = child.getAttributes().getNamedItem("reply").getNodeValue();
+				boolean requestReply = requestStr.equals("yes");
+				if(!requestReply){
+					owner.ProcessChatMessage(sender + " nekade din anslutning", "System", Color.black);
+					break;
+				}
+				owner.ProcessChatMessage(sender + " är nu ansluten.", "System", Color.black);
 				break;
 			case "disconnect":
                 relayMessage(connections, conn, string);
@@ -305,8 +316,8 @@ public class ChatMdl extends Thread {
 		
 		owner.ProcessChatMessage(text, sender, color);
 	}
+
 	public int GetLocalPort() {
-		// TODO Auto-generated method stub
 		return connections.get(0).GetLocalPort();
 	}    
 

@@ -257,9 +257,11 @@ public class ProgramView extends JFrame {
 		if(newChatView.result == 1) {
 			ChatView newView;
 			if(newChatView.getChatType() == 1) {
+				// Group chat
 				newView = ctrl.newChat(port);
 				port = ctrl.getListeningPort();
 			} else {
+				// Single chat
 				newView = ctrl.connectChat(newChatView.getAdress(), port);
 			}
 			

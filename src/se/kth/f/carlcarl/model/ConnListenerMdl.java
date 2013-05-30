@@ -7,6 +7,7 @@ import java.net.Socket;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -23,6 +24,7 @@ public class ConnListenerMdl extends Thread{
 	ServerSocket listeningSocket;
 	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder builder;
+	Document xmlDoc;
 	int listeningPort;
 	boolean notdone = true;
 	
@@ -30,6 +32,11 @@ public class ConnListenerMdl extends Thread{
 	public ConnListenerMdl(ProgramCtrl owner, int port){
 		
 		this.owner = owner;
+		try {
+			builder = factory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
 		findSocket(listeningPort);
 		
 	}
@@ -109,7 +116,6 @@ public class ConnListenerMdl extends Thread{
 		
 		//Process message
 		String message = child.getNodeValue();
-		owner.ChatRequest(false, sender,  conn, message);
-		
+		owner.ChatRequest(false, sender, conn, message);
 	}
 }

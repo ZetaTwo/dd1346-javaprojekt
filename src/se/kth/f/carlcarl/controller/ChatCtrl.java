@@ -8,7 +8,6 @@ import java.net.UnknownHostException;
 import se.kth.f.carlcarl.model.*;
 import se.kth.f.carlcarl.view.ChatView;
 import se.kth.f.carlcarl.view.ChatViewSingle;
-import se.kth.f.carlcarl.view.FileTransferView;
 
 public class ChatCtrl {
 	ProgramCtrl owner;
@@ -80,12 +79,7 @@ public class ChatCtrl {
 		owner.FileTransferResponse(conn, reply, port, file);
 	}
 	
-	/*
-	public void ProcessChatRequest(String username) {
-		// TODO
-		// boolean accept = owner.ChatRequest(true, username);
-	}
-	*/
+	
 	
 	public void ProcessDisconnect(String username) {
 		view.addMessage(username + " has disconnected.", "System", Color.black);
@@ -120,7 +114,11 @@ public class ChatCtrl {
 	public int GetLocalPort() {
 		return model.GetLocalPort();
 	}
-
-   	 public void Update() {
-   	 }
+	
+   	public void Update() {
+   	}
+	
+	public String getUserName() {
+		return owner.getUserName();
+	}
 }
