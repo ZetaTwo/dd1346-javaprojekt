@@ -16,6 +16,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import se.kth.f.carlcarl.controller.ProgramCtrl;
+import se.kth.f.carlcarl.model.Connection;
 import se.kth.f.carlcarl.model.ProgramSettingsMdl;
 
 import java.awt.Color;
@@ -281,6 +282,18 @@ public class ProgramView extends JFrame {
 	}
 	
 	private void SendFile() {
+        ChatView activeChat = (ChatView)this.tabbedPane.getSelectedComponent();
+        if(activeChat == null) {
+            JOptionPane.showMessageDialog(this, "Du måste välja en chat", "Filöverföringsfel",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Connection reciever = activeChat.getConnection();
+        if(reciever == null) {
+            JOptionPane.showMessageDialog(this, "Du måste välja en mottagare", "Filöverföringsfel",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
 		FileTransferStartView dialog = new FileTransferStartView(this);
 		dialog.setVisible(true);
 		
@@ -289,9 +302,11 @@ public class ProgramView extends JFrame {
 			long fileSize = file.length();
 			String message = dialog.getMessage();
 			
-			ctrl.SendFileTransferRequest(file, fileSize, message);
+			ctrl.SendFileTransferRequest(reciever, file, fileSize, message);
 		}
 	}
+
+
 	
 	public int IncomingChatRequest(String name) {
 		return JOptionPane.showConfirmDialog(null, name + " vill chatta med dig. Vill du?", "Inkommande chatförfrågan", JOptionPane.YES_NO_OPTION);

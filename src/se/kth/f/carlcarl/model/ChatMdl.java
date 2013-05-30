@@ -75,15 +75,7 @@ public class ChatMdl extends Thread {
 						}
 						if(!data.isEmpty()) {
 							ParseMessage(conn, data);
-							if(connectionsCopy.size() > 1){
-								for(Connection connect: connectionsCopy) {
-									if(connect != conn){
-										connect.getOut().println(data);
-										connect.getOut().flush();
-									}
-								}
-							}
-						}
+                        }
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -96,8 +88,19 @@ public class ChatMdl extends Thread {
             }
 		}
 	}
-	
-	public void Connect(String host, int port) throws UnknownHostException, IOException {
+
+    private void relayMessage(ArrayList<Connection> connectionsCopy, Connection conn, String data) {
+        if(connectionsCopy.size() > 1){
+            for(Connection connect: connectionsCopy) {
+                if(connect != conn){
+                    connect.getOut().println(data);
+                    connect.getOut().flush();
+                }
+            }
+        }
+    }
+
+    public void Connect(String host, int port) throws UnknownHostException, IOException {
 		Socket target = new Socket(host, port);
 		Connection connection = new Connection(target);
 		addConnection(connection);
@@ -105,6 +108,7 @@ public class ChatMdl extends Thread {
 	
 	public void addConnection(Connection connection) {
 		connections.add(connection);
+        owner.Update();
 	}
 	
 	public void sendMessage(String htmlMessage, String sender, Color color, EncryptionHandler.Encryption encryption, String key) {
@@ -123,22 +127,22 @@ public class ChatMdl extends Thread {
 		postMessage(messageData);
 	}
 	
-	public void sendFile(File file, String message, long fileSize, String sender) {
+	public void sendFile(File file, String message, long fileSize, String sender, Connection connection) {
         String filename = file.getName();
         pendingFileRequests.add(file.getAbsolutePath());
 		String messageData = "<message sender=\"" + sender + "\">" + 
 				  "<filerequest name=\"" + filename + "\" size=\"" + fileSize + "\">" + message + "</filerequest>" +
 				 "</message>";
 				  
-		postMessage(messageData);
+		postMessage(messageData, connection);
 	}
 	
-	public void sendFileResponse(boolean response, String message, int port, String sender) {
+	public void sendFileResponse(boolean response, String message, int port, String sender, Connection connection) {
 		String messageData = "<message sender=\"" + sender + "\">" + 
 				  "<fileresponse reply=\"" + ((response)?"yes":"no") + "\" port=\"" + port + "\">" + message + "</fileresponse>" +
 				 "</message>";
 				  
-		postMessage(messageData);
+		postMessage(messageData, connection);
 	}
 	
 	public void sendKeyrequest(String sender, String message, String type) {
@@ -176,6 +180,10 @@ public class ChatMdl extends Thread {
 		}
 	}
 
+    private void postMessage(String xmlData, Connection connection) {
+        connection.getOut().println(xmlData);
+    }
+
 	public MessageSettings getSettings() {
 		return messageSettings;
 	}
@@ -190,15 +198,19 @@ public class ChatMdl extends Thread {
 			
 			//Get sender and root
 			String sender = root.getAttributes().getNamedItem("sender").getTextContent();
+            conn.setUsername(sender);
+            owner.Update();
 			Node child = root.getFirstChild();
 			
 			//Process message
 			switch(child.getNodeName()) {
 			case "text":
+                relayMessage(connections, conn, string);
 				ParseTextMessage(xmlDoc, sender, child);
 				break;
 
 			case "encrypted":
+                relayMessage(connections, conn, string);
 				ParseEncryptedMessage(conn, sender, child);
 				break;
 				
@@ -208,7 +220,7 @@ public class ChatMdl extends Thread {
 				String name = child.getAttributes().getNamedItem("name").getNodeValue();
                 String message = child.getTextContent();
 
-				owner.ProcessFileTransferRequest(sender, name, size, message);
+				owner.ProcessFileTransferRequest(sender, name, size, message, conn);
 				break;
 				
 			case "fileresponse":
@@ -229,6 +241,7 @@ public class ChatMdl extends Thread {
 				// owner.ProcessChatRequest(sender);
 				break;
 			case "disconnect":
+                relayMessage(connections, conn, string);
 				owner.ProcessDisconnect(sender);
 				break;
 			case "keyrequest":
@@ -296,5 +309,9 @@ public class ChatMdl extends Thread {
 		// TODO Auto-generated method stub
 		return connections.get(0).GetLocalPort();
 	}    
+
+    public Connection[] getUsers() {
+        return connections.toArray(new Connection[connections.size()]);
+    }
 	
 }

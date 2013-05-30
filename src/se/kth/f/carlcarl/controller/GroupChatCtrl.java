@@ -14,4 +14,8 @@ public class GroupChatCtrl extends ChatCtrl {
 		view = new ChatViewGroup();
 	}
 
+    @Override
+    public void Update() {
+        ((ChatViewGroup)view).Update(model.getUsers());
+    }
 }

@@ -146,10 +146,10 @@ public class ProgramCtrl {
 		return connectionListener.getListeningPort();
 	}
 
-	public void SendFileTransferRequest(File file, long fileSize,
+	public void SendFileTransferRequest(Connection connection, File file, long fileSize,
 			String message) {
 		String user = programMdl.getUserName();
-		activeChat.SendFileRequest(user, file, fileSize, message);
+		activeChat.SendFileRequest(connection, user, file, fileSize, message);
 		
 	}
 

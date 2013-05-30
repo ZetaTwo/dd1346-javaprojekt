@@ -1,13 +1,18 @@
 package se.kth.f.carlcarl.view;
+import se.kth.f.carlcarl.model.Connection;
+
 import javax.swing.SpringLayout;
 
 public class ChatViewSingle extends ChatView {
 	private static final long serialVersionUID = 7989847204259584555L;
-	
+
+    Connection connection;
+
 	/**
 	 * Create the panel.
 	 */
-	public ChatViewSingle() {
+	public ChatViewSingle(Connection connection) {
+        this.connection = connection;
 		
 		SpringLayout springLayout = new SpringLayout();
 		setLayout(springLayout);
@@ -18,4 +23,9 @@ public class ChatViewSingle extends ChatView {
 		springLayout.putConstraint(SpringLayout.EAST, editorPane, 0, SpringLayout.EAST, this);
 		add(editorPane);
 	}
+
+    @Override
+    public Connection getConnection() {
+        return connection;
+    }
 }

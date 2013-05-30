@@ -22,14 +22,14 @@ public class ChatCtrl {
 		this.owner = owner;
 		model = new ChatMdl(this, conn);
 		model.start();
-		view = new ChatViewSingle();
+		view = new ChatViewSingle(model.getUsers()[0]);
 	}
 	
 	public ChatCtrl(ProgramCtrl owner, String adress, int port) throws UnknownHostException, IOException {
 		this.owner = owner;
 		model = new ChatMdl(this, adress, port);
 		model.start();
-		view = new ChatViewSingle();
+		view = new ChatViewSingle(model.getUsers()[0]);
 	}
 	
 	public void UpdateSettings(MessageSettings settings) {
@@ -66,14 +66,14 @@ public class ChatCtrl {
 		view.addMessage(message, username, color);
 	}
 	
-	public void ProcessFileTransferRequest(String username, String fileName, int fileSize, String message) {
+	public void ProcessFileTransferRequest(String username, String fileName, int fileSize, String message, Connection connection) {
 		boolean accept = owner.FileTransferRequest(username, fileName, fileSize, message);
 
         if(accept) {
             owner.CreateFileTransfer(fileName, fileSize);
         }
 
-        model.sendFileResponse(accept, "", 50000, owner.getSettings().getUserName());
+        model.sendFileResponse(accept, "", 50000, owner.getSettings().getUserName(), connection);
 	}
 
     public void ProcessFileTransferResponse(Connection conn, boolean reply, int port, String file) {
@@ -108,9 +108,9 @@ public class ChatCtrl {
 		}
 	}
 
-	public void SendFileRequest(String user, File file, long fileSize,
+	public void SendFileRequest(Connection connection, String user, File file, long fileSize,
 			String message) {
-		model.sendFile(file, message, fileSize, user);
+		model.sendFile(file, message, fileSize, user, connection);
 	}
 
 	public void Close() {
@@ -120,4 +120,7 @@ public class ChatCtrl {
 	public int GetLocalPort() {
 		return model.GetLocalPort();
 	}
+
+   	 public void Update() {
+   	 }
 }

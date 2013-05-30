@@ -11,6 +11,7 @@ public class Connection {
 	Socket socket;
 	PrintWriter out;
 	BufferedReader in;
+    String username;
 	
 	public Connection(Socket socket) throws IOException {
 		this.socket = socket;
@@ -44,6 +45,18 @@ public class Connection {
 
     public int GetPort(){
         return socket.getPort();
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String toString() {
+        return getUsername();
     }
     
     public int GetLocalPort() {
