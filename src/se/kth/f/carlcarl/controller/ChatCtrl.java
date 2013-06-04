@@ -1,14 +1,15 @@
 package se.kth.f.carlcarl.controller;
 
-import java.awt.Color;
-import java.io.File;
-import java.io.IOException;
-import java.net.UnknownHostException;
-
 import se.kth.f.carlcarl.helper.EncryptionHelper;
-import se.kth.f.carlcarl.model.*;
+import se.kth.f.carlcarl.model.ChatMdl;
+import se.kth.f.carlcarl.model.Connection;
+import se.kth.f.carlcarl.model.MessageSettings;
 import se.kth.f.carlcarl.view.ChatView;
 import se.kth.f.carlcarl.view.ChatViewSingle;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class ChatCtrl {
 	private final ProgramCtrl owner;
@@ -25,9 +26,9 @@ public class ChatCtrl {
 		view = new ChatViewSingle(model.getUsers()[0]);
 	}
 	
-	public ChatCtrl(ProgramCtrl owner, String adress, int port) throws UnknownHostException, IOException {
+	public ChatCtrl(ProgramCtrl owner, String address, int port) throws IOException {
 		this.owner = owner;
-		model = new ChatMdl(this, adress, port);
+		model = new ChatMdl(this, address, port);
 		model.start();
 		view = new ChatViewSingle(model.getUsers()[0]);
 	}
@@ -48,8 +49,8 @@ public class ChatCtrl {
 		String username = owner.getSettings().getUserName();
         String key = "";
         switch(encryption) {
-            case CASEAR:
-                key = Integer.toString(owner.getSettings().getCeasarKey());
+            case CAESAR:
+                key = Integer.toString(owner.getSettings().getCaesarKey());
                 break;
             case AES:
                 key = owner.getSettings().getAESKey();
@@ -69,18 +70,17 @@ public class ChatCtrl {
 	public void ProcessFileTransferRequest(String username, String fileName, int fileSize, String message, Connection connection) {
 		boolean accept = owner.FileTransferRequest(username, fileName, fileSize, message);
 
+        int port = 0;
         if(accept) {
-            owner.CreateFileTransfer(fileName, fileSize);
+            port = owner.CreateFileTransfer(fileName, fileSize);
         }
 
-        model.sendFileResponse(accept, message, 50000, owner.getSettings().getUserName(), connection);
+        model.sendFileResponse(accept, message, port, owner.getSettings().getUserName(), connection);
 	}
 
     public void ProcessFileTransferResponse(Connection conn, int port, String file) {
 		owner.FileTransferResponse(conn, port, file);
 	}
-	
-	
 	
 	public void ProcessDisconnect(String username) {
 		view.addMessage(username + " has disconnected.", "System", Color.black);
@@ -93,7 +93,7 @@ public class ChatCtrl {
 			key = owner.getSettings().getAESKey();
 			break;
 		case "Caesar":
-			key = String.valueOf(owner.getSettings().getCeasarKey());
+			key = String.valueOf(owner.getSettings().getCaesarKey());
 		default:
 			break;
 		}
@@ -112,6 +112,7 @@ public class ChatCtrl {
 		String username = owner.getSettings().getUserName();
 		model.close(username);
 	}
+
 	public int GetLocalPort() {
 		return model.GetLocalPort();
 	}

@@ -24,9 +24,6 @@ public class ConnListenerMdl extends Thread{
 	private boolean running = true;
 	private ServerSocket listeningSocket;
     private DocumentBuilder builder;
-	Document xmlDoc;
-	private int listeningPort;
-
 
     public ConnListenerMdl(ProgramCtrl owner, int port) throws IOException {
 		
@@ -74,7 +71,9 @@ public class ConnListenerMdl extends Thread{
 	public void setListeningPort(int port) throws IOException {
 		Stop();
 		try {
-			listeningSocket.close();
+            if(listeningSocket != null) {
+			    listeningSocket.close();
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -90,9 +89,9 @@ public class ConnListenerMdl extends Thread{
         }
         Start();
 	}
-	
+
 	public int getListeningPort() {
-		return listeningPort;
+		return listeningSocket.getLocalPort();
 	}
 	
 	private void ParseMessage(String string, Connection conn) throws SAXException, IOException {
@@ -109,6 +108,6 @@ public class ConnListenerMdl extends Thread{
 		
 		//Process message
 		String message = child.getNodeValue();
-		owner.ChatRequest(false, sender, conn, message);
+		owner.ChatRequest(sender, conn, message);
 	}
 }

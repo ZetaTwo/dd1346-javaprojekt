@@ -11,14 +11,7 @@ import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class FileTransferRequestView extends JDialog{
-	
-	
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3109817122107630020L;
+public class FileTransferRequestView extends JDialog {
 	
 	
 	private int result;
@@ -126,16 +119,5 @@ public class FileTransferRequestView extends JDialog{
 			numberOfItterations += 1;
 		}
 		return Long.toString(fileSize) + " "  + suffixList[numberOfItterations];
-	}
-	
-
-	public static void main(String[] args) {
-		try {
-			FileTransferRequestView dialog = new FileTransferRequestView(null, "Peter", "file.jpg", 1024, "Hej jag tänkte skicka med den här lilla filen jag hoppas att den är trevlig jag vet inte riktigt vad den innehåller men det är säkert bra i alla fall.");
-			dialog.setVisible(true);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 }

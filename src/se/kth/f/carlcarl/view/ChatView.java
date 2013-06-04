@@ -8,7 +8,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 
 public abstract class ChatView extends JPanel {
-	private static final long serialVersionUID = 9064849823829997292L;
 
 	private String bodyText = "";
 	final JEditorPane editorPane = new JEditorPane();

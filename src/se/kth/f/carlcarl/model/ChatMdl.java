@@ -47,14 +47,14 @@ public class ChatMdl extends Thread {
 	}
 	
 	
-	public ChatMdl(ChatCtrl ctrl, String adress, int port) throws UnknownHostException, IOException {
+	public ChatMdl(ChatCtrl ctrl, String address, int port) throws IOException {
 		owner = ctrl;
 		try {
 			builder = factory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		}
-		Connect(adress, port);
+		Connect(address, port);
 	}
 	
 	public void UpdateSettings(MessageSettings settings) {
@@ -103,7 +103,7 @@ public class ChatMdl extends Thread {
         }
     }
 
-    void Connect(String host, int port) throws UnknownHostException, IOException {
+    void Connect(String host, int port) throws IOException {
 		Socket target = new Socket(host, port);
 		Connection connection = new Connection(target);
 		connection.getOut().println("<message sender=\"" + getUserName() + "\"> <request>" + "</request> </message>");
@@ -148,7 +148,8 @@ public class ChatMdl extends Thread {
 				  
 		postMessage(messageData, connection);
 	}
-	
+
+    //TODO: Send key request?
 	public void sendKeyrequest(String sender, String message, String type) {
 		String messageData = "<message sender=\"" + sender + "\">" + 
 				  "<keyrequest type=\"" + type + "\">" + message + "</fileresponse>" +

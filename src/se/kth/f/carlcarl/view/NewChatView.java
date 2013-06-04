@@ -19,19 +19,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 
-public class NewChatView extends JDialog{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2563969029790271758L;
-
-	
+class NewChatView extends JDialog{
 	private final JFormattedTextField portTextField;
 	private final JTextField adressTextField;
 	private final JRadioButton radioGroup;
     private final JRadioButton radioSingle;
-	int result;
+	private int result;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	
 	
@@ -86,7 +79,7 @@ public class NewChatView extends JDialog{
 			}
 		});
 		
-		// L�gger till componenterna
+		// Lägger till componenterna
 		contentPane.add(portLabel);
 		contentPane.add(portTextField);
 		contentPane.add(radioGroup);
@@ -96,8 +89,8 @@ public class NewChatView extends JDialog{
 		contentPane.add(yesButton);
 		contentPane.add(noButton);
 
-		// L�ser dimensionerna
-		Dimension dimension = new Dimension(200,170);
+		// Läser dimensionerna
+		Dimension dimension = new Dimension(200, 170);
 		contentPane.setPreferredSize(dimension);
 		setResizable(false);
 		
@@ -162,14 +155,4 @@ public class NewChatView extends JDialog{
 	public int getResult(){
 		return result;
 	}
-	
-	public static void main(String[] args) {
-		try {
-			NewChatView dialog = new NewChatView(null, 20122);
-			dialog.setVisible(true);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}		
 }

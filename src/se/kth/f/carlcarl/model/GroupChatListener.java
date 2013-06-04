@@ -22,7 +22,8 @@ class GroupChatListener extends Thread {
 			}
 		}
 	}
-	
+
+    //TODO: Implement proper stop
 	public void abort() {
 		running = false;
 	}

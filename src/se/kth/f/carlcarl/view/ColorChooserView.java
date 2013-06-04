@@ -10,11 +10,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-public class ColorChooserView extends JDialog {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7647290776582643746L;
+class ColorChooserView extends JDialog {
 	private final JColorChooser colorChooser = new JColorChooser();
 	private int result = 0;
 

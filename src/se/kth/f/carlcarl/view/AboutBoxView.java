@@ -7,12 +7,7 @@ import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class AboutBoxView extends JDialog{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3122749887881125400L;
-
+class AboutBoxView extends JDialog{
 
 	public AboutBoxView() {
 		setTitle("Om");

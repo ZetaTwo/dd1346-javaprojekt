@@ -21,7 +21,6 @@ import javax.swing.DefaultComboBoxModel;
 import se.kth.f.carlcarl.model.MessageSettings;
 
 public class MessageComposerView extends JPanel {
-	private static final long serialVersionUID = 3010982094099123535L;
 
 	private Color currentColor;
 	private final JButton boldButton;
@@ -163,7 +162,6 @@ public class MessageComposerView extends JPanel {
 	}
 	
 	class BoldAction extends StyledEditorKit.StyledTextAction {
-	  private static final long serialVersionUID = 9174670038684056758L;
 	  boolean isActive;
 	  
 	  public BoldAction() {
@@ -208,8 +206,6 @@ public class MessageComposerView extends JPanel {
 	}
 	
 	class ItalicAction extends StyledEditorKit.StyledTextAction {
-
-		  private static final long serialVersionUID = -1428340091100055456L;
 		  boolean isActive;
 		  
 		  public ItalicAction() {

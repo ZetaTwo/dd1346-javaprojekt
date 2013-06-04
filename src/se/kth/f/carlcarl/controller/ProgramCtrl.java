@@ -1,12 +1,5 @@
 package se.kth.f.carlcarl.controller;
 
-import java.awt.Color;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.swing.JOptionPane;
-
 import se.kth.f.carlcarl.helper.EncryptionHelper;
 import se.kth.f.carlcarl.model.ConnListenerMdl;
 import se.kth.f.carlcarl.model.Connection;
@@ -16,6 +9,12 @@ import se.kth.f.carlcarl.view.ChatView;
 import se.kth.f.carlcarl.view.FileTransferRequestView;
 import se.kth.f.carlcarl.view.FileTransferView;
 import se.kth.f.carlcarl.view.ProgramView;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class ProgramCtrl {
 	
@@ -91,7 +90,7 @@ public class ProgramCtrl {
 	public ProgramSettingsMdl getSettings() {
 		return programMdl;
 	}
-	
+
 	public static void main(String[] args) throws IOException {
 		ProgramCtrl ctrl = new ProgramCtrl();
 		ctrl.Start();
@@ -136,17 +135,17 @@ public class ProgramCtrl {
 	public void ChatRequest(String username, Connection conn, String message) {
 		int answer = JOptionPane.showConfirmDialog(programView, username + " vill chatta med dig.", "Chattförfrågan", JOptionPane.YES_NO_OPTION);
 		if(answer == JOptionPane.YES_OPTION) {
+            //TODO: Invectigate behaviour
 			newChat(conn);
-			System.out.println(getUserName());
-			conn.getOut().println("<message sender=\""+ getUserName() + "\"><request reply=\"yes\"> yes </request> </message>");
+			conn.getOut().println("<message sender=\""+ getUserName() + "\"><request reply=\"yes\">" + message + "</request> </message>");
 		}
 		else{
-			conn.getOut().println("<message sender=\""+ getUserName() + "\"><request reply=\"no\"> no </request> </message>");
+			conn.getOut().println("<message sender=\""+ getUserName() + "\"><request reply=\"no\">" + message + "</request> </message>");
 			conn.Close();
 		}
 	}
 
-	public void ChangeListeningPort(int port) {
+	public void ChangeListeningPort(int port) throws IOException {
 		connectionListener.setListeningPort(port);		
 	}
 	
@@ -168,10 +167,12 @@ public class ProgramCtrl {
 		return result;
 	}
 
-    public void CreateFileTransfer(String fileName, int fileSize) {
-        FileTransferMdl fileTransfer = FileTransferMdl.Host(50000, fileName, fileSize);
+    public int CreateFileTransfer(String fileName, int fileSize) {
+        FileTransferMdl fileTransfer = FileTransferMdl.Host(fileName, fileSize);
         FileTransferView fileTransferView = new FileTransferView(programView, fileTransfer);
         fileTransferView.setVisible(true);
+
+        return fileTransfer.getPort();
     }
 
 	

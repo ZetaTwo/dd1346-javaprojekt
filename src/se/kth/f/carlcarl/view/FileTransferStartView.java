@@ -14,13 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
-public class FileTransferStartView extends JDialog {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -662484651376974878L;
-	
+class FileTransferStartView extends JDialog {
 	private final JTextField textField;
 	private final JTextArea textArea;
 	private int result;
@@ -130,15 +124,4 @@ public class FileTransferStartView extends JDialog {
 	public int getResult() {
 		return result;
 	}
-	
-	public static void main(String[] args) {
-		try {
-			FileTransferStartView dialog = new FileTransferStartView(null);
-			dialog.setVisible(true);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 }

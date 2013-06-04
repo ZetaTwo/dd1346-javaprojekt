@@ -39,7 +39,7 @@ public class Connection {
 		return in;
 	}
 
-    public InetAddress GetAdress() {
+    public InetAddress GetAddress() {
         return socket.getInetAddress();
     }
 

@@ -4,7 +4,6 @@ import se.kth.f.carlcarl.model.Connection;
 import javax.swing.*;
 
 public class ChatViewGroup extends ChatView {
-	private static final long serialVersionUID = -129893716411983668L;
     private final JList<Connection> list;
 
     /**

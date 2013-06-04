@@ -29,14 +29,11 @@ import java.io.File;
 import java.io.IOException;
 
 public class ProgramView extends JFrame {
-
-	private static final long serialVersionUID = -7022872006598970444L;
     private JTabbedPane tabbedPane;
 	public final MessageComposerView messageComposerView;
 	private final ProgramCtrl ctrl;
-	int chatIndex = 1;
 
-	/**
+    /**
 	 * Launch the application.
 	 */
 	
@@ -230,8 +227,12 @@ public class ProgramView extends JFrame {
 		
 		if(dialog.getResult() == 1) {
 			int port = dialog.getListeningPort();
-			ctrl.ChangeListeningPort(port);
-			port = ctrl.getListeningPort();
+            try {
+                ctrl.ChangeListeningPort(port);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Kunde inte ändra port. Var god starta om programmet.", "Nätverksfel", JOptionPane.ERROR_MESSAGE);
+            }
+            port = ctrl.getListeningPort();
 			ctrl.getSettings().setListeningPort(port);
 			String name = dialog.getName();
 			ctrl.getSettings().setUserName(name);
@@ -252,7 +253,7 @@ public class ProgramView extends JFrame {
 		newChatView.setVisible(true);
 		int port = newChatView.getListeningPort();
 		//Process results
-		if(newChatView.result == 1) {
+		if(newChatView.getResult() == 1) {
 			ChatView newView;
 			if(newChatView.getChatType() == 1) {
 				// Group chat
@@ -307,7 +308,7 @@ public class ProgramView extends JFrame {
 	}
 
 
-	
+	//TODO: Use this?
 	public int IncomingChatRequest(String name) {
 		return JOptionPane.showConfirmDialog(null, name + " vill chatta med dig. Vill du?", "Inkommande chatförfrågan", JOptionPane.YES_NO_OPTION);
 	}

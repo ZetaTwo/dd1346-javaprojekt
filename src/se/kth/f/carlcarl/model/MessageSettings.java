@@ -4,22 +4,13 @@ import java.awt.Color;
 
 public class MessageSettings {
 	
-	private boolean bold;
-    private boolean italics;
-	private Color color;
-	private String cryptoType;
-    private String currentMessage;
-	
-	private MessageSettings(boolean boldBool, boolean italicsBool, Color colorColor, String cryptoString, String currentMessageString) {
-		bold = boldBool;
-		italics = italicsBool;
-		color = colorColor;
-		cryptoType = cryptoString;
-		currentMessage = currentMessageString;
-	}
+	private boolean bold = false;
+    private boolean italics = false;
+	private Color color = Color.black;
+	private String cryptoType = "";
+    private String currentMessage = "";
 	
 	public MessageSettings() {
-		this(false, false, Color.black, "", "");
 	}
 	
 	public void setBold(boolean bool) {

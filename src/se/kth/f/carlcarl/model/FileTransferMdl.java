@@ -9,12 +9,14 @@ public class FileTransferMdl extends Thread {
     private String filePath;
     private long fileSize;
     private int bytesProcessed = 0;
+    private int port;
 
-    public static FileTransferMdl Host(int port, String filePath, int fileSize) {
+    public static FileTransferMdl Host(String filePath, int fileSize) {
         FileTransferMdl result = new FileTransferMdl();
-        FileTransferListenerMdl listenerMdl = new FileTransferListenerMdl(result, port);
+        FileTransferListenerMdl listenerMdl = new FileTransferListenerMdl(result);
         result.filePath = filePath;
         result.fileSize = fileSize;
+        result.port = listenerMdl.getListeningPort();
         listenerMdl.start();
 
         return result;
@@ -24,11 +26,12 @@ public class FileTransferMdl extends Thread {
         FileTransferMdl result = new FileTransferMdl();
 
         try {
-            Connection newconn = new Connection(new Socket(conn.GetAdress(), port));
+            Connection newconn = new Connection(new Socket(conn.GetAddress(), port));
             result.send = true;
             result.filePath = filePath;
             File file = new File(filePath);
             result.fileSize = file.length();
+            result.port = port;
             result.connect(newconn);
         } catch (IOException e) {
             e.printStackTrace();
@@ -94,5 +97,9 @@ public class FileTransferMdl extends Thread {
 
     public String getFilePath() {
         return filePath;
+    }
+
+    public int getPort() {
+        return port;
     }
 }

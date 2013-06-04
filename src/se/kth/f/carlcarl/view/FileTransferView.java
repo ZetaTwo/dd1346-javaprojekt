@@ -10,11 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class FileTransferView extends JDialog implements ActionListener {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -91035909390392840L;
 	private int result;
     private final FileTransferMdl fileTransferMdl;
     private final JProgressBar progressBar;
@@ -129,14 +124,19 @@ public class FileTransferView extends JDialog implements ActionListener {
 	private void Close() {
 		dispose();
 	}
-	
+
+    //TODO: Do we care?
+    public int getResult() {
+        return result;
+    }
+
+    // TODO: Filöverföring
 	private String timeLeft(){
-		// TODO Filöverföring
 		return "";
 	}
-	
+
+    // TODO: Filöverföring
 	private String currentSpeed() {
-		// TODO Filöverföring
 		return "";
 	}
 

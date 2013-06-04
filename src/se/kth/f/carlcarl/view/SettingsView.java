@@ -14,12 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
-public class SettingsView extends JDialog {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 919092415372014804L;
+class SettingsView extends JDialog {
 
 	private final JTextField nameField;
 	private final JFormattedTextField portField;

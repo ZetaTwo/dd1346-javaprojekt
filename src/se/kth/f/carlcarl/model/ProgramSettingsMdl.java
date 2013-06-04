@@ -27,8 +27,8 @@ public class ProgramSettingsMdl {
 		username = name;
 	}
 	
-	void setCeasarKey(int ceasarKey) {
-		privateKey.put("ceasar", ceasarKey);
+	void setCaesarKey(int caesarKey) {
+		privateKey.put("caesar", caesarKey);
 	}
 	
 	void setRSAKey(String AESKey) {
@@ -43,8 +43,8 @@ public class ProgramSettingsMdl {
 		return username;
 	}
 	
-	public int getCeasarKey() {
-		return (Integer)privateKey.get("ceasar");
+	public int getCaesarKey() {
+		return (Integer)privateKey.get("caesar");
 	}
 	
 	public String getAESKey() {
@@ -58,7 +58,7 @@ public class ProgramSettingsMdl {
         ini.clear();
 		ini.add("Data","Username", getUserName());
 		ini.add("Data","ListeningPort", getListeningPort());
-		ini.add("Data","CeasarKey", getCeasarKey());
+		ini.add("Data","CaesarKey", getCaesarKey());
 		ini.add("Data","AESKey", getAESKey());
 		ini.store();
 
@@ -76,7 +76,7 @@ public class ProgramSettingsMdl {
 		
 		returnMdl.setListeningPort(data.getInt("ListeningPort", 0));
 		returnMdl.setUserName(data.get("Username", ""));
-		returnMdl.setCeasarKey(data.getInt("CeasarKey", 0));
+		returnMdl.setCaesarKey(data.getInt("CaesarKey", 0));
 		returnMdl.setRSAKey(data.get("AESKey", ""));
 
         if(fileCreated) {
@@ -84,27 +84,5 @@ public class ProgramSettingsMdl {
         }
 
 		return returnMdl;
-	}
-	
-	 public static void main(String[] args) {
-
-		ProgramSettingsMdl model;
-
-		try {
-			model = open("filepath.ini");
-		} catch (IOException e1) {
-			e1.printStackTrace();
-            return;
-		}
-		model.setCeasarKey(13);
-		model.setListeningPort(20030);
-		model.setUserName("Carl");
-		model.setRSAKey("ksanfdpijanfu9qh318412");
-		try {
-			model.save();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
 	}
 }

@@ -7,10 +7,11 @@ import java.net.Socket;
 class FileTransferListenerMdl extends Thread {
     private final FileTransferMdl transferMdl;
     private ServerSocket server;
-    public FileTransferListenerMdl(FileTransferMdl fileTransferMdl, int port) {
+
+    public FileTransferListenerMdl(FileTransferMdl fileTransferMdl) {
         this.transferMdl = fileTransferMdl;
         try {
-            server = new ServerSocket(port);
+            server = new ServerSocket(0);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -25,5 +26,9 @@ class FileTransferListenerMdl extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getListeningPort() {
+        return server.getLocalPort();
     }
 }

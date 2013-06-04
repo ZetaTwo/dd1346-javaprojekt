@@ -4,7 +4,6 @@ import se.kth.f.carlcarl.model.Connection;
 import javax.swing.SpringLayout;
 
 public class ChatViewSingle extends ChatView {
-	private static final long serialVersionUID = 7989847204259584555L;
 
     private final Connection connection;
 

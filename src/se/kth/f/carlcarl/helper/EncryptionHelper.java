@@ -100,30 +100,6 @@ public class EncryptionHelper {
         return cipherText.toString();
     }
 
-    public static void main(String[] args) {
-        String message = "<text color=\"#000000\">abcxyz</text>";
-        String key1 = "ABCDABCDABCDABCDABCDABCDABCDABCD";
-        String key2 = "13";
-
-        String cipher = EncryptionHelper.Encrypt(Encryption.AES, message, key1);
-        cipher = cipher.replace("<encrypted type=\"aes\">", "");
-        cipher = cipher.replace("</encrypted>", "");
-        String decrypt = EncryptionHelper.Decrypt(Encryption.AES, cipher, key1);
-
-        System.out.println(message);
-        System.out.println(cipher);
-        System.out.println(decrypt);
-
-        cipher = EncryptionHelper.Encrypt(Encryption.CAESAR, message, key2);
-        cipher = cipher.replace("<encrypted type=\"caesar\">", "");
-        cipher = cipher.replace("</encrypted>", "");
-        decrypt = EncryptionHelper.Decrypt(Encryption.CAESAR, cipher, key2);
-
-        System.out.println(message);
-        System.out.println(cipher);
-        System.out.println(decrypt);
-    }
-
     private static byte[] hexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];
