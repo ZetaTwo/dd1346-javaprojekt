@@ -21,7 +21,7 @@ public class FileTransferRequestView extends JDialog{
 	private static final long serialVersionUID = 3109817122107630020L;
 	
 	
-	int result;
+	private int result;
 
 	public FileTransferRequestView(Window parent, String user, String fileName, int fileSize, String message) {
 		super(parent, "Filöverföringsförfrågan", Dialog.ModalityType.APPLICATION_MODAL);
@@ -118,7 +118,7 @@ public class FileTransferRequestView extends JDialog{
 		return result;
 	}
 	
-	public String getFileSize(int fileSize) {
+	String getFileSize(int fileSize) {
 		String[] suffixList = new String[]{"B", "kB", "MB", "GB", "TB"};
 		int numberOfItterations = 0;
 		while(fileSize > 1000) {

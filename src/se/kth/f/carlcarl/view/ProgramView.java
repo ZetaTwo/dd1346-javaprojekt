@@ -31,9 +31,9 @@ import java.io.IOException;
 public class ProgramView extends JFrame {
 
 	private static final long serialVersionUID = -7022872006598970444L;
-    public JTabbedPane tabbedPane;
-	public MessageComposerView messageComposerView;
-	ProgramCtrl ctrl;
+    private JTabbedPane tabbedPane;
+	public final MessageComposerView messageComposerView;
+	private final ProgramCtrl ctrl;
 	int chatIndex = 1;
 
 	/**
@@ -198,7 +198,7 @@ public class ProgramView extends JFrame {
 		helpMenu.add(aboutItem);
 	}
 	
-	protected void NextTab() {
+	void NextTab() {
 		int tabCount = tabbedPane.getTabCount();
 		int currentIndex = tabbedPane.getSelectedIndex();
 		if(tabCount - currentIndex == 1){
@@ -206,8 +206,6 @@ public class ProgramView extends JFrame {
 			return;
 		}
 		tabbedPane.setSelectedIndex(currentIndex + 1);
-		return;
-		
 	}
 
 	private void CloseChat() {

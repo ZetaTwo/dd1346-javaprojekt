@@ -7,9 +7,9 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+import se.kth.f.carlcarl.helper.EncryptionHelper;
 import se.kth.f.carlcarl.model.ConnListenerMdl;
 import se.kth.f.carlcarl.model.Connection;
-import se.kth.f.carlcarl.model.EncryptionHandler;
 import se.kth.f.carlcarl.model.FileTransferMdl;
 import se.kth.f.carlcarl.model.ProgramSettingsMdl;
 import se.kth.f.carlcarl.view.ChatView;
@@ -19,21 +19,21 @@ import se.kth.f.carlcarl.view.ProgramView;
 
 public class ProgramCtrl {
 	
-	ProgramSettingsMdl programMdl;
-	ProgramView programView;
-	ArrayList<ChatCtrl> chatCtrls = new ArrayList<>();
-	ChatCtrl activeChat;
-	ConnListenerMdl connectionListener;
+	private ProgramSettingsMdl programMdl;
+	private ProgramView programView;
+	private final ArrayList<ChatCtrl> chatCtrls = new ArrayList<>();
+	private ChatCtrl activeChat;
+	private ConnListenerMdl connectionListener;
 	
 	
-	public ProgramCtrl() throws IOException {
+	private ProgramCtrl() throws IOException {
 		programMdl = ProgramSettingsMdl.open("programSettings.ini");
 		programView = new ProgramView(this);
 		connectionListener = new ConnListenerMdl(this, programMdl.getListeningPort());
 		connectionListener.start();
 	}
 	
-	protected void SaveMessageSettings() {
+	void SaveMessageSettings() {
 		if(activeChat != null) {
 			activeChat.UpdateSettings(programView.messageComposerView.getSettings());
 		}
@@ -53,7 +53,7 @@ public class ProgramCtrl {
 		}
 	}
 	
-	public void newChat(Connection conn) {
+	void newChat(Connection conn) {
 		ChatCtrl ctrl;
 		ctrl = new ChatCtrl(this, conn);
 		programView.addChatView(addChat(ctrl), ctrl.GetLocalPort());
@@ -100,13 +100,13 @@ public class ProgramCtrl {
 	public boolean Send(String text, String encryptionString, Color color) {
 		boolean result = activeChat != null;
 		if(result) {
-            EncryptionHandler.Encryption encryption = EncryptionHandler.Encryption.NONE;
+            EncryptionHelper.Encryption encryption = EncryptionHelper.Encryption.NONE;
             switch (encryptionString) {
                 case "Caesar":
-                    encryption = EncryptionHandler.Encryption.CASEAR;
+                    encryption = EncryptionHelper.Encryption.CAESAR;
                     break;
                 case "AES":
-                    encryption = EncryptionHandler.Encryption.AES;
+                    encryption = EncryptionHelper.Encryption.AES;
                     break;
                 default:
                     break;
@@ -123,18 +123,18 @@ public class ProgramCtrl {
         return dialog.getResult() == 1;
 	}
 
-	public void FileTransferResponse(Connection conn, boolean reply, int port, String filePath) {
+	public void FileTransferResponse(Connection conn, int port, String filePath) {
         FileTransferMdl fileTransferMdl = FileTransferMdl.Connect(conn, port, filePath);
         FileTransferView fileTransferView = new FileTransferView(programView, fileTransferMdl);
         fileTransferView.setVisible(true);
 	}
 	
 	public void ChatRequest(Connection conn) {
-		ChatRequest(false, "Någon", conn, "");
+		ChatRequest("NÃ¥gon", conn, "");
 	}
 
-	public void ChatRequest(boolean groupChat, String username, Connection conn, String string) {
-		int answer = JOptionPane.showConfirmDialog(programView, username + " vill chatta med dig.", "Chattförfrågan", JOptionPane.YES_NO_OPTION);
+	public void ChatRequest(String username, Connection conn, String message) {
+		int answer = JOptionPane.showConfirmDialog(programView, username + " vill chatta med dig.", "ChattfÃ¶rfrÃ¥gan", JOptionPane.YES_NO_OPTION);
 		if(answer == JOptionPane.YES_OPTION) {
 			newChat(conn);
 			System.out.println(getUserName());

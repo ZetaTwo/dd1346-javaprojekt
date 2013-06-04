@@ -21,9 +21,9 @@ public class FileTransferStartView extends JDialog {
 	 */
 	private static final long serialVersionUID = -662484651376974878L;
 	
-	private JTextField textField;
-	private JTextArea textArea;
-	int result;
+	private final JTextField textField;
+	private final JTextArea textArea;
+	private int result;
 	
 	public FileTransferStartView(Window parent) {
 		super(parent, "Filöverföring", Dialog.ModalityType.APPLICATION_MODAL);

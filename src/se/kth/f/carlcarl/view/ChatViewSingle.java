@@ -6,7 +6,7 @@ import javax.swing.SpringLayout;
 public class ChatViewSingle extends ChatView {
 	private static final long serialVersionUID = 7989847204259584555L;
 
-    Connection connection;
+    private final Connection connection;
 
 	/**
 	 * Create the panel.

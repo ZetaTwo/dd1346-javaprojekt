@@ -16,28 +16,28 @@ import org.xml.sax.SAXException;
 
 
 import se.kth.f.carlcarl.controller.ProgramCtrl;
+import se.kth.f.carlcarl.helper.NetworkHelper;
 
 public class ConnListenerMdl extends Thread{
 	
-	ProgramCtrl owner;
-	boolean running = true;
-	ServerSocket listeningSocket;
-	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	DocumentBuilder builder;
+	private final ProgramCtrl owner;
+	private boolean running = true;
+	private ServerSocket listeningSocket;
+    private DocumentBuilder builder;
 	Document xmlDoc;
-	int listeningPort;
-	boolean notdone = true;
-	
-	
-	public ConnListenerMdl(ProgramCtrl owner, int port){
+	private int listeningPort;
+
+
+    public ConnListenerMdl(ProgramCtrl owner, int port) throws IOException {
 		
 		this.owner = owner;
 		try {
-			builder = factory.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            builder = factory.newDocumentBuilder();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		findSocket(listeningPort);
+        setListeningPort(port);
 		
 	}
 	public void run() {
@@ -57,45 +57,38 @@ public class ConnListenerMdl extends Thread{
 					owner.ChatRequest(conn);
 				}
 			}
-			catch (IOException e) {
-			} catch (InterruptedException e) {
-			} catch (SAXException e) {
-			}
+			catch (Exception e) {
+                e.printStackTrace();
+            }
 		}
 	}
 	
-	public void Start(){
-		this.running = true;
+	void Start(){
+		running = true;
 	}
 	
-	public void Stop() {
-		this.running = false;
+	void Stop() {
+		running = false;
 	}
 
-	public void setListeningPort(int port) {
+	public void setListeningPort(int port) throws IOException {
 		Stop();
 		try {
 			listeningSocket.close();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		findSocket(port);
-		Start();
-	}
-	
-	private void findSocket(int port) {
-		listeningPort = port;
-		notdone = true;
-		
-		while(notdone) {
-			try {
-				listeningSocket = new ServerSocket(listeningPort);
-				notdone = false;
-			} catch (Exception e) {
-				e.printStackTrace();
-				listeningPort++;
-			}
-		}
+
+        try {
+            listeningSocket = NetworkHelper.findNextOpenPort(port);
+        } catch (Exception e) {
+            try {
+                listeningSocket = NetworkHelper.findNextOpenPort(0);
+            } catch (IOException e1) {
+                throw new IOException("No port available");
+            }
+        }
+        Start();
 	}
 	
 	public int getListeningPort() {

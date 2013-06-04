@@ -4,11 +4,11 @@ import java.io.*;
 import java.net.Socket;
 
 public class FileTransferMdl extends Thread {
-    Connection connection;
-    boolean send = false;
-    String filePath;
-    long fileSize;
-    int bytesProcessed = 0;
+    private Connection connection;
+    private boolean send = false;
+    private String filePath;
+    private long fileSize;
+    private int bytesProcessed = 0;
 
     public static FileTransferMdl Host(int port, String filePath, int fileSize) {
         FileTransferMdl result = new FileTransferMdl();
@@ -31,7 +31,7 @@ public class FileTransferMdl extends Thread {
             result.fileSize = file.length();
             result.connect(newconn);
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
         return result;
@@ -47,47 +47,39 @@ public class FileTransferMdl extends Thread {
     }
 
     public void run() {
-        if(send) {
-            File file = new File(filePath);
-            FileOutputStream in = null;
+        File file = new File(filePath);
+        BufferedInputStream bis;
+        BufferedOutputStream bos;
 
-            try {
-                int len = (int)file.length();
-                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
-                BufferedOutputStream bos = new BufferedOutputStream(connection.getSocket().getOutputStream());
-                byte[] byteArray = new byte[1000];
-                int i=0;
-
-                while ((i = bis.read(byteArray)) != -1){ //in = int; byteArray = byte[]
-                    bos.write(byteArray, 0, i);
-                    bytesProcessed += i;
-                }
-                bos.flush();
-                bos.close();
-                bis.close();
-            } catch (Exception e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        try {
+            //Setup streams
+            if(send) {
+                bis = new BufferedInputStream(new FileInputStream(file));
+                bos = new BufferedOutputStream(connection.getSocket().getOutputStream());
+            } else {
+                bis = new BufferedInputStream(connection.getSocket().getInputStream());
+                bos = new BufferedOutputStream(new FileOutputStream(file));
             }
-        } else {
-            File file = new File(filePath);
-            FileOutputStream in = null;
 
-            try {
-                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-                BufferedInputStream bis = new BufferedInputStream(connection.getSocket().getInputStream());
-                byte[] byteArray = new byte[1000];
+            //Setup buffer
+            byte[] byteArray = new byte[1024];
+            int i;
 
-                int i=0;
-                while ((i = bis.read(byteArray)) != -1){ //in = int; byteArray = byte[]
-                    bos.write(byteArray, 0, i);
-                    bytesProcessed += i;
-                }
-                bos.flush();
-                bos.close();
-                bis.close();
-            } catch (Exception e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            //Read and write
+            while ((i = bis.read(byteArray)) != -1){ //in = int; byteArray = byte[]
+                bos.write(byteArray, 0, i);
+                bytesProcessed += i;
             }
+
+            //Close
+            bos.flush();
+            bos.close();
+            bis.close();
+        } catch (Exception e) {
+            if (!send) {
+                file.delete();
+            }
+
         }
 
     }

@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class FileTransferListenerMdl extends Thread {
-    FileTransferMdl transferMdl;
-    ServerSocket server;
+class FileTransferListenerMdl extends Thread {
+    private final FileTransferMdl transferMdl;
+    private ServerSocket server;
     public FileTransferListenerMdl(FileTransferMdl fileTransferMdl, int port) {
         this.transferMdl = fileTransferMdl;
         try {

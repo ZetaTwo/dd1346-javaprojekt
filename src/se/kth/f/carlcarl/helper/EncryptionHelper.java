@@ -1,14 +1,11 @@
-package se.kth.f.carlcarl.model;
+package se.kth.f.carlcarl.helper;
 
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
-import javax.xml.bind.DatatypeConverter;
 
-public class EncryptionHandler {
-    public static enum Encryption {NONE, AES, CASEAR};
+public class EncryptionHelper {
+    public static enum Encryption {NONE, AES, CAESAR}
 
     public static String Encrypt(Encryption encryption, String message, String key) {
         String encryptedMessage;
@@ -16,7 +13,7 @@ public class EncryptionHandler {
             case AES:
                 encryptedMessage = "<encrypted type=\"aes\" key=\""+ key +"\">" + EncryptAES(message, key) + "</encrypted>";
                 break;
-            case CASEAR:
+            case CAESAR:
                 encryptedMessage = "<encrypted type=\"caesar\" key=\""+ key +"\">" + EncryptCaesar(message, key) + "</encrypted>";
                 break;
             default:
@@ -33,7 +30,7 @@ public class EncryptionHandler {
             case AES:
                 decryptedMessage = DecryptAES(ciphertext, key);
                 break;
-            case CASEAR:
+            case CAESAR:
                 decryptedMessage = DecryptCaesar(ciphertext, key);
                 break;
             default:
@@ -46,7 +43,7 @@ public class EncryptionHandler {
 
     private static String EncryptAES(String message, String keyString) {
         Cipher cipher;
-        StringBuffer cipherText = new StringBuffer();
+        StringBuilder cipherText = new StringBuilder();
         try {
             cipher = Cipher.getInstance("AES");
             byte[] keyData = hexStringToByteArray(keyString);
@@ -66,7 +63,7 @@ public class EncryptionHandler {
 
     private static String EncryptCaesar(String message, String keyString) {
         byte key = (byte)Integer.parseInt(keyString);
-        StringBuffer cipherText = new StringBuffer();
+        StringBuilder cipherText = new StringBuilder();
         for(byte b : message.getBytes()) {
             cipherText.append(String.format("%02X", b+key));
         }
@@ -93,7 +90,7 @@ public class EncryptionHandler {
 
     private static String DecryptCaesar(String message, String keyString) {
         int key = Integer.parseInt(keyString);
-        StringBuffer cipherText = new StringBuffer();
+        StringBuilder cipherText = new StringBuilder();
 
         for (int i = 0; i < message.length(); i+=2){
             char c = (char)(Integer.parseInt(message.substring(i, i+2), 16)-key);
@@ -108,26 +105,26 @@ public class EncryptionHandler {
         String key1 = "ABCDABCDABCDABCDABCDABCDABCDABCD";
         String key2 = "13";
 
-        String cipher = EncryptionHandler.Encrypt(Encryption.AES, message, key1);
+        String cipher = EncryptionHelper.Encrypt(Encryption.AES, message, key1);
         cipher = cipher.replace("<encrypted type=\"aes\">", "");
         cipher = cipher.replace("</encrypted>", "");
-        String decrypt = EncryptionHandler.Decrypt(Encryption.AES, cipher, key1);
+        String decrypt = EncryptionHelper.Decrypt(Encryption.AES, cipher, key1);
 
         System.out.println(message);
         System.out.println(cipher);
         System.out.println(decrypt);
 
-        cipher = EncryptionHandler.Encrypt(Encryption.CASEAR, message, key2);
+        cipher = EncryptionHelper.Encrypt(Encryption.CAESAR, message, key2);
         cipher = cipher.replace("<encrypted type=\"caesar\">", "");
         cipher = cipher.replace("</encrypted>", "");
-        decrypt = EncryptionHandler.Decrypt(Encryption.CASEAR, cipher, key2);
+        decrypt = EncryptionHelper.Decrypt(Encryption.CAESAR, cipher, key2);
 
         System.out.println(message);
         System.out.println(cipher);
         System.out.println(decrypt);
     }
 
-    public static byte[] hexStringToByteArray(String s) {
+    private static byte[] hexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {

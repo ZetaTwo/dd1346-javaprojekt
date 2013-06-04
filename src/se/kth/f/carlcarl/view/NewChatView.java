@@ -27,9 +27,10 @@ public class NewChatView extends JDialog{
 	private static final long serialVersionUID = -2563969029790271758L;
 
 	
-	JFormattedTextField portTextField;
-	JTextField adressTextField;
-	JRadioButton radioGroup, radioSingle;
+	private final JFormattedTextField portTextField;
+	private final JTextField adressTextField;
+	private final JRadioButton radioGroup;
+    private final JRadioButton radioSingle;
 	int result;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	
@@ -85,7 +86,7 @@ public class NewChatView extends JDialog{
 			}
 		});
 		
-		// Lägger till componenterna
+		// Lï¿½gger till componenterna
 		contentPane.add(portLabel);
 		contentPane.add(portTextField);
 		contentPane.add(radioGroup);
@@ -95,7 +96,7 @@ public class NewChatView extends JDialog{
 		contentPane.add(yesButton);
 		contentPane.add(noButton);
 
-		// Låser dimensionerna
+		// Lï¿½ser dimensionerna
 		Dimension dimension = new Dimension(200,170);
 		contentPane.setPreferredSize(dimension);
 		setResizable(false);

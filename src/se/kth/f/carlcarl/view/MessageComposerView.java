@@ -23,10 +23,11 @@ import se.kth.f.carlcarl.model.MessageSettings;
 public class MessageComposerView extends JPanel {
 	private static final long serialVersionUID = 3010982094099123535L;
 
-	Color currentColor;
-	JButton boldButton, italicsButton, colorButton;
-	JTextPane editorPane;
-	JComboBox<String> encryptionComboBox;
+	private Color currentColor;
+	private final JButton boldButton;
+    private final JButton italicsButton;
+    private final JTextPane editorPane;
+	private final JComboBox<String> encryptionComboBox;
 
     /**
 	 * Create the panel.
@@ -50,18 +51,18 @@ public class MessageComposerView extends JPanel {
 		springLayout.putConstraint(SpringLayout.WEST, italicsButton, 6, SpringLayout.EAST, boldButton);
 		springLayout.putConstraint(SpringLayout.SOUTH, italicsButton, 0, SpringLayout.SOUTH, boldButton);
 		add(italicsButton);
-		
-		colorButton = new JButton("Color");
+
+        JButton colorButton = new JButton("Color");
 		colorButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				ColorChooserView dialog = new ColorChooserView();
-				dialog.setVisible(true);
-				
-				if(dialog.getResult() == 1) {
-					currentColor = dialog.getColor();
-				}
-			}
-		});
+            public void actionPerformed(ActionEvent arg0) {
+                ColorChooserView dialog = new ColorChooserView();
+                dialog.setVisible(true);
+
+                if (dialog.getResult() == 1) {
+                    currentColor = dialog.getColor();
+                }
+            }
+        });
 		
 		springLayout.putConstraint(SpringLayout.NORTH, colorButton, 0, SpringLayout.NORTH, boldButton);
 		springLayout.putConstraint(SpringLayout.WEST, colorButton, 6, SpringLayout.EAST, italicsButton);
@@ -118,7 +119,7 @@ public class MessageComposerView extends JPanel {
 		return text;
 	}
 	
-	public void setText(String htmlString) {
+	void setText(String htmlString) {
 		editorPane.setText(htmlString);
 	}
 	
@@ -126,30 +127,30 @@ public class MessageComposerView extends JPanel {
 		return (String)encryptionComboBox.getSelectedItem();
 	}
 	
-	public void setEncryption(String encryption) {
+	void setEncryption(String encryption) {
 		int s = encryptionComboBox.getComponentCount();
 		int i = 0;
 		while(i < s) {
-			if(encryption.equals(encryptionComboBox.getComponent(i))) {
+			if(encryption.equals(encryptionComboBox.getComponent(i).toString())) {
 				encryptionComboBox.setSelectedIndex(i);
 			}
 			i++;
 		}
 	}
 	
-	public boolean isBold() {
+	boolean isBold() {
 		return ((BoldAction) boldButton.getAction()).isActive();
 	}
 	
-	public void setBold() {
+	void setBold() {
 		((BoldAction) boldButton.getAction()).activate();
 	}
 	
-	public boolean isItalics() {
+	boolean isItalics() {
 		return ((ItalicAction) italicsButton.getAction()).isActive();
 	}
 	
-	public void setItalics() {
+	void setItalics() {
 		((ItalicAction) italicsButton.getAction()).activate();
 	}
 	
@@ -157,7 +158,7 @@ public class MessageComposerView extends JPanel {
 		return currentColor;
 	}
 	
-	public void setActiveColor(Color color) {
+	void setActiveColor(Color color) {
 		currentColor = color;
 	}
 	

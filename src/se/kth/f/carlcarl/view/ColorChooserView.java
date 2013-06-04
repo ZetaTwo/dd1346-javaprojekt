@@ -15,9 +15,8 @@ public class ColorChooserView extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = 7647290776582643746L;
-	JColorChooser colorChooser = new JColorChooser();
-	int result = 0; 
-	Color currentColor;
+	private final JColorChooser colorChooser = new JColorChooser();
+	private int result = 0;
 
 	public ColorChooserView() {
 		JButton accept = new JButton("OK");
@@ -56,7 +55,7 @@ public class ColorChooserView extends JDialog {
 	    pack();
 	}
 
-	  protected void None() {
+	  void None() {
 		  result = 1;
 		  colorChooser.setColor(0, 0, 0);
 		  dispose();
@@ -64,7 +63,6 @@ public class ColorChooserView extends JDialog {
 	}
 
 	private void Ok() {
-		  currentColor = colorChooser.getColor();
 		  result = 1;
 		  dispose();
 	}

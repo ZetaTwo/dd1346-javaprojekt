@@ -15,9 +15,8 @@ public class FileTransferView extends JDialog implements ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = -91035909390392840L;
-	int result;
-    FileTransferMdl fileTransferMdl;
-    private final Timer timer = new Timer(40, this);
+	private int result;
+    private final FileTransferMdl fileTransferMdl;
     private final JProgressBar progressBar;
     private final JButton btnSlutfr;
 
@@ -100,6 +99,7 @@ public class FileTransferView extends JDialog implements ActionListener {
 		springLayout.putConstraint(SpringLayout.SOUTH, lblFilesize, 0, SpringLayout.SOUTH, lblFilstorlek);
 		getContentPane().add(lblFilesize);
 
+        Timer timer = new Timer(40, this);
         timer.start();
 
 		setSize(450, 250);

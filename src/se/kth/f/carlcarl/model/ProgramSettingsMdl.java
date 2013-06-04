@@ -11,9 +11,10 @@ import org.ini4j.IniPreferences;
 
 public class ProgramSettingsMdl {
 	
-	int listeningPort;
-	String username, filePath;
-	Map<String, Object> privateKey = new HashMap<>();
+	private int listeningPort;
+	private String username;
+    private String filePath;
+	private final Map<String, Object> privateKey = new HashMap<>();
 	
 	private ProgramSettingsMdl() {
 	}
@@ -26,11 +27,11 @@ public class ProgramSettingsMdl {
 		username = name;
 	}
 	
-	public void setCeasarKey(int ceasarKey) {
+	void setCeasarKey(int ceasarKey) {
 		privateKey.put("ceasar", ceasarKey);
 	}
 	
-	public void setRSAKey(String AESKey) {
+	void setRSAKey(String AESKey) {
 		privateKey.put("AES", AESKey);
 	}
 	
@@ -67,10 +68,7 @@ public class ProgramSettingsMdl {
 		ProgramSettingsMdl returnMdl = new ProgramSettingsMdl();
 		returnMdl.filePath = path;
 		File saveFile = new File(path);
-		
-		if(!saveFile.exists()) {
-			saveFile.createNewFile();
-		}
+        boolean fileCreated = saveFile.createNewFile();
 		Ini ini = new Ini(saveFile);
 		
 		Preferences prefs = new IniPreferences(ini);
@@ -80,7 +78,11 @@ public class ProgramSettingsMdl {
 		returnMdl.setUserName(data.get("Username", ""));
 		returnMdl.setCeasarKey(data.getInt("CeasarKey", 0));
 		returnMdl.setRSAKey(data.get("AESKey", ""));
-		
+
+        if(fileCreated) {
+            returnMdl.save();
+        }
+
 		return returnMdl;
 	}
 	

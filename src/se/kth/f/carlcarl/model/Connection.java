@@ -8,10 +8,10 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 public class Connection {
-	Socket socket;
-	PrintWriter out;
+	private final Socket socket;
+	private PrintWriter out;
 	BufferedReader in;
-    String username;
+    private String username;
 	
 	public Connection(Socket socket) throws IOException {
 		this.socket = socket;
@@ -47,7 +47,7 @@ public class Connection {
         return socket.getPort();
     }
 
-    public String getUsername() {
+    String getUsername() {
         return username;
     }
 

@@ -10,13 +10,13 @@ import javax.swing.JPanel;
 public abstract class ChatView extends JPanel {
 	private static final long serialVersionUID = 9064849823829997292L;
 
-	String bodyText = "";
-	protected JEditorPane editorPane = new JEditorPane();
+	private String bodyText = "";
+	final JEditorPane editorPane = new JEditorPane();
 	
 	/**
 	 * Create the panel.
 	 */
-	public ChatView() {
+    ChatView() {
 		editorPane.setContentType("text/html");
 		editorPane.setEditable(false);
 	}

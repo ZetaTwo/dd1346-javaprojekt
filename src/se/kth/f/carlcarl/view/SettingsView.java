@@ -21,16 +21,16 @@ public class SettingsView extends JDialog {
 	 */
 	private static final long serialVersionUID = 919092415372014804L;
 
-	JTextField nameField;
-	JFormattedTextField portField;
+	private final JTextField nameField;
+	private final JFormattedTextField portField;
 	
-	int result;
+	private int result;
 	
 	public SettingsView(Window parent, String name, int port) {
-		super(parent, "Inställningar", Dialog.ModalityType.APPLICATION_MODAL);
+		super(parent, "Instï¿½llningar", Dialog.ModalityType.APPLICATION_MODAL);
 		
 		// Titel och exitonclose
-		//setTitle("Inställningar");
+		//setTitle("Instï¿½llningar");
 		
 		// Skapar komponenter
 		JLabel nameLabel = new JLabel("Name :");
@@ -61,7 +61,7 @@ public class SettingsView extends JDialog {
 			}
 		});
 		
-		// Lägger till komponenterna
+		// Lï¿½gger till komponenterna
 		Container contentPane = this.getContentPane();
 		
 		contentPane.add(nameLabel);

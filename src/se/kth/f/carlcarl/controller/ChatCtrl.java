@@ -5,16 +5,17 @@ import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import se.kth.f.carlcarl.helper.EncryptionHelper;
 import se.kth.f.carlcarl.model.*;
 import se.kth.f.carlcarl.view.ChatView;
 import se.kth.f.carlcarl.view.ChatViewSingle;
 
 public class ChatCtrl {
-	ProgramCtrl owner;
+	private final ProgramCtrl owner;
 	ChatMdl model;
 	ChatView view;
 	
-	protected ChatCtrl(ProgramCtrl owner) {
+	ChatCtrl(ProgramCtrl owner) {
 		this.owner = owner;
 	}
 	public ChatCtrl(ProgramCtrl owner, Connection conn) {
@@ -43,7 +44,7 @@ public class ChatCtrl {
 		return view;
 	}
 
-	public void Send(String text, EncryptionHandler.Encryption encryption, Color color) {
+	public void Send(String text, EncryptionHelper.Encryption encryption, Color color) {
 		String username = owner.getSettings().getUserName();
         String key = "";
         switch(encryption) {
@@ -72,11 +73,11 @@ public class ChatCtrl {
             owner.CreateFileTransfer(fileName, fileSize);
         }
 
-        model.sendFileResponse(accept, "", 50000, owner.getSettings().getUserName(), connection);
+        model.sendFileResponse(accept, message, 50000, owner.getSettings().getUserName(), connection);
 	}
 
-    public void ProcessFileTransferResponse(Connection conn, boolean reply, int port, String file) {
-		owner.FileTransferResponse(conn, reply, port, file);
+    public void ProcessFileTransferResponse(Connection conn, int port, String file) {
+		owner.FileTransferResponse(conn, port, file);
 	}
 	
 	

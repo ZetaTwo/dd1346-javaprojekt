@@ -17,20 +17,18 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import javax.xml.parsers.*;
 
 import se.kth.f.carlcarl.controller.ChatCtrl;
+import se.kth.f.carlcarl.helper.EncryptionHelper;
 
 public class ChatMdl extends Thread {
-	ArrayList<String> messages = new ArrayList<>();
-	ArrayList<String> users = new ArrayList<>();
-	protected ArrayList<Connection> connections = new ArrayList<>();
-	MessageSettings messageSettings = new MessageSettings();
-	protected boolean running = true;
-	ChatCtrl owner;
-	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	DocumentBuilder builder;
+	private final ArrayList<Connection> connections = new ArrayList<>();
+	private MessageSettings messageSettings = new MessageSettings();
+    private final ChatCtrl owner;
+	private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	private DocumentBuilder builder;
 	
-	Queue<String> pendingFileRequests = new LinkedList<>();
+	private final Queue<String> pendingFileRequests = new LinkedList<>();
 	
-	protected ChatMdl(ChatCtrl ctrl) {
+	ChatMdl(ChatCtrl ctrl) {
 		owner = ctrl;
 		try {
 			builder = factory.newDocumentBuilder();
@@ -64,7 +62,8 @@ public class ChatMdl extends Thread {
 	}
 	
 	public void run() {
-		while(running) {
+        boolean running = true;
+        while(running) {
 			ArrayList<Connection> connectionsCopy = new ArrayList<>(connections);
 			for(Connection conn : connectionsCopy) {
 				try {
@@ -84,7 +83,11 @@ public class ChatMdl extends Thread {
             try {
                 Thread.sleep(50);
             } catch (Exception e) {
+                e.printStackTrace();
+            }
 
+            if(connections.isEmpty()) {
+                running = false;
             }
 		}
 	}
@@ -100,7 +103,7 @@ public class ChatMdl extends Thread {
         }
     }
 
-    public void Connect(String host, int port) throws UnknownHostException, IOException {
+    void Connect(String host, int port) throws UnknownHostException, IOException {
 		Socket target = new Socket(host, port);
 		Connection connection = new Connection(target);
 		connection.getOut().println("<message sender=\"" + getUserName() + "\"> <request>" + "</request> </message>");
@@ -112,7 +115,7 @@ public class ChatMdl extends Thread {
         owner.Update();
 	}
 	
-	public void sendMessage(String htmlMessage, String sender, Color color, EncryptionHandler.Encryption encryption, String key) {
+	public void sendMessage(String htmlMessage, String sender, Color color, EncryptionHelper.Encryption encryption, String key) {
 		String colorString = String.format("#%06X", (0xFFFFFF & color.getRGB()));
 		
 		htmlMessage = htmlMessage.replace("<b>", "<fetstil>");
@@ -121,7 +124,7 @@ public class ChatMdl extends Thread {
 		htmlMessage = htmlMessage.replace("</i>", "</kursiv>");
 
         String messageTag = "<text color=\"" + colorString + "\">" + htmlMessage + "</text>";
-        String messageFinal = EncryptionHandler.Encrypt(encryption, messageTag, key);
+        String messageFinal = EncryptionHelper.Encrypt(encryption, messageTag, key);
 		
 		String messageData = "<message sender=\"" + sender + "\">" + messageFinal + "</message>";
 							  
@@ -189,7 +192,7 @@ public class ChatMdl extends Thread {
 		return messageSettings;
 	}
 	
-	public String getUserName() {
+	String getUserName() {
 		return owner.getUserName();
 	}
 	
@@ -233,10 +236,9 @@ public class ChatMdl extends Thread {
                 String replyStr = child.getAttributes().getNamedItem("reply").getNodeValue();
 				boolean reply = replyStr.equals("yes");
 				int port = Integer.parseInt(child.getAttributes().getNamedItem("port").getNodeValue());
-				
-				//TODO: Filöverföring
+
 				if(reply) {
-					owner.ProcessFileTransferResponse(conn, reply, port, pendingFileRequests.poll());
+					owner.ProcessFileTransferResponse(conn, port, pendingFileRequests.poll());
 				} else {
 					owner.ProcessChatMessage(sender + " nekade din filöverföring", "System", Color.black);
 				}
@@ -249,7 +251,7 @@ public class ChatMdl extends Thread {
 					owner.ProcessChatMessage(sender + " nekade din anslutning", "System", Color.black);
 					break;
 				}
-				owner.ProcessChatMessage(sender + " �r nu ansluten.", "System", Color.black);
+				owner.ProcessChatMessage(sender + " är nu ansluten.", "System", Color.black);
 				break;
 			case "disconnect":
                 relayMessage(connections, conn, string);
@@ -270,17 +272,17 @@ public class ChatMdl extends Thread {
 
 	private void ParseEncryptedMessage(Connection conn, String sender, Node child) {
 		//Prepare message and get encryption type
-		String decryptedMessage = null;
+		String decryptedMessage;
 		String encryption = child.getAttributes().getNamedItem("type").getNodeValue();
 		String key = child.getAttributes().getNamedItem("key").getNodeValue();
         String encryptedMessage = child.getFirstChild().getNodeValue();
 
 		switch(encryption) {
 		case "aes":
-            decryptedMessage = EncryptionHandler.Decrypt(EncryptionHandler.Encryption.AES, encryptedMessage, key);
+            decryptedMessage = EncryptionHelper.Decrypt(EncryptionHelper.Encryption.AES, encryptedMessage, key);
 			break;
 		case "caesar":
-            decryptedMessage = EncryptionHandler.Decrypt(EncryptionHandler.Encryption.CASEAR, encryptedMessage, key);
+            decryptedMessage = EncryptionHelper.Decrypt(EncryptionHelper.Encryption.CAESAR, encryptedMessage, key);
 			break;
 		default:
 			decryptedMessage = "<text>unknown encryption</text>";
