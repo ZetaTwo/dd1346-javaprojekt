@@ -18,13 +18,20 @@ class GroupChatListener extends Thread {
 			try {
 				model.addConnection(new Connection(server.accept()));
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 	}
 
-    //TODO: Implement proper stop
 	public void abort() {
+        try {
+            server.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 		running = false;
 	}
+
+    public int getPort() {
+        return server.getLocalPort();
+    }
 }

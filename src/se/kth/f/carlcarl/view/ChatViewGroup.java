@@ -5,11 +5,14 @@ import javax.swing.*;
 
 public class ChatViewGroup extends ChatView {
     private final JList<Connection> list;
+    private final int port;
 
     /**
 	 * Create the panel.
 	 */
-	public ChatViewGroup() {
+	public ChatViewGroup(int port) {
+        this.port = port;
+
 		SpringLayout springLayout = new SpringLayout();
 		setLayout(springLayout);
 		
@@ -35,5 +38,10 @@ public class ChatViewGroup extends ChatView {
     @Override
     public Connection getConnection() {
         return list.getSelectedValue();
+    }
+
+    @Override
+    public int getPort() {
+        return port;
     }
 }

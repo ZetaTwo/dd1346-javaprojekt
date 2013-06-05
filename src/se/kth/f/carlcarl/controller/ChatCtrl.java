@@ -15,23 +15,36 @@ public class ChatCtrl {
 	private final ProgramCtrl owner;
 	ChatMdl model;
 	ChatView view;
-	
-	ChatCtrl(ProgramCtrl owner) {
-		this.owner = owner;
-	}
-	public ChatCtrl(ProgramCtrl owner, Connection conn) {
-		this.owner = owner;
-		model = new ChatMdl(this, conn);
-		model.start();
-		view = new ChatViewSingle(model.getUsers()[0]);
-	}
-	
-	public ChatCtrl(ProgramCtrl owner, String address, int port) throws IOException {
-		this.owner = owner;
-		model = new ChatMdl(this, address, port);
-		model.start();
-		view = new ChatViewSingle(model.getUsers()[0]);
-	}
+
+    ChatCtrl(ProgramCtrl owner) {
+        this.owner = owner;
+    }
+
+    ChatCtrl FinishConstruction(ChatMdl model) {
+        if(model == null) {
+            return null;
+        }
+
+        this.model = model;
+        this.model.start();
+        this.view = new ChatViewSingle(this.model.getUsers()[0]);
+
+        return this;
+    }
+
+    public static ChatCtrl CreateChat(ProgramCtrl owner, Connection conn) {
+        ChatCtrl result = new ChatCtrl(owner);
+        ChatMdl model = ChatMdl.ConnectChat(result, conn);
+
+        return result.FinishConstruction(model);
+    }
+
+    public static ChatCtrl CreateChat(ProgramCtrl owner, String address, int port) {
+        ChatCtrl result = new ChatCtrl(owner);
+        ChatMdl model = ChatMdl.ConnectChat(result, address, port);
+
+        return result.FinishConstruction(model);
+    }
 	
 	public void UpdateSettings(MessageSettings settings) {
 		model.UpdateSettings(settings);

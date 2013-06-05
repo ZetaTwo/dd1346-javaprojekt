@@ -23,46 +23,41 @@ public class ChatMdl extends Thread {
 	private final ArrayList<Connection> connections = new ArrayList<>();
 	private MessageSettings messageSettings = new MessageSettings();
     private final ChatCtrl owner;
-	private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	private DocumentBuilder builder;
+    private DocumentBuilder builder;
 	
 	private final Queue<String> pendingFileRequests = new LinkedList<>();
-	
-	ChatMdl(ChatCtrl ctrl) {
-		owner = ctrl;
-		try {
-			builder = factory.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}
+    private boolean running = true;
+
+    public static ChatMdl ConnectChat(ChatCtrl owner, Connection conn) {
+        ChatMdl result = new ChatMdl(owner);
+        result.addConnection(conn);
+        return result;
 	}
-	public ChatMdl(ChatCtrl ctrl, Connection conn) {
-		owner = ctrl;
-		try {
-			builder = factory.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}
-		addConnection(conn);
-	}
-	
-	
-	public ChatMdl(ChatCtrl ctrl, String address, int port) throws IOException {
-		owner = ctrl;
-		try {
-			builder = factory.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}
-		Connect(address, port);
-	}
+
+    public static ChatMdl ConnectChat(ChatCtrl owner, String address, int port) {
+        ChatMdl result = new ChatMdl(owner);
+        if(!result.Connect(address, port)) {
+            return null;
+        }
+
+        return result;
+    }
+
+    ChatMdl(ChatCtrl owner) {
+        this.owner = owner;
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            builder = factory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
 	
 	public void UpdateSettings(MessageSettings settings) {
 		messageSettings = settings;
 	}
 	
 	public void run() {
-        boolean running = true;
         while(running) {
 			ArrayList<Connection> connectionsCopy = new ArrayList<>(connections);
 			for(Connection conn : connectionsCopy) {
@@ -85,10 +80,6 @@ public class ChatMdl extends Thread {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            if(connections.isEmpty()) {
-                running = false;
-            }
 		}
 	}
 
@@ -103,11 +94,18 @@ public class ChatMdl extends Thread {
         }
     }
 
-    void Connect(String host, int port) throws IOException {
-		Socket target = new Socket(host, port);
-		Connection connection = new Connection(target);
+    boolean Connect(String host, int port) {
+        Connection connection;
+        try {
+		    Socket target = new Socket(host, port);
+		    connection = new Connection(target);
+        } catch (Exception e) {
+            return false;
+        }
 		connection.getOut().println("<message sender=\"" + getUserName() + "\"> <request>" + "</request> </message>");
 		addConnection(connection);
+
+        return true;
 	}
 	
 	public void addConnection(Connection connection) {
@@ -177,6 +175,7 @@ public class ChatMdl extends Thread {
 			}
 		}
 		connections.clear();
+        running = false;
 	}
 	
 	private void postMessage(String xmlData) {

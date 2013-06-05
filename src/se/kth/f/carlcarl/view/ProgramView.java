@@ -206,13 +206,10 @@ public class ProgramView extends JFrame {
 	}
 
 	private void CloseChat() {
-		ChatView closedView = ctrl.closeCurrentChat();
-		if(closedView != null) {
-			tabbedPane.remove(closedView);	
-			if(tabbedPane.getTabCount() > 0) {
-				tabbedPane.setSelectedIndex(0);
-			}
-		}
+		ctrl.closeCurrentChat();
+
+        int selectedIndex = tabbedPane.getSelectedIndex();
+        tabbedPane.remove(selectedIndex);
 	}
 
 	private void HelpAbout() {
@@ -258,13 +255,21 @@ public class ProgramView extends JFrame {
 			if(newChatView.getChatType() == 1) {
 				// Group chat
 				newView = ctrl.newChat(port);
-				port = ctrl.getListeningPort();
 			} else {
 				// Single chat
 				newView = ctrl.connectChat(newChatView.getAdress(), port);
 			}
-			
-			addChatView(newView, port);
+
+            if(newView == null) {
+                if(newChatView.getChatType() == 1) {
+                    JOptionPane.showMessageDialog(this, "Lyckades inte skapa gruppchat. Var god försök igen.", "Chatfel",JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Kunde inte snaluta till chat.", "Chatfel",JOptionPane.ERROR_MESSAGE);
+                }
+                return;
+            }
+
+			addChatView(newView);
 			
 		}
 	}
@@ -313,8 +318,8 @@ public class ProgramView extends JFrame {
 		return JOptionPane.showConfirmDialog(null, name + " vill chatta med dig. Vill du?", "Inkommande chatförfrågan", JOptionPane.YES_NO_OPTION);
 	}
 	
-	public void addChatView(ChatView view, int port) {
-		tabbedPane.add("Chat (port: " + port + ")" , view);
+	public void addChatView(ChatView view) {
+		tabbedPane.add("Chat (port: " + view.getPort() + ")" , view);
 	}
 	
 	/* SettingsView v = new SetingsView();

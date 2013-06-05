@@ -27,4 +27,5 @@ public abstract class ChatView extends JPanel {
 	}
 
     public abstract Connection getConnection();
+    public abstract int getPort();
 }

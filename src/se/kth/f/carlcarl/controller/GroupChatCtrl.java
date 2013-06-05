@@ -7,11 +7,22 @@ import java.io.IOException;
 
 public class GroupChatCtrl extends ChatCtrl {
 
-	public GroupChatCtrl(ProgramCtrl owner, int port) throws IOException {
+    public static GroupChatCtrl CreateGroupChat(ProgramCtrl owner, int port) {
+        GroupChatCtrl result = new GroupChatCtrl(owner);
+
+        result.model = GroupChatMdl.CreateGroupChat(result, port);
+        if(result.model == null) {
+            return null;
+        }
+
+        result.model.start();
+        result.view = new ChatViewGroup(result.model.GetLocalPort());
+
+        return result;
+    }
+
+	private GroupChatCtrl(ProgramCtrl owner) {
 		super(owner);
-		model = new GroupChatMdl(this, port);
-		model.start();
-		view = new ChatViewGroup();
 	}
 
     @Override

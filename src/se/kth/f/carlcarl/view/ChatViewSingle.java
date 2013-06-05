@@ -27,4 +27,9 @@ public class ChatViewSingle extends ChatView {
     public Connection getConnection() {
         return connection;
     }
+
+    @Override
+    public int getPort() {
+        return connection.GetLocalPort();
+    }
 }

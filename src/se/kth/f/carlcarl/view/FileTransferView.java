@@ -14,6 +14,10 @@ public class FileTransferView extends JDialog implements ActionListener {
     private final FileTransferMdl fileTransferMdl;
     private final JProgressBar progressBar;
     private final JButton btnSlutfr;
+    private int lastBytesProcessed = 0;
+    private int deltaBytes = 0;
+    private final JLabel labelSpeed;
+    private final JLabel labelTimeleft;
 
     public FileTransferView(Window parent, FileTransferMdl fileTransferMdl) {
 		super(parent, "Filöverföring");
@@ -39,28 +43,26 @@ public class FileTransferView extends JDialog implements ActionListener {
 		springLayout.putConstraint(SpringLayout.WEST, progressBar, 10, SpringLayout.WEST, getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, progressBar, -10, SpringLayout.EAST, getContentPane());
 		getContentPane().add(progressBar);
-		// TODO Fil�verf�ring
-		// Make observer;
 		
 		JLabel lblTidKvar = new JLabel("Tid kvar :");
 		springLayout.putConstraint(SpringLayout.NORTH, lblTidKvar, 6, SpringLayout.SOUTH, progressBar);
 		springLayout.putConstraint(SpringLayout.WEST, lblTidKvar, 0, SpringLayout.WEST, lblFil);
 		getContentPane().add(lblTidKvar);
-		
-		JLabel label = new JLabel(timeLeft());
-		springLayout.putConstraint(SpringLayout.WEST, label, 6, SpringLayout.EAST, lblTidKvar);
-		springLayout.putConstraint(SpringLayout.SOUTH, label, 0, SpringLayout.SOUTH, lblTidKvar);
-		getContentPane().add(label);
-		
-		JLabel label_1 = new JLabel(currentSpeed());
-		springLayout.putConstraint(SpringLayout.NORTH, label_1, 6
+
+        labelTimeleft = new JLabel(timeLeft());
+		springLayout.putConstraint(SpringLayout.WEST, labelTimeleft, 6, SpringLayout.EAST, lblTidKvar);
+		springLayout.putConstraint(SpringLayout.SOUTH, labelTimeleft, 0, SpringLayout.SOUTH, lblTidKvar);
+		getContentPane().add(labelTimeleft);
+
+        labelSpeed = new JLabel(currentSpeed());
+		springLayout.putConstraint(SpringLayout.NORTH, labelSpeed, 6
                 , SpringLayout.SOUTH, progressBar);
-		springLayout.putConstraint(SpringLayout.EAST, label_1, 0, SpringLayout.EAST, progressBar);
-		getContentPane().add(label_1);
-		
+		springLayout.putConstraint(SpringLayout.EAST, labelSpeed, 0, SpringLayout.EAST, progressBar);
+		getContentPane().add(labelSpeed);
+
 		JLabel lblHastighet = new JLabel("Hastighet :");
 		springLayout.putConstraint(SpringLayout.NORTH, lblHastighet, 6, SpringLayout.SOUTH, progressBar);
-		springLayout.putConstraint(SpringLayout.EAST, lblHastighet, -6, SpringLayout.WEST, label_1);
+		springLayout.putConstraint(SpringLayout.EAST, lblHastighet, -6, SpringLayout.WEST, labelSpeed);
 		getContentPane().add(lblHastighet);
 		
 		JButton btnAvbryt = new JButton("Avbryt");
@@ -83,12 +85,12 @@ public class FileTransferView extends JDialog implements ActionListener {
 		springLayout.putConstraint(SpringLayout.SOUTH, btnSlutfr, 0, SpringLayout.SOUTH, btnAvbryt);
 		springLayout.putConstraint(SpringLayout.EAST, btnSlutfr, -6, SpringLayout.WEST, btnAvbryt);
 		getContentPane().add(btnSlutfr);
-		
+
 		JLabel lblFilstorlek = new JLabel("Filstorlek :");
 		springLayout.putConstraint(SpringLayout.NORTH, lblFilstorlek, 6, SpringLayout.SOUTH, lblFil);
 		springLayout.putConstraint(SpringLayout.WEST, lblFilstorlek, 0, SpringLayout.WEST, lblFil);
 		getContentPane().add(lblFilstorlek);
-		
+
 		JLabel lblFilesize = new JLabel(getFileSize(fileTransferMdl.getFileSize()));
 		springLayout.putConstraint(SpringLayout.WEST, lblFilesize, 6, SpringLayout.EAST, lblFilstorlek);
 		springLayout.putConstraint(SpringLayout.SOUTH, lblFilesize, 0, SpringLayout.SOUTH, lblFilstorlek);
@@ -130,19 +132,29 @@ public class FileTransferView extends JDialog implements ActionListener {
         return result;
     }
 
-    // TODO: Filöverföring
 	private String timeLeft(){
-		return "";
+        if(deltaBytes == 0) {
+		    return "inf";
+        } else {
+            long bytesLeft = fileTransferMdl.getFileSize() - fileTransferMdl.getBytesProcessed();
+            return String.format("%d sekunder", (int)(bytesLeft/(deltaBytes/0.040)));
+        }
 	}
 
-    // TODO: Filöverföring
 	private String currentSpeed() {
-		return "";
+		return String.format("%d bytes/sekund", (int)(deltaBytes/0.040));
 	}
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        progressBar.setValue(fileTransferMdl.getBytesProcessed());
+        int bytesProcessed = fileTransferMdl.getBytesProcessed();
+        deltaBytes = bytesProcessed - lastBytesProcessed;
+        lastBytesProcessed = bytesProcessed;
+
+        labelSpeed.setText(currentSpeed());
+        labelTimeleft.setText(timeLeft());
+
+        progressBar.setValue(bytesProcessed);
         if(fileTransferMdl.getBytesProcessed() == fileTransferMdl.getFileSize()) {
             btnSlutfr.setEnabled(true);
         }

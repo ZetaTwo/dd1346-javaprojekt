@@ -53,32 +53,25 @@ public class ProgramCtrl {
 	}
 	
 	void newChat(Connection conn) {
-		ChatCtrl ctrl;
-		ctrl = new ChatCtrl(this, conn);
-		programView.addChatView(addChat(ctrl), ctrl.GetLocalPort());
+		ChatCtrl ctrl = ChatCtrl.CreateChat(this, conn);
+		programView.addChatView(addChat(ctrl));
 	}
 	
 	public ChatView newChat(int port) {
-		ChatCtrl ctrl;
-		try {
-			ctrl = new GroupChatCtrl(this, port);
-		} catch (IOException e) {
-			return null;
-		}
+		ChatCtrl ctrl = GroupChatCtrl.CreateGroupChat(this, port);
 		return addChat(ctrl);
 	}
 	
-	public ChatView connectChat(String adress, int port) {
-		ChatCtrl ctrl;
-		try {
-			ctrl = new ChatCtrl(this, adress, port);
-		} catch (IOException e) {
-			return null;
-		}
+	public ChatView connectChat(String address, int port) {
+		ChatCtrl ctrl = ChatCtrl.CreateChat(this, address, port);
 		return addChat(ctrl);
 	}
 	
 	private ChatView addChat(ChatCtrl ctrl) {
+        if (ctrl == null) {
+            return null;
+        }
+
 		chatCtrls.add(ctrl);
 		return ctrl.getView();
 	}
@@ -160,11 +153,10 @@ public class ProgramCtrl {
 		
 	}
 
-	public ChatView closeCurrentChat() {
-		ChatView result = activeChat.getView();
-		activeChat.Close();
-		
-		return result;
+	public void closeCurrentChat() {
+        if(activeChat != null) {
+            activeChat.Close();
+        }
 	}
 
     public int CreateFileTransfer(String fileName, int fileSize) {
