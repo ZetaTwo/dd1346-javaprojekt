@@ -262,9 +262,9 @@ public class ProgramView extends JFrame {
 
             if(newView == null) {
                 if(newChatView.getChatType() == 1) {
-                    JOptionPane.showMessageDialog(this, "Lyckades inte skapa gruppchat. Var god försök igen.", "Chatfel",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Lyckades inte skapa gruppchat. Var god försök igen.", "Chatfel", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(this, "Kunde inte snaluta till chat.", "Chatfel",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Kunde inte ansluta till chat.", "Chatfel", JOptionPane.ERROR_MESSAGE);
                 }
                 return;
             }
