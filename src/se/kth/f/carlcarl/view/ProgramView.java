@@ -152,7 +152,7 @@ public class ProgramView extends JFrame {
 		
 		JMenuBar menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
-		
+
 		JMenu fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
 		

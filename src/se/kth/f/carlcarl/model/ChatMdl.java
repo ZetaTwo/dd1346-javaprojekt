@@ -25,7 +25,7 @@ public class ChatMdl extends Thread {
     private final ChatCtrl owner;
     private DocumentBuilder builder;
 	
-	private final Queue<String> pendingFileRequests = new LinkedList<>();
+	private final Queue<PendingFileTransfer> pendingFileRequests = new LinkedList<>();
     private boolean running = true;
 
     public static ChatMdl ConnectChat(ChatCtrl owner, Connection conn) {
@@ -131,7 +131,9 @@ public class ChatMdl extends Thread {
 	
 	public void sendFile(File file, String message, long fileSize, String sender, Connection connection) {
         String filename = file.getName();
-        pendingFileRequests.add(file.getAbsolutePath());
+
+        PendingFileTransfer pendingFileTransfer = new PendingFileTransfer(this, file.getAbsolutePath(), connection);
+        pendingFileRequests.add(pendingFileTransfer);
 		String messageData = "<message sender=\"" + sender + "\">" + 
 				  "<filerequest name=\"" + filename + "\" size=\"" + fileSize + "\">" + message + "</filerequest>" +
 				 "</message>";
@@ -209,6 +211,8 @@ public class ChatMdl extends Thread {
             conn.setUsername(sender);
             owner.Update();
 			Node child = root.getFirstChild();
+
+            String message;
 			
 			//Process message
 			switch(child.getNodeName()) {
@@ -226,7 +230,7 @@ public class ChatMdl extends Thread {
 				//Get file parameters
 				int size = Integer.parseInt(child.getAttributes().getNamedItem("size").getNodeValue());
 				String name = child.getAttributes().getNamedItem("name").getNodeValue();
-                String message = child.getTextContent();
+                message = child.getTextContent();
 
 				owner.ProcessFileTransferRequest(sender, name, size, message, conn);
 				break;
@@ -237,11 +241,9 @@ public class ChatMdl extends Thread {
 				boolean reply = replyStr.equals("yes");
 				int port = Integer.parseInt(child.getAttributes().getNamedItem("port").getNodeValue());
 
-				if(reply) {
-					owner.ProcessFileTransferResponse(conn, port, pendingFileRequests.poll());
-				} else {
-					owner.ProcessChatMessage(sender + " nekade din filöverföring", "System", Color.black);
-				}
+                message = child.getTextContent();
+
+                ParseFileResponse(conn, sender, reply, port);
 				
 				break;
 			case "request":
@@ -270,7 +272,26 @@ public class ChatMdl extends Thread {
 		}
 	}
 
-	private void ParseEncryptedMessage(Connection conn, String sender, Node child) {
+    void ParseFileResponse(Connection conn, String sender, boolean reply, int port) {
+        PendingFileTransfer pendingFileTransfer = pendingFileRequests.peek();
+        boolean response = (pendingFileTransfer != null && !pendingFileTransfer.isTimedOut());
+        if (response) {
+            pendingFileTransfer.responseReceived();
+            pendingFileRequests.remove();
+        }
+
+        if(reply) {
+            owner.ProcessFileTransferResponse(conn, port, pendingFileTransfer.getFilePath());
+        } else {
+if(!response) {
+owner.ProcessChatMessage(sender + " svarade inte på din filöverföringsförfrågan.", "System", Color.black);
+} else {
+owner.ProcessChatMessage(sender + " nekade din filöverföring.", "System", Color.black);
+}
+        }
+    }
+
+    private void ParseEncryptedMessage(Connection conn, String sender, Node child) {
 		//Prepare message and get encryption type
 		String decryptedMessage;
 		String encryption = child.getAttributes().getNamedItem("type").getNodeValue();
@@ -281,7 +302,8 @@ public class ChatMdl extends Thread {
 		case "aes":
             decryptedMessage = EncryptionHelper.Decrypt(EncryptionHelper.Encryption.AES, encryptedMessage, key);
 			break;
-		case "caesar":
+
+            case "caesar":
             decryptedMessage = EncryptionHelper.Decrypt(EncryptionHelper.Encryption.CAESAR, encryptedMessage, key);
 			break;
 		default:
