@@ -14,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class ProgramCtrl {
@@ -122,18 +123,30 @@ public class ProgramCtrl {
 	}
 	
 	public void ChatRequest(Connection conn) {
-		ChatRequest("Någon", conn, "");
+		ChatRequest("Någon", conn, "", true);
 	}
 
-	public void ChatRequest(String username, Connection conn, String message) {
+	public void ChatRequest(String username, Connection conn, String message, boolean simple) {
 		int answer = JOptionPane.showConfirmDialog(programView, username + " vill chatta med dig.", "Chattförfrågan", JOptionPane.YES_NO_OPTION);
-		if(answer == JOptionPane.YES_OPTION) {
-            //TODO: Invectigate behaviour
+        PrintWriter connectionWriter = conn.getOut();
+        String messageStart = "<message sender=\""+ getUserName() + ">";
+        String messageEnd = "</message>";
+
+        if(answer == JOptionPane.YES_OPTION) {
 			newChat(conn);
-			conn.getOut().println("<message sender=\""+ getUserName() + "\"><request reply=\"yes\">" + message + "</request> </message>");
+            if(simple) {
+                connectionWriter.println(messageStart + "<text>accepterade din chatförfrågan</text>" + messageEnd);
+            } else {
+                connectionWriter.println(messageStart + "<request reply=\"yes\">" + message + "</request>" + messageEnd);
+            }
+
 		}
 		else{
-			conn.getOut().println("<message sender=\""+ getUserName() + "\"><request reply=\"no\">" + message + "</request> </message>");
+            if(simple) {
+                connectionWriter.println(messageStart + "<text>nekade din chatförfrågan</text>" + messageEnd);
+            } else {
+                connectionWriter.println(messageStart +"<request reply=\"no\">" + message + "</request>" + messageEnd);
+            }
 			conn.Close();
 		}
 	}

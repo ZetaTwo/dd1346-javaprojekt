@@ -108,6 +108,6 @@ public class ConnListenerMdl extends Thread{
 		
 		//Process message
 		String message = child.getNodeValue();
-		owner.ChatRequest(sender, conn, message);
+		owner.ChatRequest(sender, conn, message, false);
 	}
 }
