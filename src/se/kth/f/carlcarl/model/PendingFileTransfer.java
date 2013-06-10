@@ -4,11 +4,10 @@ public class PendingFileTransfer extends Thread {
     ChatMdl owner;
     boolean responderReceived = false;
     boolean timedOut = false;
-    String receiver = "";
     String filePath = "";
     Connection connection;
 
-    public PendingFileTransfer(ChatMdl owner, String filePath, Connection connection) {
+    public PendingFileTransfer(ChatMdl owner, Connection connection) {
         this.owner = owner;
         this.connection = connection;
         start();
@@ -22,8 +21,8 @@ public class PendingFileTransfer extends Thread {
         }
 
         if (!responderReceived) {
-            owner.ParseFileResponse(connection, false, "svarade inte i tid.", 0, connection.getUsername(), );
             timedOut = true;
+            owner.ParseFileResponse(connection, connection.getUsername(), false, 0, true);
         }
     }
 

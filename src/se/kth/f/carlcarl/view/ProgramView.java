@@ -33,10 +33,6 @@ public class ProgramView extends JFrame {
 	public final MessageComposerView messageComposerView;
 	private final ProgramCtrl ctrl;
 
-    /**
-	 * Launch the application.
-	 */
-	
 	/**
 	 * Create the frame.
 	 */
@@ -75,8 +71,7 @@ public class ProgramView extends JFrame {
 				}
 			}
 		});
-		
-		
+
 		Action actionListenerTabbed = new AbstractAction() {
 		      public void actionPerformed(ActionEvent actionEvent) {
 		        NextTab();
@@ -89,7 +84,6 @@ public class ProgramView extends JFrame {
 		ActionMap actionMapTabbed = tabbedPane.getActionMap();
 		actionMapTabbed.put(ACTION_KEY_TABBED, actionListenerTabbed);
 		tabbedPane.setActionMap(actionMapTabbed);
-		
 		
 		JButton closeButton = new JButton("Close");
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, closeButton, -10, SpringLayout.SOUTH, contentPane);
@@ -109,9 +103,8 @@ public class ProgramView extends JFrame {
 				Send();
 			}
 		});
-		
-	
-		 Action actionListener = new AbstractAction() {
+
+        Action actionListener = new AbstractAction() {
 		      public void actionPerformed(ActionEvent actionEvent) {
 		        Send();
 		      }
@@ -123,9 +116,6 @@ public class ProgramView extends JFrame {
 		ActionMap actionMap = sendButton.getActionMap();
 		actionMap.put(ACTION_KEY, actionListener);
 		sendButton.setActionMap(actionMap);
-		
-		
-		
 		
 		contentPane.add(sendButton);
 		
@@ -312,7 +302,6 @@ public class ProgramView extends JFrame {
 		}
 	}
 
-
 	//TODO: Use this?
 	public int IncomingChatRequest(String name) {
 		return JOptionPane.showConfirmDialog(null, name + " vill chatta med dig. Vill du?", "Inkommande chatförfrågan", JOptionPane.YES_NO_OPTION);
@@ -321,12 +310,4 @@ public class ProgramView extends JFrame {
 	public void addChatView(ChatView view) {
 		tabbedPane.add("Chat (port: " + view.getPort() + ")" , view);
 	}
-	
-	/* SettingsView v = new SetingsView();
-	 * int result = v.show();
-	 * if(result > 0) {
-	 *      SPARA INSTÄLLNINGAR;
-	 * }
-	 * 
-	 */
 }

@@ -3,7 +3,6 @@ package se.kth.f.carlcarl.model;
 import java.awt.Color;
 import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -132,7 +131,7 @@ public class ChatMdl extends Thread {
 	public void sendFile(File file, String message, long fileSize, String sender, Connection connection) {
         String filename = file.getName();
 
-        PendingFileTransfer pendingFileTransfer = new PendingFileTransfer(this, file.getAbsolutePath(), connection);
+        PendingFileTransfer pendingFileTransfer = new PendingFileTransfer(this, connection);
         pendingFileRequests.add(pendingFileTransfer);
 		String messageData = "<message sender=\"" + sender + "\">" + 
 				  "<filerequest name=\"" + filename + "\" size=\"" + fileSize + "\">" + message + "</filerequest>" +
@@ -242,8 +241,8 @@ public class ChatMdl extends Thread {
 				int port = Integer.parseInt(child.getAttributes().getNamedItem("port").getNodeValue());
 
                 message = child.getTextContent();
-
-                ParseFileResponse(conn, sender, reply, port);
+                owner.ProcessChatMessage(sender + " svarade " + ((reply)?"ja":"nej") + " på din filöverföringsförfrågan med meddelandet: " + message, "System", Color.BLACK);
+                ParseFileResponse(conn, sender, reply, port, false);
 				
 				break;
 			case "request":
@@ -272,22 +271,26 @@ public class ChatMdl extends Thread {
 		}
 	}
 
-    void ParseFileResponse(Connection conn, String sender, boolean reply, int port) {
+    void ParseFileResponse(Connection conn, String sender, boolean reply, int port, boolean timeOut) {
         PendingFileTransfer pendingFileTransfer = pendingFileRequests.peek();
-        boolean response = (pendingFileTransfer != null && !pendingFileTransfer.isTimedOut());
-        if (response) {
+
+        if (!timeOut) {
             pendingFileTransfer.responseReceived();
             pendingFileRequests.remove();
+
+            if(pendingFileTransfer.isTimedOut()) {
+                return;
+            }
         }
 
         if(reply) {
             owner.ProcessFileTransferResponse(conn, port, pendingFileTransfer.getFilePath());
         } else {
-if(!response) {
-owner.ProcessChatMessage(sender + " svarade inte på din filöverföringsförfrågan.", "System", Color.black);
-} else {
-owner.ProcessChatMessage(sender + " nekade din filöverföring.", "System", Color.black);
-}
+            if(timeOut) {
+                owner.ProcessChatMessage(sender + " svarade inte på din filöverföringsförfrågan.", "System", Color.black);
+            } else {
+                owner.ProcessChatMessage(sender + " nekade din filöverföring.", "System", Color.black);
+            }
         }
     }
 
