@@ -32,8 +32,9 @@ public class ProgramView extends JFrame {
     private JTabbedPane tabbedPane;
 	public final MessageComposerView messageComposerView;
 	private final ProgramCtrl ctrl;
+    private final JButton closeButton;
 
-	/**
+    /**
 	 * Create the frame.
 	 */
 	public ProgramView(ProgramCtrl owner) {
@@ -84,15 +85,16 @@ public class ProgramView extends JFrame {
 		ActionMap actionMapTabbed = tabbedPane.getActionMap();
 		actionMapTabbed.put(ACTION_KEY_TABBED, actionListenerTabbed);
 		tabbedPane.setActionMap(actionMapTabbed);
-		
-		JButton closeButton = new JButton("Close");
+
+        closeButton = new JButton("Close");
+        closeButton.setEnabled(false);
 		sl_contentPane.putConstraint(SpringLayout.SOUTH, closeButton, -10, SpringLayout.SOUTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.EAST, closeButton, 0, SpringLayout.EAST, contentPane);
 		closeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				CloseChat();
-			}
-		});
+            public void actionPerformed(ActionEvent e) {
+                CloseChat();
+            }
+        });
 		contentPane.add(closeButton);
 		
 		JButton sendButton = new JButton("Send");
@@ -199,7 +201,12 @@ public class ProgramView extends JFrame {
 		ctrl.closeCurrentChat();
 
         int selectedIndex = tabbedPane.getSelectedIndex();
-        tabbedPane.remove(selectedIndex);
+        if(selectedIndex >= 0) {
+            tabbedPane.remove(selectedIndex);
+            if(tabbedPane.getTabCount() == 0) {
+                closeButton.setEnabled(false);
+            }
+        }
 	}
 
 	private void HelpAbout() {
@@ -309,5 +316,8 @@ public class ProgramView extends JFrame {
 	
 	public void addChatView(ChatView view) {
 		tabbedPane.add("Chat (port: " + view.getPort() + ")" , view);
+        if(tabbedPane.getTabCount() > 0) {
+            closeButton.setEnabled(true);
+        }
 	}
 }

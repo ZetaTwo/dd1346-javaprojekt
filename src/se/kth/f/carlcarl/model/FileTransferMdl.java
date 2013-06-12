@@ -84,7 +84,6 @@ public class FileTransferMdl extends Thread {
             }
 
         }
-
     }
 
     public long getFileSize() {

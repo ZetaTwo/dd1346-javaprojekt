@@ -129,7 +129,7 @@ public class ProgramCtrl {
 	public void ChatRequest(String username, Connection conn, String message, boolean simple) {
 		int answer = JOptionPane.showConfirmDialog(programView, username + " vill chatta med dig.", "Chattförfrågan", JOptionPane.YES_NO_OPTION);
         PrintWriter connectionWriter = conn.getOut();
-        String messageStart = "<message sender=\""+ getUserName() + ">";
+        String messageStart = "<message sender=\""+ getUserName() + "\">";
         String messageEnd = "</message>";
 
         if(answer == JOptionPane.YES_OPTION) {
